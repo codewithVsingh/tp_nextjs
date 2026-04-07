@@ -111,7 +111,7 @@ const HeroSection = () => {
 
               {status === "success" ? (
                 <div className="flex flex-col items-center gap-3 py-8">
-                  <CheckCircle className="w-12 h-12 text-green-500" />
+                  <CheckCircle className="w-12 h-12 text-secondary" />
                   <p className="font-heading font-semibold text-foreground">Thank you!</p>
                   <p className="text-muted-foreground text-sm text-center">We'll contact you shortly to schedule your free demo.</p>
                   <Button variant="ghost" className="mt-2 text-primary" onClick={() => setStatus("idle")}>
