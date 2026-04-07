@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -7,14 +8,14 @@ const Footer = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <Link to="/" className="flex items-center gap-2 mb-4">
               <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-lg">T</span>
               </div>
               <span className="font-heading font-bold text-xl text-primary-foreground">
                 Tutors Parliament
               </span>
-            </div>
+            </Link>
             <p className="text-sm leading-relaxed">
               India's trusted online tutoring platform connecting students with expert educators for personalized learning and exam success.
             </p>
@@ -24,13 +25,12 @@ const Footer = () => {
           <div>
             <h4 className="font-heading font-semibold text-primary-foreground mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              {["Home", "About Us", "Courses", "Tutors", "Results", "Contact"].map((link) => (
-                <li key={link}>
-                  <a href={`#${link.toLowerCase().replace(" ", "")}`} className="hover:text-primary-foreground transition-colors">
-                    {link}
-                  </a>
-                </li>
-              ))}
+              <li><Link to="/" className="hover:text-primary-foreground transition-colors">Home</Link></li>
+              <li><Link to="/about" className="hover:text-primary-foreground transition-colors">About Us</Link></li>
+              <li><a href="/#courses" className="hover:text-primary-foreground transition-colors">Courses</a></li>
+              <li><a href="/#tutors" className="hover:text-primary-foreground transition-colors">Tutors</a></li>
+              <li><a href="/#testimonials" className="hover:text-primary-foreground transition-colors">Results</a></li>
+              <li><a href="/#contact" className="hover:text-primary-foreground transition-colors">Contact</a></li>
             </ul>
           </div>
 
@@ -40,13 +40,13 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               {["UPSC Preparation", "SSC Coaching", "Banking Exams", "School Tuitions", "JEE/NEET Prep"].map((c) => (
                 <li key={c}>
-                  <a href="#courses" className="hover:text-primary-foreground transition-colors">{c}</a>
+                  <a href="/#courses" className="hover:text-primary-foreground transition-colors">{c}</a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact + Blog */}
           <div>
             <h4 className="font-heading font-semibold text-primary-foreground mb-4">Contact Us</h4>
             <ul className="space-y-3 text-sm">
@@ -63,6 +63,12 @@ const Footer = () => {
                 <span>New Delhi, India</span>
               </li>
             </ul>
+            <div className="mt-6">
+              <h4 className="font-heading font-semibold text-primary-foreground mb-2">Resources</h4>
+              <Link to="/blog" className="text-sm hover:text-primary-foreground transition-colors flex items-center gap-1">
+                📝 Blog & Articles
+              </Link>
+            </div>
           </div>
         </div>
 
