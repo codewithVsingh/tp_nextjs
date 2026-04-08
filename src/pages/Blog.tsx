@@ -1,114 +1,137 @@
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Calendar, ArrowRight, Clock } from "lucide-react";
+import { Calendar, ArrowRight, Clock, Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-
-const posts = [
-  {
-    title: "Top 10 Tips to Crack UPSC in Your First Attempt",
-    excerpt: "Learn proven strategies from UPSC toppers and our expert mentors to maximize your preparation efficiency.",
-    date: "March 15, 2024",
-    readTime: "8 min read",
-    category: "UPSC",
-  },
-  {
-    title: "How Personalized Learning Plans Boost Exam Scores by 40%",
-    excerpt: "Discover the science behind personalized education and how Tutors Parliament uses AI to tailor learning paths.",
-    date: "March 8, 2024",
-    readTime: "6 min read",
-    category: "Learning",
-  },
-  {
-    title: "Banking Exam 2024: Complete Preparation Guide",
-    excerpt: "A comprehensive roadmap covering IBPS PO, SBI, and RBI exam preparation with subject-wise strategies.",
-    date: "February 28, 2024",
-    readTime: "10 min read",
-    category: "Banking",
-  },
-  {
-    title: "Why Online Tutoring is the Future of Education in India",
-    excerpt: "Explore how online tutoring platforms are breaking geographical barriers and making quality education accessible.",
-    date: "February 20, 2024",
-    readTime: "5 min read",
-    category: "Education",
-  },
-  {
-    title: "SSC CGL 2024: Subject-Wise Strategy & Booklist",
-    excerpt: "Expert-recommended books and strategies for each section of the SSC CGL exam to help you score 200+.",
-    date: "February 12, 2024",
-    readTime: "7 min read",
-    category: "SSC",
-  },
-  {
-    title: "5 Study Habits of Toppers That You Can Adopt Today",
-    excerpt: "Research-backed study techniques used by top rankers across competitive exams. Start implementing them now.",
-    date: "February 5, 2024",
-    readTime: "4 min read",
-    category: "Tips",
-  },
-];
+import { blogPosts, blogCategories } from "@/data/blogPosts";
 
 const Blog = () => {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filtered = useMemo(() => {
+    return blogPosts.filter((post) => {
+      const matchCategory = activeCategory === "All" || post.category === activeCategory;
+      const matchSearch =
+        !searchQuery ||
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchCategory && matchSearch;
+    });
+  }, [activeCategory, searchQuery]);
+
   return (
     <>
       <Navbar />
       <main>
+        {/* Hero */}
         <section className="pt-24 pb-16 section-padding" style={{ background: "var(--hero-gradient)" }}>
           <div className="container mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-primary-foreground mb-4">
                 Blog & <span className="text-secondary">Resources</span>
               </h1>
-              <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
-                Expert tips, exam strategies, and education insights to help you stay ahead in your preparation journey.
+              <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto mb-8">
+                Expert tips, study strategies, and education insights for Delhi students and parents.
               </p>
+
+              {/* Search */}
+              <div className="max-w-md mx-auto relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  placeholder="Search articles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 focus-visible:ring-secondary"
+                />
+              </div>
             </motion.div>
           </div>
         </section>
 
-        <section className="section-padding">
+        {/* Category Filters */}
+        <section className="section-padding pb-0 pt-8">
           <div className="container mx-auto">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post, i) => (
-                <motion.article
-                  key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
-                  className="bg-background rounded-2xl overflow-hidden card-shadow hover:card-shadow-hover transition-all duration-300 hover:-translate-y-1 group"
+            <div className="flex flex-wrap gap-2 mb-8">
+              {blogCategories.map((cat) => (
+                <Button
+                  key={cat}
+                  variant={activeCategory === cat ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveCategory(cat)}
+                  className="rounded-full"
                 >
-                  <div className="h-48 bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center p-6">
-                    <span className="bg-secondary/20 text-secondary-foreground text-xs font-semibold px-3 py-1 rounded-full border border-secondary/30 absolute top-4 left-4">
-                      {post.category}
-                    </span>
-                    <h3 className="font-heading font-bold text-lg text-primary-foreground text-center leading-snug">
-                      {post.title}
-                    </h3>
-                  </div>
-                  <div className="p-6">
-                    <p className="text-muted-foreground text-sm leading-relaxed mb-4">{post.excerpt}</p>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" /> {post.date}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {post.readTime}
-                      </span>
-                    </div>
-                    <Button variant="ghost" className="text-primary font-semibold p-0 h-auto hover:bg-transparent hover:text-secondary group-hover:gap-3 transition-all">
-                      Read More <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </motion.article>
+                  {cat}
+                </Button>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Blog Grid */}
+        <section className="section-padding pt-4">
+          <div className="container mx-auto">
+            {filtered.length === 0 ? (
+              <p className="text-center text-muted-foreground py-12">No articles found. Try a different search or category.</p>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filtered.map((post, i) => (
+                  <motion.article
+                    key={post.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.06 }}
+                    className="bg-background rounded-2xl overflow-hidden card-shadow hover:card-shadow-hover transition-all duration-300 hover:-translate-y-1.5 group"
+                  >
+                    <Link to={`/blog/${post.slug}`} className="block">
+                      {/* Image */}
+                      <div className="relative h-52 overflow-hidden">
+                        <img
+                          src={post.heroImage}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-3 left-3 flex gap-2">
+                          <span className="bg-secondary text-secondary-foreground text-xs font-semibold px-3 py-1 rounded-full">
+                            {post.category}
+                          </span>
+                          {post.popular && (
+                            <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+                              <MapPin className="w-3 h-3" /> Popular in Delhi
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6">
+                        <h3 className="font-heading font-bold text-lg text-foreground leading-snug mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                          {post.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2">{post.excerpt}</p>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" /> {post.date}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" /> {post.readTime}
+                          </span>
+                        </div>
+                        <span className="text-primary font-semibold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
+                          Read More <ArrowRight className="w-4 h-4" />
+                        </span>
+                      </div>
+                    </Link>
+                  </motion.article>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>
