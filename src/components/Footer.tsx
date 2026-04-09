@@ -17,7 +17,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-sm leading-relaxed">
-              India's trusted online tutoring platform connecting students with expert educators for personalized learning and exam success.
+              Delhi's trusted tutoring platform connecting students with expert educators for personalized learning, board exam preparation, and career counselling.
             </p>
           </div>
 
@@ -27,26 +27,26 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li><Link to="/" className="hover:text-primary-foreground transition-colors">Home</Link></li>
               <li><Link to="/about" className="hover:text-primary-foreground transition-colors">About Us</Link></li>
-              <li><a href="/#courses" className="hover:text-primary-foreground transition-colors">Courses</a></li>
-              <li><a href="/#tutors" className="hover:text-primary-foreground transition-colors">Tutors</a></li>
-              <li><a href="/#testimonials" className="hover:text-primary-foreground transition-colors">Results</a></li>
-              <li><a href="/#contact" className="hover:text-primary-foreground transition-colors">Contact</a></li>
+              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Courses</Link></li>
+              <li><Link to="/counselling/student" className="hover:text-primary-foreground transition-colors">Student Counselling</Link></li>
+              <li><Link to="/counselling/parent" className="hover:text-primary-foreground transition-colors">Parent Counselling</Link></li>
+              <li><Link to="/counselling/personal" className="hover:text-primary-foreground transition-colors">Personal Counselling</Link></li>
             </ul>
           </div>
 
-          {/* Courses */}
+          {/* Courses & Resources */}
           <div>
-            <h4 className="font-heading font-semibold text-primary-foreground mb-4">Popular Courses</h4>
+            <h4 className="font-heading font-semibold text-primary-foreground mb-4">Our Programs</h4>
             <ul className="space-y-2 text-sm">
-              {["UPSC Preparation", "SSC Coaching", "Banking Exams", "School Tuitions", "JEE/NEET Prep"].map((c) => (
-                <li key={c}>
-                  <a href="/#courses" className="hover:text-primary-foreground transition-colors">{c}</a>
-                </li>
-              ))}
+              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">CBSE Tuition</Link></li>
+              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">ICSE Coaching</Link></li>
+              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">JEE / NEET Prep</Link></li>
+              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Spoken English</Link></li>
+              <li><Link to="/blog" className="hover:text-primary-foreground transition-colors">📝 Blog & Articles</Link></li>
             </ul>
           </div>
 
-          {/* Contact + Blog */}
+          {/* Contact */}
           <div>
             <h4 className="font-heading font-semibold text-primary-foreground mb-4">Contact Us</h4>
             <ul className="space-y-3 text-sm">
@@ -63,11 +63,11 @@ const Footer = () => {
                 <span>New Delhi, India</span>
               </li>
             </ul>
-            <div className="mt-6">
-              <h4 className="font-heading font-semibold text-primary-foreground mb-2">Resources</h4>
-              <Link to="/blog" className="text-sm hover:text-primary-foreground transition-colors flex items-center gap-1">
-                📝 Blog & Articles
-              </Link>
+            {/* Trust badges */}
+            <div className="mt-6 flex flex-wrap gap-3">
+              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">✅ Verified Tutors</span>
+              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">500+ Students</span>
+              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">⭐ 4.8 Rating</span>
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@ const Footer = () => {
         {/* SEO block */}
         <div className="border-t border-primary-foreground/10 pt-8 mt-8">
           <p className="text-xs text-primary-foreground/50 text-center max-w-3xl mx-auto mb-6">
-            Tutors Parliament is India's leading online tutoring platform offering expert coaching for UPSC, SSC, Banking exams, school tuitions (CBSE, ICSE), JEE, NEET, and more. Our personalized learning plans and 500+ experienced tutors help students achieve academic excellence. Find the best online tutors in India for competitive exam preparation and personalized learning.
+            Tutors Parliament is Delhi's leading tutoring platform offering expert home tutors, online tuition classes for CBSE, ICSE, State Boards, JEE, NEET preparation, and professional counselling services. Find the best private tutors in Delhi NCR for personalized learning and academic excellence. We serve students from KG to Class 12 with online and offline coaching across all subjects.
           </p>
           <p className="text-sm text-primary-foreground/50 text-center">
             © {new Date().getFullYear()} Tutors Parliament. All rights reserved.
