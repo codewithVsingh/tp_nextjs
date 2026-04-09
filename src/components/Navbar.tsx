@@ -1,20 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
-  { label: "Courses", href: "/#courses" },
+  { label: "Courses", href: "/courses" },
+  {
+    label: "Counselling",
+    href: "#",
+    children: [
+      { label: "Student Counselling", href: "/counselling/student" },
+      { label: "Parent Counselling", href: "/counselling/parent" },
+      { label: "Personal Counselling", href: "/counselling/personal" },
+    ],
+  },
   { label: "Tutors", href: "/#tutors" },
   { label: "Results", href: "/#testimonials" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/#contact" },
 ];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -23,59 +36,109 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Handle hash scrolling when navigating from another page
   useEffect(() => {
     if (location.hash) {
       const el = document.querySelector(location.hash);
-      if (el) {
-        setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 100);
-      }
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 100);
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [location]);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleNavClick = (href: string) => {
     setIsOpen(false);
-    // If we're on the same page and it's a hash link
+    setMobileDropdownOpen(false);
     if (location.pathname === "/" && href.startsWith("/#")) {
       const el = document.querySelector(href.replace("/", ""));
       if (el) el.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  const renderLink = (link: { label: string; href: string }, className: string) => {
+  const linkClass = "text-sm font-medium text-muted-foreground hover:text-primary transition-colors";
+  const mobileLinkClass = "block py-3 text-sm font-medium text-muted-foreground hover:text-primary transition-colors";
+
+  const renderLink = (link: typeof navLinks[0], mobile = false) => {
+    const cls = mobile ? mobileLinkClass : linkClass;
+
+    // Dropdown
+    if (link.children) {
+      if (mobile) {
+        return (
+          <div key={link.label}>
+            <button
+              className={`${mobileLinkClass} flex items-center gap-1 w-full`}
+              onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+            >
+              {link.label} <ChevronDown className={`w-4 h-4 transition-transform ${mobileDropdownOpen ? "rotate-180" : ""}`} />
+            </button>
+            {mobileDropdownOpen && (
+              <div className="pl-4 space-y-1">
+                {link.children.map((child) => (
+                  <Link key={child.label} to={child.href} className={mobileLinkClass} onClick={() => handleNavClick(child.href)}>
+                    {child.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      }
+      return (
+        <div
+          key={link.label}
+          className="relative"
+          ref={dropdownRef}
+          onMouseEnter={() => setDropdownOpen(true)}
+          onMouseLeave={() => setDropdownOpen(false)}
+        >
+          <button className={`${cls} flex items-center gap-1`}>
+            {link.label} <ChevronDown className={`w-3.5 h-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+          </button>
+          {dropdownOpen && (
+            <div className="absolute top-full left-0 mt-2 w-56 bg-background rounded-xl border border-border card-shadow py-2 z-50">
+              {link.children.map((child) => (
+                <Link
+                  key={child.label}
+                  to={child.href}
+                  className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-primary hover:bg-accent transition-colors"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  {child.label}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // Hash link
     if (link.href.startsWith("/#")) {
       if (location.pathname === "/") {
         return (
-          <a
-            key={link.label}
-            href={link.href.replace("/", "")}
-            className={className}
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick(link.href);
-            }}
-          >
+          <a key={link.label} href={link.href.replace("/", "")} className={cls}
+            onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}>
             {link.label}
           </a>
         );
       }
-      return (
-        <Link key={link.label} to={link.href} className={className} onClick={() => setIsOpen(false)}>
-          {link.label}
-        </Link>
-      );
+      return <Link key={link.label} to={link.href} className={cls} onClick={() => setIsOpen(false)}>{link.label}</Link>;
     }
 
+    // Regular link
     const isActive = location.pathname === link.href;
     return (
-      <Link
-        key={link.label}
-        to={link.href}
-        className={`${className} ${isActive ? "!text-primary" : ""}`}
-        onClick={() => setIsOpen(false)}
-      >
+      <Link key={link.label} to={link.href} className={`${cls} ${isActive ? "!text-primary" : ""}`} onClick={() => setIsOpen(false)}>
         {link.label}
       </Link>
     );
@@ -93,35 +156,20 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) =>
-            renderLink(link, "text-sm font-medium text-muted-foreground hover:text-primary transition-colors")
-          )}
-          <Button variant="cta" size="lg">
-            Book Free Demo
-          </Button>
+        <div className="hidden md:flex items-center gap-6">
+          {navLinks.map((link) => renderLink(link))}
+          <Button variant="cta" size="lg">Book Free Demo</Button>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden text-foreground"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
+        <button className="md:hidden text-foreground" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {isOpen && (
         <div className="md:hidden bg-background border-b border-border px-4 pb-4">
-          {navLinks.map((link) =>
-            renderLink(link, "block py-3 text-sm font-medium text-muted-foreground hover:text-primary transition-colors")
-          )}
-          <Button variant="cta" className="w-full mt-2">
-            Book Free Demo
-          </Button>
+          {navLinks.map((link) => renderLink(link, true))}
+          <Button variant="cta" className="w-full mt-2">Book Free Demo</Button>
         </div>
       )}
     </nav>

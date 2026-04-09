@@ -1,26 +1,27 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const courses = [
   {
-    title: "UPSC Preparation",
-    description: "Complete Civil Services preparation with expert mentorship and mock tests.",
+    title: "CBSE Tuition",
+    description: "Structured learning aligned with NCERT curriculum for Class 1-12. Expert Delhi-based tutors for every subject.",
     color: "from-primary to-primary/80",
   },
   {
-    title: "SSC Coaching",
-    description: "Comprehensive SSC CGL, CHSL & MTS preparation with topic-wise coverage.",
+    title: "ICSE Coaching",
+    description: "Concept clarity with detailed subject depth. Comprehensive ICSE/ISC preparation with application-based learning.",
     color: "from-secondary to-secondary/80",
   },
   {
-    title: "Banking Exams",
-    description: "IBPS PO, SBI, RBI and all banking exam preparation with practice sets.",
+    title: "State Boards",
+    description: "Region-specific syllabus expertise for Delhi, UP, Haryana and other state boards with experienced tutors.",
     color: "from-primary to-primary/80",
   },
   {
-    title: "School Tuitions",
-    description: "Class 6-12 CBSE, ICSE & State Board tuitions with personalized attention.",
+    title: "JEE / NEET Prep",
+    description: "Competitive exam preparation with mock tests, problem-solving sessions, and personalized mentorship.",
     color: "from-secondary to-secondary/80",
   },
 ];
@@ -39,6 +40,7 @@ const CoursesSection = () => {
           <h2 className="font-heading font-bold text-3xl md:text-4xl text-foreground mt-2">
             Programs Designed for <span className="text-primary">Your Success</span>
           </h2>
+          <p className="text-muted-foreground mt-3 max-w-xl mx-auto">Online & Offline tuition classes across Delhi NCR for all boards and competitive exams</p>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -58,9 +60,11 @@ const CoursesSection = () => {
               </div>
               <div className="p-6">
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">{course.description}</p>
-                <Button variant="ghost" className="text-primary font-semibold p-0 h-auto hover:bg-transparent hover:text-secondary group-hover:gap-3 transition-all">
-                  Learn More <ArrowRight className="w-4 h-4" />
-                </Button>
+                <Link to="/courses">
+                  <Button variant="ghost" className="text-primary font-semibold p-0 h-auto hover:bg-transparent hover:text-secondary group-hover:gap-3 transition-all">
+                    Explore Courses <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
               </div>
             </motion.div>
           ))}
