@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -28,6 +29,7 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -55,6 +57,26 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    };
+  }, []);
+
+  const handleDropdownEnter = useCallback(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setDropdownOpen(true);
+  }, []);
+
+  const handleDropdownLeave = useCallback(() => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setDropdownOpen(false);
+    }, 400);
+  }, []);
+
   const handleNavClick = (href: string) => {
     setIsOpen(false);
     setMobileDropdownOpen(false);
@@ -70,7 +92,6 @@ const Navbar = () => {
   const renderLink = (link: typeof navLinks[0], mobile = false) => {
     const cls = mobile ? mobileLinkClass : linkClass;
 
-    // Dropdown
     if (link.children) {
       if (mobile) {
         return (
@@ -79,17 +100,24 @@ const Navbar = () => {
               className={`${mobileLinkClass} flex items-center gap-1 w-full`}
               onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
             >
-              {link.label} <ChevronDown className={`w-4 h-4 transition-transform ${mobileDropdownOpen ? "rotate-180" : ""}`} />
+              {link.label} <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${mobileDropdownOpen ? "rotate-180" : ""}`} />
             </button>
-            {mobileDropdownOpen && (
-              <div className="pl-4 space-y-1">
-                {link.children.map((child) => (
-                  <Link key={child.label} to={child.href} className={mobileLinkClass} onClick={() => handleNavClick(child.href)}>
-                    {child.label}
-                  </Link>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {mobileDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="pl-4 space-y-1 overflow-hidden"
+                >
+                  {link.children.map((child) => (
+                    <Link key={child.label} to={child.href} className={mobileLinkClass} onClick={() => handleNavClick(child.href)}>
+                      {child.label}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         );
       }
@@ -98,31 +126,43 @@ const Navbar = () => {
           key={link.label}
           className="relative"
           ref={dropdownRef}
-          onMouseEnter={() => setDropdownOpen(true)}
-          onMouseLeave={() => setDropdownOpen(false)}
+          onMouseEnter={handleDropdownEnter}
+          onMouseLeave={handleDropdownLeave}
         >
-          <button className={`${cls} flex items-center gap-1`}>
-            {link.label} <ChevronDown className={`w-3.5 h-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+          <button
+            className={`${cls} flex items-center gap-1`}
+            onClick={() => setDropdownOpen((prev) => !prev)}
+          >
+            {link.label} <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
           </button>
-          {dropdownOpen && (
-            <div className="absolute top-full left-0 mt-2 w-56 bg-background rounded-xl border border-border card-shadow py-2 z-50">
-              {link.children.map((child) => (
-                <Link
-                  key={child.label}
-                  to={child.href}
-                  className="block px-4 py-2.5 text-sm text-muted-foreground hover:text-primary hover:bg-accent transition-colors"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  {child.label}
-                </Link>
-              ))}
-            </div>
-          )}
+          <AnimatePresence>
+            {dropdownOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute top-full left-0 mt-1 pt-2"
+              >
+                <div className="w-60 bg-background rounded-xl border border-border card-shadow py-2 z-50">
+                  {link.children.map((child) => (
+                    <Link
+                      key={child.label}
+                      to={child.href}
+                      className="block px-5 py-3 text-sm text-muted-foreground hover:text-primary hover:bg-accent/60 transition-colors"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       );
     }
 
-    // Hash link
     if (link.href.startsWith("/#")) {
       if (location.pathname === "/") {
         return (
@@ -135,7 +175,6 @@ const Navbar = () => {
       return <Link key={link.label} to={link.href} className={cls} onClick={() => setIsOpen(false)}>{link.label}</Link>;
     }
 
-    // Regular link
     const isActive = location.pathname === link.href;
     return (
       <Link key={link.label} to={link.href} className={`${cls} ${isActive ? "!text-primary" : ""}`} onClick={() => setIsOpen(false)}>
@@ -166,12 +205,19 @@ const Navbar = () => {
         </button>
       </div>
 
-      {isOpen && (
-        <div className="md:hidden bg-background border-b border-border px-4 pb-4">
-          {navLinks.map((link) => renderLink(link, true))}
-          <Button variant="cta" className="w-full mt-2">Book Free Demo</Button>
-        </div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-background border-b border-border px-4 pb-4 overflow-hidden"
+          >
+            {navLinks.map((link) => renderLink(link, true))}
+            <Button variant="cta" className="w-full mt-2">Book Free Demo</Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

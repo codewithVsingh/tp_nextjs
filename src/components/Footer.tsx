@@ -31,6 +31,7 @@ const Footer = () => {
               <li><Link to="/counselling/student" className="hover:text-primary-foreground transition-colors">Student Counselling</Link></li>
               <li><Link to="/counselling/parent" className="hover:text-primary-foreground transition-colors">Parent Counselling</Link></li>
               <li><Link to="/counselling/personal" className="hover:text-primary-foreground transition-colors">Personal Counselling</Link></li>
+              <li><Link to="/faq" className="hover:text-primary-foreground transition-colors">FAQs</Link></li>
             </ul>
           </div>
 
@@ -66,8 +67,9 @@ const Footer = () => {
             {/* Trust badges */}
             <div className="mt-6 flex flex-wrap gap-3">
               <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">✅ Verified Tutors</span>
-              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">500+ Students</span>
-              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">⭐ 4.8 Rating</span>
+              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">👨‍🎓 8500+ Students</span>
+              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">⭐ 4.8 Average Rating</span>
+              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">📍 Serving Delhi NCR</span>
             </div>
           </div>
         </div>
