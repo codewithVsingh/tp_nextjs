@@ -31,7 +31,7 @@ const Footer = () => {
               <li><Link to="/counselling/student" className="hover:text-primary-foreground transition-colors">Student Counselling</Link></li>
               <li><Link to="/counselling/parent" className="hover:text-primary-foreground transition-colors">Parent Counselling</Link></li>
               <li><Link to="/counselling/personal" className="hover:text-primary-foreground transition-colors">Personal Counselling</Link></li>
-              <li><Link to="/faq" className="hover:text-primary-foreground transition-colors">FAQs</Link></li>
+              <li><a href="/faq" target="_blank" rel="noopener noreferrer" className="hover:text-primary-foreground transition-colors">FAQs</a></li>
             </ul>
           </div>
 
