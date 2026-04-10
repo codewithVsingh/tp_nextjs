@@ -1,5 +1,40 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+
+const footerSeoSections = [
+  {
+    title: "Tutors By Language",
+    items: [
+      "French Home Tutor in Delhi",
+      "German Home Tutor in Delhi",
+      "Spanish Home Tutor in Delhi",
+      "Hindi Home Tutor in Delhi",
+      "English Speaking Tutor in Delhi",
+    ],
+  },
+  {
+    title: "Tutors By Location",
+    items: [
+      "Home Tutor in South Delhi",
+      "Home Tutor in North Delhi",
+      "Home Tutor in East Delhi",
+      "Home Tutor in West Delhi",
+      "Home Tutor in Dwarka",
+      "Home Tutor in Rohini",
+    ],
+  },
+  {
+    title: "Tutors By Subject",
+    items: [
+      "Maths Home Tutor in Delhi",
+      "Science Home Tutor in Delhi",
+      "Physics Home Tutor in Delhi",
+      "Chemistry Home Tutor in Delhi",
+      "English Home Tutor in Delhi",
+      "Accounts Home Tutor in Delhi",
+    ],
+  },
+];
 
 const Footer = () => {
   return (
@@ -35,7 +70,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Courses & Resources */}
+          {/* Our Programs */}
           <div>
             <h4 className="font-heading font-semibold text-primary-foreground mb-4">Our Programs</h4>
             <ul className="space-y-2 text-sm">
@@ -64,7 +99,6 @@ const Footer = () => {
                 <span>New Delhi, India</span>
               </li>
             </ul>
-            {/* Trust badges */}
             <div className="mt-6 flex flex-wrap gap-3">
               <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">✅ Verified Tutors</span>
               <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">👨‍🎓 8500+ Students</span>
@@ -74,8 +108,36 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* SEO block */}
-        <div className="border-t border-primary-foreground/10 pt-8 mt-8">
+        {/* SEO Link Sections */}
+        <div className="border-t border-primary-foreground/10 pt-8 mb-8">
+          <div className="grid sm:grid-cols-3 gap-8">
+            {footerSeoSections.map((section) => (
+              <div key={section.title}>
+                <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-3">
+                  {section.title}
+                </h4>
+                <ul className="space-y-1.5 text-xs">
+                  {section.items.map((item) => (
+                    <li key={item}>
+                      <span className="flex items-center gap-1.5 hover:text-primary-foreground transition-colors cursor-default">
+                        <ArrowRight className="w-3 h-3 text-secondary shrink-0" />
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                  <li>
+                    <span className="inline-flex items-center gap-1 mt-1 text-secondary font-semibold cursor-default">
+                      View All →
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-primary-foreground/10 pt-8">
           <p className="text-xs text-primary-foreground/50 text-center max-w-3xl mx-auto mb-6">
             Tutors Parliament is Delhi's leading tutoring platform offering expert home tutors, online tuition classes for CBSE, ICSE, State Boards, JEE, NEET preparation, and professional counselling services. Find the best private tutors in Delhi NCR for personalized learning and academic excellence. We serve students from KG to Class 12 with online and offline coaching across all subjects.
           </p>
