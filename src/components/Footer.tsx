@@ -5,33 +5,33 @@ const footerSeoSections = [
   {
     title: "Tutors By Language",
     items: [
-      "French Home Tutor in Delhi",
-      "German Home Tutor in Delhi",
-      "Spanish Home Tutor in Delhi",
-      "Hindi Home Tutor in Delhi",
-      "English Speaking Tutor in Delhi",
+      { label: "French Home Tutor in Delhi", slug: "french-delhi" },
+      { label: "German Home Tutor in Delhi", slug: "german-delhi" },
+      { label: "Spanish Home Tutor in Delhi", slug: "spanish-delhi" },
+      { label: "Hindi Home Tutor in Delhi", slug: "hindi-delhi" },
+      { label: "English Speaking Tutor in Delhi", slug: "english-delhi" },
     ],
   },
   {
     title: "Tutors By Location",
     items: [
-      "Home Tutor in South Delhi",
-      "Home Tutor in North Delhi",
-      "Home Tutor in East Delhi",
-      "Home Tutor in West Delhi",
-      "Home Tutor in Dwarka",
-      "Home Tutor in Rohini",
+      { label: "Home Tutor in South Delhi", slug: "south-delhi-delhi" },
+      { label: "Home Tutor in North Delhi", slug: "north-delhi-delhi" },
+      { label: "Home Tutor in East Delhi", slug: "east-delhi-delhi" },
+      { label: "Home Tutor in West Delhi", slug: "west-delhi-delhi" },
+      { label: "Home Tutor in Dwarka", slug: "dwarka-delhi" },
+      { label: "Home Tutor in Rohini", slug: "rohini-delhi" },
     ],
   },
   {
     title: "Tutors By Subject",
     items: [
-      "Maths Home Tutor in Delhi",
-      "Science Home Tutor in Delhi",
-      "Physics Home Tutor in Delhi",
-      "Chemistry Home Tutor in Delhi",
-      "English Home Tutor in Delhi",
-      "Accounts Home Tutor in Delhi",
+      { label: "Maths Home Tutor in Delhi", slug: "math-delhi" },
+      { label: "Science Home Tutor in Delhi", slug: "science-delhi" },
+      { label: "Physics Home Tutor in Delhi", slug: "physics-delhi" },
+      { label: "Chemistry Home Tutor in Delhi", slug: "chemistry-delhi" },
+      { label: "English Home Tutor in Delhi", slug: "english-delhi" },
+      { label: "Accounts Home Tutor in Delhi", slug: "accounts-delhi" },
     ],
   },
 ];
@@ -118,18 +118,13 @@ const Footer = () => {
                 </h4>
                 <ul className="space-y-1.5 text-xs">
                   {section.items.map((item) => (
-                    <li key={item}>
-                      <span className="flex items-center gap-1.5 hover:text-primary-foreground transition-colors cursor-default">
+                    <li key={item.slug}>
+                      <Link to={`/tutors/${item.slug}`} className="flex items-center gap-1.5 hover:text-primary-foreground transition-colors">
                         <ArrowRight className="w-3 h-3 text-secondary shrink-0" />
-                        {item}
-                      </span>
+                        {item.label}
+                      </Link>
                     </li>
                   ))}
-                  <li>
-                    <span className="inline-flex items-center gap-1 mt-1 text-secondary font-semibold cursor-default">
-                      View All →
-                    </span>
-                  </li>
                 </ul>
               </div>
             ))}
