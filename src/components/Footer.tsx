@@ -118,18 +118,13 @@ const Footer = () => {
                 </h4>
                 <ul className="space-y-1.5 text-xs">
                   {section.items.map((item) => (
-                    <li key={item}>
-                      <span className="flex items-center gap-1.5 hover:text-primary-foreground transition-colors cursor-default">
+                    <li key={item.slug}>
+                      <Link to={`/tutors/${item.slug}`} className="flex items-center gap-1.5 hover:text-primary-foreground transition-colors">
                         <ArrowRight className="w-3 h-3 text-secondary shrink-0" />
-                        {item}
-                      </span>
+                        {item.label}
+                      </Link>
                     </li>
                   ))}
-                  <li>
-                    <span className="inline-flex items-center gap-1 mt-1 text-secondary font-semibold cursor-default">
-                      View All →
-                    </span>
-                  </li>
                 </ul>
               </div>
             ))}
