@@ -16,6 +16,7 @@ const StudentCounselling = lazy(() => import("./pages/StudentCounselling.tsx"));
 const ParentCounselling = lazy(() => import("./pages/ParentCounselling.tsx"));
 const PersonalCounselling = lazy(() => import("./pages/PersonalCounselling.tsx"));
 const FAQ = lazy(() => import("./pages/FAQ.tsx"));
+const TutorSeoPage = lazy(() => import("./pages/TutorSeoPage.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/faq" element={<FAQ />} />
+              <Route path="/tutors/:slug" element={<TutorSeoPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
