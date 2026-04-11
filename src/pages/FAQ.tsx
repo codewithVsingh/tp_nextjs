@@ -191,8 +191,8 @@ const FAQ = () => (
             <a href="/#contact" className="inline-flex items-center justify-center rounded-xl bg-primary text-primary-foreground px-8 py-3 font-semibold hover:opacity-90 transition-opacity">
               Contact Us
             </a>
-            <a href="/#contact" className="inline-flex items-center justify-center rounded-xl border border-border bg-background text-foreground px-8 py-3 font-semibold hover:bg-accent transition-colors">
-              Book Free Demo
+            <a href="/demo-booking" className="inline-flex items-center justify-center rounded-xl border border-border bg-background text-foreground px-8 py-3 font-semibold hover:bg-accent transition-colors">
+              Start Free Demo
             </a>
           </div>
         </div>

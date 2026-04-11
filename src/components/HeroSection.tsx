@@ -1,48 +1,31 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, CheckCircle, AlertCircle } from "lucide-react";
+import { Star, CheckCircle, Users, Clock } from "lucide-react";
 import heroImage from "@/assets/hero-students.jpg";
 
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-}
-
 const HeroSection = () => {
-  const [formData, setFormData] = useState<FormData>({ name: "", email: "", phone: "" });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const validate = (): boolean => {
-    const newErrors: Partial<FormData> = {};
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Valid email is required";
-    if (!formData.phone.trim() || formData.phone.replace(/\D/g, "").length < 10) newErrors.phone = "Valid phone number is required";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!phone.trim() || phone.replace(/\D/g, "").length < 10) {
+      setError("Please enter a valid phone number");
+      return;
+    }
+    const params = new URLSearchParams();
+    params.set("phone", phone.trim());
+    if (name.trim()) params.set("name", name.trim());
+    navigate(`/demo-booking?${params.toString()}`);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    setStatus("loading");
-    try {
-      // Ready for Formspree or API integration
-      // const res = await fetch("https://formspree.io/f/YOUR_FORM_ID", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(formData),
-      // });
-      // if (!res.ok) throw new Error("Failed");
-      await new Promise((r) => setTimeout(r, 1000)); // Simulated
-      setStatus("success");
-      setFormData({ name: "", email: "", phone: "" });
-    } catch {
-      setStatus("error");
-    }
+  const handleCTAClick = () => {
+    navigate("/demo-booking");
   };
 
   return (
@@ -86,12 +69,25 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="lg" className="text-base px-8 py-6">
-                Book Free Demo
+              <Button variant="hero" size="lg" className="text-base px-8 py-6" onClick={handleCTAClick}>
+                Start Free Demo
               </Button>
-              <Button variant="hero-outline" size="lg" className="text-base px-8 py-6">
-                Explore Courses
+              <Button variant="hero-outline" size="lg" className="text-base px-8 py-6" asChild>
+                <a href="/courses">Explore Courses</a>
               </Button>
+            </div>
+
+            {/* Trust signals */}
+            <div className="flex flex-wrap gap-4 mt-6">
+              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm">
+                <Users className="w-4 h-4" /> 10,000+ students
+              </span>
+              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm">
+                <Clock className="w-4 h-4" /> Free demo in 24 hrs
+              </span>
+              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm">
+                <CheckCircle className="w-4 h-4" /> Verified tutors
+              </span>
             </div>
           </motion.div>
 
@@ -103,65 +99,37 @@ const HeroSection = () => {
           >
             <div className="bg-background rounded-2xl p-8 card-shadow max-w-md ml-auto">
               <h3 className="font-heading font-bold text-xl text-foreground mb-2">
-                Get Started for Free
+                Find the Right Tutor
               </h3>
               <p className="text-muted-foreground text-sm mb-6">
-                Book your free demo class today
+                Enter your number — we'll match you with the perfect tutor
               </p>
 
-              {status === "success" ? (
-                <div className="flex flex-col items-center gap-3 py-8">
-                  <CheckCircle className="w-12 h-12 text-secondary" />
-                  <p className="font-heading font-semibold text-foreground">Thank you!</p>
-                  <p className="text-muted-foreground text-sm text-center">We'll contact you shortly to schedule your free demo.</p>
-                  <Button variant="ghost" className="mt-2 text-primary" onClick={() => setStatus("idle")}>
-                    Submit Another
-                  </Button>
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <div>
+                  <Input
+                    placeholder="Your Name (optional)"
+                    className="h-12 rounded-lg"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </div>
-              ) : (
-                <form className="space-y-4" onSubmit={handleSubmit}>
-                  <div>
-                    <Input
-                      placeholder="Your Name"
-                      className={`h-12 rounded-lg ${errors.name ? "border-destructive" : ""}`}
-                      value={formData.name}
-                      onChange={(e) => { setFormData({ ...formData, name: e.target.value }); setErrors({ ...errors, name: undefined }); }}
-                    />
-                    {errors.name && <p className="text-destructive text-xs mt-1">{errors.name}</p>}
-                  </div>
-                  <div>
-                    <Input
-                      placeholder="Email Address"
-                      type="email"
-                      className={`h-12 rounded-lg ${errors.email ? "border-destructive" : ""}`}
-                      value={formData.email}
-                      onChange={(e) => { setFormData({ ...formData, email: e.target.value }); setErrors({ ...errors, email: undefined }); }}
-                    />
-                    {errors.email && <p className="text-destructive text-xs mt-1">{errors.email}</p>}
-                  </div>
-                  <div>
-                    <Input
-                      placeholder="Phone Number"
-                      type="tel"
-                      className={`h-12 rounded-lg ${errors.phone ? "border-destructive" : ""}`}
-                      value={formData.phone}
-                      onChange={(e) => { setFormData({ ...formData, phone: e.target.value }); setErrors({ ...errors, phone: undefined }); }}
-                    />
-                    {errors.phone && <p className="text-destructive text-xs mt-1">{errors.phone}</p>}
-                  </div>
-                  {status === "error" && (
-                    <div className="flex items-center gap-2 text-destructive text-sm">
-                      <AlertCircle className="w-4 h-4" />
-                      <span>Something went wrong. Please try again.</span>
-                    </div>
-                  )}
-                  <Button variant="cta" className="w-full h-12 text-base" disabled={status === "loading"}>
-                    {status === "loading" ? "Submitting..." : "Book Free Demo"}
-                  </Button>
-                </form>
-              )}
+                <div>
+                  <Input
+                    placeholder="Phone Number *"
+                    type="tel"
+                    className={`h-12 rounded-lg ${error ? "border-destructive" : ""}`}
+                    value={phone}
+                    onChange={(e) => { setPhone(e.target.value); setError(""); }}
+                  />
+                  {error && <p className="text-destructive text-xs mt-1">{error}</p>}
+                </div>
+                <Button variant="cta" className="w-full h-12 text-base">
+                  Continue
+                </Button>
+              </form>
               <p className="text-xs text-muted-foreground mt-4 text-center">
-                No credit card required • Free consultation
+                ⚡ Takes less than 30 seconds
               </p>
             </div>
           </motion.div>

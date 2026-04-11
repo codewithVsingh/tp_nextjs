@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -31,6 +31,7 @@ const Navbar = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -197,7 +198,7 @@ const Navbar = () => {
 
         <div className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => renderLink(link))}
-          <Button variant="cta" size="lg">Book Free Demo</Button>
+          <Button variant="cta" size="lg" onClick={() => navigate("/demo-booking")}>Start Free Demo</Button>
         </div>
 
         <button className="md:hidden text-foreground" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
@@ -214,7 +215,7 @@ const Navbar = () => {
             className="md:hidden bg-background border-b border-border px-4 pb-4 overflow-hidden"
           >
             {navLinks.map((link) => renderLink(link, true))}
-            <Button variant="cta" className="w-full mt-2">Book Free Demo</Button>
+            <Button variant="cta" className="w-full mt-2" onClick={() => { setIsOpen(false); navigate("/demo-booking"); }}>Start Free Demo</Button>
           </motion.div>
         )}
       </AnimatePresence>

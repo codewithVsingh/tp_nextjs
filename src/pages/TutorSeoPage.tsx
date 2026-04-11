@@ -164,11 +164,11 @@ const TutorSeoPage = () => {
               transition={{ delay: 0.2 }}
               className="flex flex-wrap gap-4 justify-center"
             >
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                Book Free Demo Class
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
+                <Link to="/demo-booking">Start Free Demo</Link>
               </Button>
-              <Button size="lg" variant="outline">
-                Call: +91 XXXXXXXXXX
+              <Button size="lg" variant="outline" asChild>
+                <a href="tel:+919873101564">Call: +91-9873101564</a>
               </Button>
             </motion.div>
 
@@ -288,8 +288,8 @@ const TutorSeoPage = () => {
             <p className="opacity-90 mb-6">
               Book a free demo class and experience personalized tutoring with Tutors Parliament.
             </p>
-            <Button size="lg" variant="secondary">
-              Book Free Demo Class
+            <Button size="lg" variant="secondary" asChild>
+              <Link to="/demo-booking">Start Free Demo</Link>
             </Button>
           </div>
         </section>

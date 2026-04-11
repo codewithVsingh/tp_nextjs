@@ -283,8 +283,8 @@ const AboutUs = () => {
               <p className="text-primary-foreground/80 text-lg mb-8 max-w-xl mx-auto">
                 Join 10,000+ students who trust Tutors Parliament for their academic success.
               </p>
-              <Button variant="hero" size="lg" className="text-base px-10 py-6">
-                Book Free Demo
+              <Button variant="hero" size="lg" className="text-base px-10 py-6" asChild>
+                <a href="/demo-booking">Start Free Demo</a>
               </Button>
             </motion.div>
           </div>

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { CalendarCheck, Users, BookOpen, BarChart3 } from "lucide-react";
 
 const steps = [
-  { icon: CalendarCheck, title: "Book Demo", description: "Schedule a free consultation with our team." },
+  { icon: CalendarCheck, title: "Start Free Demo", description: "Schedule a free consultation with our team." },
   { icon: Users, title: "Get Matched", description: "We pair you with the perfect tutor for your goals." },
   { icon: BookOpen, title: "Start Learning", description: "Begin your personalized learning journey." },
   { icon: BarChart3, title: "Track Progress", description: "Monitor improvements with detailed analytics." },
