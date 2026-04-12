@@ -80,6 +80,17 @@ export const intentModifiers = [
   { slug: "home-vs-online", name: "Home vs Online", label: "Home vs Online Tuition" },
 ] as const;
 
+export const examTypes = [
+  { slug: "jee", name: "JEE" },
+  { slug: "neet", name: "NEET" },
+  { slug: "cuet", name: "CUET" },
+  { slug: "ntse", name: "NTSE" },
+  { slug: "olympiad", name: "Olympiad" },
+  { slug: "navodaya", name: "Navodaya (JNVST)" },
+  { slug: "sainik-school", name: "Sainik School" },
+];
+function findExam(s: string) { return examTypes.find(e => e.slug === s); }
+
 export type IntentModifier = typeof intentModifiers[number];
 
 export type PageType =
