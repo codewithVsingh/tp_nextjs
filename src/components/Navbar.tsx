@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import TutorRegistrationModal from "./TutorRegistrationModal";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -28,6 +29,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const [tutorModalOpen, setTutorModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const location = useLocation();
@@ -196,8 +198,9 @@ const Navbar = () => {
           </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-4">
           {navLinks.map((link) => renderLink(link))}
+          <Button variant="outline" size="sm" onClick={() => setTutorModalOpen(true)}>Become a Tutor</Button>
           <Button variant="cta" size="lg" onClick={() => navigate("/demo-booking")}>Start Free Demo</Button>
         </div>
 
@@ -215,10 +218,20 @@ const Navbar = () => {
             className="md:hidden bg-background border-b border-border px-4 pb-4 overflow-hidden"
           >
             {navLinks.map((link) => renderLink(link, true))}
+            <Button variant="outline" className="w-full mt-2" onClick={() => { setIsOpen(false); setTutorModalOpen(true); }}>Become a Tutor</Button>
             <Button variant="cta" className="w-full mt-2" onClick={() => { setIsOpen(false); navigate("/demo-booking"); }}>Start Free Demo</Button>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Sticky Mobile CTA */}
+      <div className="fixed bottom-4 left-4 right-4 z-40 md:hidden">
+        <Button variant="cta" className="w-full shadow-xl" onClick={() => setTutorModalOpen(true)}>
+          Teach & Earn 💰
+        </Button>
+      </div>
+
+      <TutorRegistrationModal open={tutorModalOpen} onOpenChange={setTutorModalOpen} />
     </nav>
   );
 };
