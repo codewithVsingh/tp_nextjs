@@ -27,11 +27,13 @@ const QUALIFICATIONS = ["12th Pass", "Undergraduate", "Graduate", "Post Graduate
 const EXPERIENCE_OPTIONS = ["0–1 years", "1–3 years", "3–5 years", "5+ years"];
 const STATUS_OPTIONS = ["Student", "Working Professional", "Full-time Tutor"];
 const CITIES = ["Delhi", "Noida", "Gurgaon", "Faridabad", "Ghaziabad"];
+const STATES = ["Delhi", "Haryana", "Uttar Pradesh", "Rajasthan", "Punjab", "Maharashtra", "Karnataka", "Tamil Nadu", "West Bengal", "Bihar", "Madhya Pradesh"];
 
 interface FormData {
   name: string;
   phone: string;
   email: string;
+  state: string;
   city: string;
   pincode: string;
   subjects: string[];
