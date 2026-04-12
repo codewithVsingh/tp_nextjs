@@ -1,49 +1,61 @@
-import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
-const footerSeoSections = [
+const seoSections = [
   {
-    title: "Tutors By Language",
-    items: [
-      { label: "French Home Tutor in Delhi", slug: "french-delhi" },
-      { label: "German Home Tutor in Delhi", slug: "german-delhi" },
-      { label: "Spanish Home Tutor in Delhi", slug: "spanish-delhi" },
-      { label: "Hindi Home Tutor in Delhi", slug: "hindi-delhi" },
-      { label: "English Speaking Tutor in Delhi", slug: "english-delhi" },
-    ],
-  },
-  {
-    title: "Tutors By Location",
+    id: "locations",
+    title: "Tutors by Location",
     items: [
       { label: "Home Tutor in South Delhi", slug: "south-delhi-delhi" },
       { label: "Home Tutor in North Delhi", slug: "north-delhi-delhi" },
-      { label: "Home Tutor in East Delhi", slug: "east-delhi-delhi" },
       { label: "Home Tutor in West Delhi", slug: "west-delhi-delhi" },
       { label: "Home Tutor in Dwarka", slug: "dwarka-delhi" },
       { label: "Home Tutor in Rohini", slug: "rohini-delhi" },
     ],
+    viewAllLabel: "View All Locations",
+    viewAllLink: "/courses",
   },
   {
-    title: "Tutors By Subject",
+    id: "subjects",
+    title: "Tutors by Subject",
     items: [
-      { label: "Maths Home Tutor in Delhi", slug: "math-delhi" },
-      { label: "Science Home Tutor in Delhi", slug: "science-delhi" },
-      { label: "Physics Home Tutor in Delhi", slug: "physics-delhi" },
-      { label: "Chemistry Home Tutor in Delhi", slug: "chemistry-delhi" },
-      { label: "English Home Tutor in Delhi", slug: "english-delhi" },
-      { label: "Accounts Home Tutor in Delhi", slug: "accounts-delhi" },
+      { label: "Maths Home Tutor", slug: "math-delhi" },
+      { label: "Science Home Tutor", slug: "science-delhi" },
+      { label: "Physics Home Tutor", slug: "physics-delhi" },
+      { label: "Chemistry Home Tutor", slug: "chemistry-delhi" },
     ],
+    viewAllLabel: "View All Subjects",
+    viewAllLink: "/courses",
+  },
+  {
+    id: "languages",
+    title: "Tutors by Language",
+    items: [
+      { label: "French Tutor", slug: "french-delhi" },
+      { label: "German Tutor", slug: "german-delhi" },
+      { label: "Spanish Tutor", slug: "spanish-delhi" },
+    ],
+    viewAllLabel: "View All Languages",
+    viewAllLink: "/courses",
   },
 ];
 
 const Footer = () => {
   return (
-    <footer id="contact" className="bg-foreground text-primary-foreground/80 section-padding pb-8">
-      <div className="container mx-auto">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          {/* Brand */}
-          <div>
-            <Link to="/" className="flex items-center gap-2 mb-4">
+    <footer id="contact" className="bg-foreground text-primary-foreground/70">
+      {/* Top: Brand + Trust + CTA */}
+      <div className="container mx-auto px-4 py-12 md:py-16">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 mb-12">
+          {/* Left: Brand */}
+          <div className="max-w-md">
+            <Link to="/" className="flex items-center gap-2.5 mb-3">
               <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-lg">T</span>
               </div>
@@ -52,92 +64,129 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-sm leading-relaxed">
-              Delhi's trusted tutoring platform connecting students with expert educators for personalized learning, board exam preparation, and career counselling.
+              Delhi's trusted platform for home &amp; online tutors, exam prep, and counselling.
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-heading font-semibold text-primary-foreground mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/" className="hover:text-primary-foreground transition-colors">Home</Link></li>
-              <li><Link to="/about" className="hover:text-primary-foreground transition-colors">About Us</Link></li>
-              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Courses</Link></li>
-              <li><Link to="/counselling/student" className="hover:text-primary-foreground transition-colors">Student Counselling</Link></li>
-              <li><Link to="/counselling/parent" className="hover:text-primary-foreground transition-colors">Parent Counselling</Link></li>
-              <li><Link to="/counselling/personal" className="hover:text-primary-foreground transition-colors">Personal Counselling</Link></li>
-              <li><a href="/faq" target="_blank" rel="noopener noreferrer" className="hover:text-primary-foreground transition-colors">FAQs</a></li>
-            </ul>
-          </div>
-
-          {/* Our Programs */}
-          <div>
-            <h4 className="font-heading font-semibold text-primary-foreground mb-4">Our Programs</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">CBSE Tuition</Link></li>
-              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">ICSE Coaching</Link></li>
-              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">JEE / NEET Prep</Link></li>
-              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Spoken English</Link></li>
-              <li><Link to="/blog" className="hover:text-primary-foreground transition-colors">📝 Blog & Articles</Link></li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h4 className="font-heading font-semibold text-primary-foreground mb-4">Contact Us</h4>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-secondary" />
-                <span>info@tutorsparliament.com</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-secondary" />
-                <a href="tel:+919873101564" className="hover:text-primary-foreground transition-colors">+91-9873101564</a>
-              </li>
-              <li className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-secondary mt-0.5" />
-                <span>New Delhi, India</span>
-              </li>
-            </ul>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">✅ Verified Tutors</span>
-              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">👨‍🎓 8500+ Students</span>
-              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">⭐ 4.8 Average Rating</span>
-              <span className="text-xs bg-primary-foreground/10 px-3 py-1.5 rounded-full">📍 Serving Delhi NCR</span>
+          {/* Right: Trust + CTAs */}
+          <div className="flex flex-col items-start lg:items-end gap-5">
+            <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-primary-foreground/60">
+              <span>✔ 8500+ Students</span>
+              <span>✔ Verified Tutors</span>
+              <span>✔ 4.8 Rating</span>
+              <span>✔ Serving Delhi NCR</span>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="cta" size="sm" asChild>
+                <Link to="/demo">Find a Tutor</Link>
+              </Button>
+              <Button variant="hero-outline" size="sm" asChild>
+                <Link to="/become-a-tutor">Become a Tutor</Link>
+              </Button>
             </div>
           </div>
         </div>
 
-        {/* SEO Link Sections */}
-        <div className="border-t border-primary-foreground/10 pt-8 mb-8">
-          <div className="grid sm:grid-cols-3 gap-8">
-            {footerSeoSections.map((section) => (
-              <div key={section.title}>
-                <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-3">
-                  {section.title}
-                </h4>
-                <ul className="space-y-1.5 text-xs">
+        {/* Divider */}
+        <div className="border-t border-primary-foreground/10 mb-10" />
+
+        {/* Middle: 3 columns + Contact */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
+          <div>
+            <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-4">Explore</h4>
+            <ul className="space-y-2.5 text-sm">
+              <li><Link to="/" className="hover:text-primary-foreground transition-colors">Home</Link></li>
+              <li><Link to="/about" className="hover:text-primary-foreground transition-colors">About Us</Link></li>
+              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Courses</Link></li>
+              <li><Link to="/blog" className="hover:text-primary-foreground transition-colors">Blog</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-4">Services</h4>
+            <ul className="space-y-2.5 text-sm">
+              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Home Tuition</Link></li>
+              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Online Tuition</Link></li>
+              <li><Link to="/counselling/student" className="hover:text-primary-foreground transition-colors">Counselling</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-4">Support</h4>
+            <ul className="space-y-2.5 text-sm">
+              <li><Link to="/faq" className="hover:text-primary-foreground transition-colors">FAQs</Link></li>
+              <li><a href="mailto:info@tutorsparliament.com" className="hover:text-primary-foreground transition-colors">Contact Us</a></li>
+              <li><span className="cursor-default">Privacy Policy</span></li>
+              <li><span className="cursor-default">Terms &amp; Conditions</span></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-4">Contact</h4>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-secondary shrink-0" />
+                <span>info@tutorsparliament.com</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-secondary shrink-0" />
+                <a href="tel:+919873101564" className="hover:text-primary-foreground transition-colors">+91-9873101564</a>
+              </li>
+              <li className="flex items-start gap-2">
+                <MapPin className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
+                <span>New Delhi, India</span>
+              </li>
+            </ul>
+            <a
+              href="https://wa.me/919873101564?text=Hi%2C%20I%27m%20interested%20in%20learning%20more%20about%20Tutors%20Parliament"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-4 text-xs font-medium text-primary-foreground bg-[#25D366]/20 hover:bg-[#25D366]/30 px-3 py-1.5 rounded-full transition-colors"
+            >
+              💬 Chat on WhatsApp
+            </a>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-primary-foreground/10 mb-8" />
+
+        {/* SEO Accordion */}
+        <Accordion type="multiple" className="mb-8">
+          {seoSections.map((section) => (
+            <AccordionItem key={section.id} value={section.id} className="border-primary-foreground/10">
+              <AccordionTrigger className="text-sm font-heading font-semibold text-primary-foreground/80 hover:text-primary-foreground hover:no-underline py-3">
+                {section.title}
+              </AccordionTrigger>
+              <AccordionContent>
+                <ul className="flex flex-wrap gap-x-6 gap-y-1.5 text-xs mb-2">
                   {section.items.map((item) => (
                     <li key={item.slug}>
-                      <Link to={`/tutors/${item.slug}`} className="flex items-center gap-1.5 hover:text-primary-foreground transition-colors">
+                      <Link
+                        to={`/tutors/${item.slug}`}
+                        className="flex items-center gap-1 hover:text-primary-foreground transition-colors"
+                      >
                         <ArrowRight className="w-3 h-3 text-secondary shrink-0" />
                         {item.label}
                       </Link>
                     </li>
                   ))}
                 </ul>
-              </div>
-            ))}
-          </div>
-        </div>
+                <Link
+                  to={section.viewAllLink}
+                  className="text-xs font-medium text-secondary hover:text-secondary/80 transition-colors"
+                >
+                  {section.viewAllLabel} →
+                </Link>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
 
-        {/* Bottom bar */}
-        <div className="border-t border-primary-foreground/10 pt-8">
-          <p className="text-xs text-primary-foreground/50 text-center max-w-3xl mx-auto mb-6">
-            Tutors Parliament is Delhi's leading tutoring platform offering expert home tutors, online tuition classes for CBSE, ICSE, State Boards, JEE, NEET preparation, and professional counselling services. Find the best private tutors in Delhi NCR for personalized learning and academic excellence. We serve students from KG to Class 12 with online and offline coaching across all subjects.
-          </p>
-          <p className="text-sm text-primary-foreground/50 text-center">
-            © {new Date().getFullYear()} Tutors Parliament. All rights reserved.
+        {/* Bottom strip */}
+        <div className="border-t border-primary-foreground/10 pt-6 text-center">
+          <p className="text-xs text-primary-foreground/40">
+            © {new Date().getFullYear()} Tutors Parliament · Serving Delhi NCR · All Rights Reserved
           </p>
         </div>
       </div>
