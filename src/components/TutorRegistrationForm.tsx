@@ -147,8 +147,9 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
       if (!form.name.trim()) e.name = "Name is required";
       if (!form.phone.match(/^[6-9]\d{9}$/)) e.phone = "Valid 10-digit mobile required";
       if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "Valid email required";
-      if (!form.city) e.city = "Select city";
       if (!form.pincode.match(/^\d{6}$/)) e.pincode = "Valid 6-digit pincode required";
+      if (!form.state) e.state = "State is required";
+      if (!form.city) e.city = "City is required";
     }
     if (s === 2) {
       if (form.subjects.length === 0) e.subjects = "Select at least one subject";
