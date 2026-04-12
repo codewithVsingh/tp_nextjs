@@ -1,5 +1,5 @@
-// ===== PROGRAMMATIC SEO DATASET =====
-// Extend arrays to auto-generate 500+ pages with ZERO per-page AI tokens
+// ===== PROGRAMMATIC SEO 2.0 DATASET =====
+// Generates 2,000+ high-intent pages dynamically via dimension combinations.
 
 export const areas = [
   { slug: "rohini", name: "Rohini", pincode: "110085" },
@@ -16,7 +16,6 @@ export const areas = [
   { slug: "north-delhi", name: "North Delhi", pincode: "110009" },
   { slug: "east-delhi", name: "East Delhi", pincode: "110096" },
   { slug: "west-delhi", name: "West Delhi", pincode: "110063" },
-  // High ROI sub-areas
   { slug: "saket", name: "Saket", pincode: "110017" },
   { slug: "malviya-nagar", name: "Malviya Nagar", pincode: "110017" },
   { slug: "hauz-khas", name: "Hauz Khas", pincode: "110016" },
@@ -67,7 +66,34 @@ export const classes = [
   { slug: "12", name: "12", label: "Class 12" },
 ];
 
-export type PageType = "subject" | "area" | "subject-area" | "area-tuition" | "area-pincode" | "subject-class-area" | "best-tutors-area";
+// ===== NEW DIMENSIONS =====
+export const boards = [
+  { slug: "cbse", name: "CBSE" },
+  { slug: "icse", name: "ICSE" },
+  { slug: "ib", name: "IB" },
+];
+
+export const intentModifiers = [
+  { slug: "fees", name: "Fees", label: "Tuition Fees" },
+  { slug: "female-tutors", name: "Female Tutors", label: "Female Tutors" },
+  { slug: "near-me", name: "Near Me", label: "Near Me" },
+  { slug: "home-vs-online", name: "Home vs Online", label: "Home vs Online Tuition" },
+] as const;
+
+export type IntentModifier = typeof intentModifiers[number];
+
+export type PageType =
+  | "subject" | "area" | "subject-area"
+  | "area-tuition" | "area-pincode"
+  | "subject-class-area" | "best-tutors-area"
+  // 2.0 types
+  | "subject-class-area-board"
+  | "subject-area-fees"
+  | "female-subject-area"
+  | "subject-near-me-class"
+  | "home-vs-online-area"
+  | "tuition-fees-area"   // money page
+  | "top-tutors-area";    // money page
 
 export interface SeoPageData {
   type: PageType;
@@ -75,45 +101,54 @@ export interface SeoPageData {
   subject?: { slug: string; name: string };
   area?: { slug: string; name: string; pincode: string };
   classLevel?: { slug: string; name: string; label: string };
+  board?: { slug: string; name: string };
+  intent?: string;
   keyword: string;
   title: string;
   metaDescription: string;
   h1: string;
+  isPillar?: boolean;       // cluster pillar page
+  isMoneyPage?: boolean;    // high-conversion money page
 }
 
-// Intro paragraph templates — rotated by index to reduce duplication
+// ===== HELPERS =====
+function findArea(s: string) { return areas.find(a => a.slug === s); }
+function findSubject(s: string) { return subjects.find(x => x.slug === s); }
+function findClass(s: string) { return classes.find(c => c.slug === s); }
+function findBoard(s: string) { return boards.find(b => b.slug === s); }
+
+// ===== INTRO / FAQ TEMPLATES (legacy compat) =====
 const introTemplates = [
   (kw: string, city: string, pincode?: string) =>
-    `Looking for the ${kw} in ${city}${pincode ? ` (${pincode})` : ""}? Tutors Parliament connects students with experienced, verified home tutors who deliver personalized learning. Whether your child needs help with board exams, competitive prep, or building a strong foundation — our tutors are ready to help.`,
+    `Looking for the ${kw} in ${city}${pincode ? ` (${pincode})` : ""}? Tutors Parliament connects students with experienced, verified home tutors who deliver personalized learning.`,
   (kw: string, city: string, pincode?: string) =>
-    `Tutors Parliament is your trusted source for ${kw} in ${city}${pincode ? ` (${pincode})` : ""}. Our handpicked educators specialize in CBSE, ICSE, and state board curricula, providing one-on-one attention that classroom teaching simply cannot match. Book a free demo class today.`,
+    `Tutors Parliament is your trusted source for ${kw} in ${city}${pincode ? ` (${pincode})` : ""}. Our handpicked educators specialize in CBSE, ICSE, and state board curricula.`,
   (kw: string, city: string, pincode?: string) =>
-    `Finding the right ${kw} in ${city}${pincode ? `, pincode ${pincode}` : ""} can be overwhelming. At Tutors Parliament, we make it simple — browse verified tutor profiles, check ratings, and schedule a free demo. Join 10,000+ students already learning with us across Delhi NCR.`,
+    `Finding the right ${kw} in ${city}${pincode ? `, pincode ${pincode}` : ""} can be overwhelming. At Tutors Parliament, we make it simple — browse verified tutor profiles and schedule a free demo.`,
   (kw: string, city: string, pincode?: string) =>
-    `Need a reliable ${kw} near ${city}${pincode ? ` (${pincode})` : ""}? Our platform matches you with qualified, background-verified tutors in your locality. Flexible timings, affordable fees, and a free demo class — start your child's learning journey today.`,
+    `Need a reliable ${kw} near ${city}${pincode ? ` (${pincode})` : ""}? Our platform matches you with qualified, background-verified tutors in your locality.`,
   (kw: string, city: string, pincode?: string) =>
-    `Discover top-rated ${kw} in ${city}${pincode ? ` — ${pincode}` : ""}. Tutors Parliament offers expert home tuition for all boards and competitive exams. Personalized attention, proven results, and a 4.8★ average rating from thousands of happy families.`,
+    `Discover top-rated ${kw} in ${city}${pincode ? ` — ${pincode}` : ""}. Tutors Parliament offers expert home tuition for all boards and competitive exams.`,
 ];
 
-// FAQ templates — each returns 4 Q&A pairs
 const faqTemplates = [
   (kw: string, area?: string, cls?: string) => [
-    { q: `How do I find the best ${kw}?`, a: `Tutors Parliament provides verified, experienced tutors${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}. Browse profiles, check ratings, and book a free demo to find the perfect match.` },
+    { q: `How do I find the best ${kw}?`, a: `Tutors Parliament provides verified, experienced tutors${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}. Browse profiles, check ratings, and book a free demo.` },
     { q: `What subjects are covered by ${kw}?`, a: `Our tutors cover all major subjects including Maths, Science, English, Hindi, Accounts, Economics, and more for CBSE, ICSE & state boards.` },
     { q: `Are demo classes available?`, a: `Yes! We offer a completely free demo class so you can evaluate the tutor's teaching style before committing.` },
-    { q: `What is the fee for ${kw}?`, a: `Fees vary based on subject, class, and experience level. Contact us for a personalized quote — we have options for every budget.` },
+    { q: `What is the fee for ${kw}?`, a: `Fees vary based on subject, class, and experience level. Contact us for a personalized quote.` },
   ],
   (kw: string, area?: string, cls?: string) => [
     { q: `Why choose Tutors Parliament for ${kw}?`, a: `With 10,000+ students, 4.8★ ratings, and verified tutors, Tutors Parliament is Delhi's most trusted home tuition platform${area ? ` serving ${area}` : ""}.` },
-    { q: `Do you provide online classes${cls ? ` for ${cls}` : ""}?`, a: `Yes, we offer both home tuition and online classes. Students can learn from anywhere with our flexible scheduling options.` },
-    { q: `How are tutors verified?`, a: `Every tutor goes through a rigorous screening process including background checks, qualification verification, and demo class evaluation.` },
-    { q: `Can I change my tutor?`, a: `Absolutely. If you're not satisfied, we'll assign a new tutor at no extra cost until you find the right fit.` },
+    { q: `Do you provide online classes${cls ? ` for ${cls}` : ""}?`, a: `Yes, we offer both home tuition and online classes with flexible scheduling options.` },
+    { q: `How are tutors verified?`, a: `Every tutor goes through rigorous screening including background checks, qualification verification, and demo class evaluation.` },
+    { q: `Can I change my tutor?`, a: `Absolutely. If you're not satisfied, we'll assign a new tutor at no extra cost.` },
   ],
   (kw: string, area?: string, cls?: string) => [
-    { q: `How quickly can I get a ${kw}?`, a: `We typically match you with a suitable tutor within 24–48 hours${area ? ` in ${area}` : ""}. Book a free demo to get started immediately.` },
+    { q: `How quickly can I get a ${kw}?`, a: `We typically match you with a suitable tutor within 24–48 hours${area ? ` in ${area}` : ""}.` },
     { q: `What boards do your tutors cover${area ? ` in ${area}` : ""}?`, a: `Our tutors are experienced in CBSE, ICSE, IGCSE, IB, and all state boards${cls ? ` for ${cls}` : ""}.` },
-    { q: `Is there a registration fee?`, a: `No, there is no registration fee. You only pay for the tuition sessions. Plus, the first demo class is completely free.` },
-    { q: `Do you offer group tuition${area ? ` in ${area}` : ""}?`, a: `We primarily focus on one-on-one home tuition for maximum attention, but small group sessions (2-3 students) can be arranged on request.` },
+    { q: `Is there a registration fee?`, a: `No registration fee. You only pay for tuition sessions. Plus, the first demo class is completely free.` },
+    { q: `Do you offer group tuition${area ? ` in ${area}` : ""}?`, a: `We primarily focus on one-on-one home tuition, but small group sessions (2-3 students) can be arranged on request.` },
   ],
 ];
 
@@ -127,205 +162,346 @@ export function getFaqs(keyword: string, area: string | undefined, index: number
 
 // ===== SLUG PARSERS =====
 
-// New URL patterns:
-// home-tuition-in-{area}
-// home-tuition-in-{area}-{pincode}
-// {subject}-tuition-in-{area}-class-{class}
-// best-home-tutors-in-{area}
-
-function findArea(areaSlug: string) {
-  return areas.find(a => a.slug === areaSlug);
-}
-function findSubject(subjSlug: string) {
-  return subjects.find(s => s.slug === subjSlug);
-}
-function findClass(clsSlug: string) {
-  return classes.find(c => c.slug === clsSlug);
-}
-
-export function parseNewSlug(slug: string): SeoPageData | null {
-  // Pattern: best-home-tutors-in-{area}
-  const bestMatch = slug.match(/^best-home-tutors-in-(.+)$/);
-  if (bestMatch) {
-    const area = findArea(bestMatch[1]);
+// ---- SEO 2.0 NEW PATTERNS ----
+export function parseSlug2(slug: string): SeoPageData | null {
+  // top-10-home-tutors-{area}
+  let m = slug.match(/^top-10-home-tutors-(.+)$/);
+  if (m) {
+    const area = findArea(m[1]);
     if (area) {
-      const keyword = `Best Home Tutors in ${area.name}`;
-      return {
-        type: "best-tutors-area",
-        slug,
-        area,
-        keyword,
-        title: `${keyword}, Delhi | Tutors Parliament`,
-        metaDescription: `Find the best home tutors in ${area.name}, Delhi (${area.pincode}). Verified tutors for all subjects and boards. Book a free demo today!`,
-        h1: keyword,
-      };
+      const kw = `Top 10 Home Tutors in ${area.name}`;
+      return { type: "top-tutors-area", slug, area, keyword: kw, isMoneyPage: true,
+        title: `Top 10 Home Tutors in ${area.name}, Delhi | Tutors Parliament`,
+        metaDescription: `Discover the top 10 home tutors in ${area.name}. Verified profiles, ratings & reviews. Book a free demo today!`,
+        h1: kw };
     }
   }
 
-  // Pattern: {subject}-tuition-in-{area}-class-{class}
-  const subClassMatch = slug.match(/^(.+)-tuition-in-(.+)-class-(.+)$/);
-  if (subClassMatch) {
-    const subj = findSubject(subClassMatch[1]);
-    const area = findArea(subClassMatch[2]);
-    const cls = findClass(subClassMatch[3]);
-    if (subj && area && cls) {
-      const keyword = `${subj.name} Tuition in ${area.name} for ${cls.label}`;
-      return {
-        type: "subject-class-area",
-        slug,
-        subject: subj,
-        area,
-        classLevel: cls,
-        keyword,
-        title: `${subj.name} Home Tuition in ${area.name} for ${cls.label} | Tutors Parliament`,
-        metaDescription: `Expert ${subj.name} home tuition in ${area.name} (${area.pincode}) for ${cls.label} students. CBSE/ICSE. Book a free demo today!`,
-        h1: `${subj.name} Home Tuition in ${area.name} for ${cls.label}`,
-      };
+  // home-tuition-fees-in-{area}
+  m = slug.match(/^home-tuition-fees-in-(.+)$/);
+  if (m) {
+    const area = findArea(m[1]);
+    if (area) {
+      const kw = `Home Tuition Fees in ${area.name}`;
+      return { type: "tuition-fees-area", slug, area, keyword: kw, intent: "fees", isMoneyPage: true,
+        title: `Home Tuition Fees in ${area.name} (2025) | Tutors Parliament`,
+        metaDescription: `Check home tuition fees in ${area.name}, Delhi. ₹300–₹800/hr. Affordable, transparent pricing. Book a free demo!`,
+        h1: `Home Tuition Fees in ${area.name}, Delhi` };
     }
   }
 
-  // Pattern: home-tuition-in-{area}-{pincode}
-  const pinMatch = slug.match(/^home-tuition-in-(.+)-(\d{6})$/);
-  if (pinMatch) {
-    const area = findArea(pinMatch[1]);
-    if (area) {
-      const pincode = pinMatch[2];
-      const keyword = `Home Tuition in ${area.name} ${pincode}`;
-      return {
-        type: "area-pincode",
-        slug,
-        area: { ...area, pincode },
-        keyword,
-        title: `Home Tuition in ${area.name} (${pincode}) | Tutors Parliament`,
-        metaDescription: `Looking for home tuition in ${area.name}, ${pincode}? Verified tutors for all subjects. CBSE, ICSE & state boards. Book a free demo!`,
-        h1: `Home Tuition in ${area.name} — ${pincode}`,
-      };
+  // female-{subject}-home-tutor-{area}
+  m = slug.match(/^female-(.+)-home-tutor-(.+)$/);
+  if (m) {
+    const subj = findSubject(m[1]);
+    const area = findArea(m[2]);
+    if (subj && area) {
+      const kw = `Female ${subj.name} Home Tutor in ${area.name}`;
+      return { type: "female-subject-area", slug, subject: subj, area, keyword: kw, intent: "female-tutors",
+        title: `Female ${subj.name} Tutor in ${area.name} | Tutors Parliament`,
+        metaDescription: `Find verified female ${subj.name} home tutors in ${area.name}. Safe, experienced & CBSE/ICSE experts. Free demo!`,
+        h1: kw };
     }
   }
 
-  // Pattern: home-tuition-in-{area}
-  const tuitionMatch = slug.match(/^home-tuition-in-(.+)$/);
-  if (tuitionMatch) {
-    const area = findArea(tuitionMatch[1]);
+  // {subject}-home-tutor-near-me-class-{class}
+  m = slug.match(/^(.+)-home-tutor-near-me-class-(.+)$/);
+  if (m) {
+    const subj = findSubject(m[1]);
+    const cls = findClass(m[2]);
+    if (subj && cls) {
+      const kw = `${subj.name} Home Tutor Near Me for ${cls.label}`;
+      return { type: "subject-near-me-class", slug, subject: subj, classLevel: cls, keyword: kw, intent: "near-me",
+        title: `${subj.name} Home Tutor Near Me — ${cls.label} | Tutors Parliament`,
+        metaDescription: `Find ${subj.name} home tutors near you for ${cls.label}. Verified, experienced, CBSE/ICSE. Book free demo!`,
+        h1: kw };
+    }
+  }
+
+  // home-vs-online-tuition-{area}
+  m = slug.match(/^home-vs-online-tuition-(.+)$/);
+  if (m) {
+    const area = findArea(m[1]);
     if (area) {
-      const keyword = `Home Tuition in ${area.name}`;
-      return {
-        type: "area-tuition",
-        slug,
-        area,
-        keyword,
-        title: `Home Tuition in ${area.name}, Delhi | Tutors Parliament`,
-        metaDescription: `Find expert home tuition in ${area.name}, Delhi (${area.pincode}). All subjects, all boards. Book a free demo class today!`,
-        h1: `Home Tuition in ${area.name}, Delhi`,
-      };
+      const kw = `Home vs Online Tuition in ${area.name}`;
+      return { type: "home-vs-online-area", slug, area, keyword: kw, intent: "home-vs-online",
+        title: `Home vs Online Tuition in ${area.name} | Tutors Parliament`,
+        metaDescription: `Compare home tuition vs online classes in ${area.name}. Pros, cons & what works best. Expert advice inside!`,
+        h1: kw };
+    }
+  }
+
+  // {subject}-home-tutor-{area}-class-{class}-{board}
+  m = slug.match(/^(.+)-home-tutor-(.+)-class-(.+)-(cbse|icse|ib)$/);
+  if (m) {
+    const subj = findSubject(m[1]);
+    const area = findArea(m[2]);
+    const cls = findClass(m[3]);
+    const board = findBoard(m[4]);
+    if (subj && area && cls && board) {
+      const kw = `${subj.name} Home Tutor in ${area.name} for ${cls.label} ${board.name}`;
+      return { type: "subject-class-area-board", slug, subject: subj, area, classLevel: cls, board, keyword: kw,
+        title: `${subj.name} Tutor ${area.name} ${cls.label} ${board.name} | Tutors Parliament`,
+        metaDescription: `Expert ${subj.name} home tutor in ${area.name} for ${cls.label} ${board.name}. Verified, experienced. Free demo!`,
+        h1: kw };
+    }
+  }
+
+  // {subject}-home-tutor-{area}-fees
+  m = slug.match(/^(.+)-home-tutor-(.+)-fees$/);
+  if (m) {
+    const subj = findSubject(m[1]);
+    const area = findArea(m[2]);
+    if (subj && area) {
+      const kw = `${subj.name} Home Tutor Fees in ${area.name}`;
+      return { type: "subject-area-fees", slug, subject: subj, area, keyword: kw, intent: "fees",
+        title: `${subj.name} Tutor Fees in ${area.name} | Tutors Parliament`,
+        metaDescription: `${subj.name} home tuition fees in ${area.name}: ₹300–₹800/hr. Transparent pricing, free demo. Book now!`,
+        h1: kw };
     }
   }
 
   return null;
 }
 
-// Legacy slug parser (existing patterns)
-export function parseSlug(slug: string): SeoPageData | null {
-  // Try new patterns first
-  const newResult = parseNewSlug(slug);
-  if (newResult) return newResult;
+// ---- Existing 1.0 patterns ----
+export function parseNewSlug(slug: string): SeoPageData | null {
+  // best-home-tutors-in-{area}
+  let m = slug.match(/^best-home-tutors-in-(.+)$/);
+  if (m) {
+    const area = findArea(m[1]);
+    if (area) {
+      const kw = `Best Home Tutors in ${area.name}`;
+      return { type: "best-tutors-area", slug, area, keyword: kw, isPillar: true,
+        title: `${kw}, Delhi | Tutors Parliament`,
+        metaDescription: `Find the best home tutors in ${area.name}, Delhi (${area.pincode}). Verified tutors for all subjects. Book a free demo!`,
+        h1: kw };
+    }
+  }
 
-  // Try subject-area-delhi pattern
+  // {subject}-tuition-in-{area}-class-{class}
+  m = slug.match(/^(.+)-tuition-in-(.+)-class-(.+)$/);
+  if (m) {
+    const subj = findSubject(m[1]);
+    const area = findArea(m[2]);
+    const cls = findClass(m[3]);
+    if (subj && area && cls) {
+      const kw = `${subj.name} Tuition in ${area.name} for ${cls.label}`;
+      return { type: "subject-class-area", slug, subject: subj, area, classLevel: cls, keyword: kw,
+        title: `${subj.name} Home Tuition in ${area.name} for ${cls.label} | Tutors Parliament`,
+        metaDescription: `Expert ${subj.name} home tuition in ${area.name} (${area.pincode}) for ${cls.label} students. CBSE/ICSE. Book a free demo!`,
+        h1: `${subj.name} Home Tuition in ${area.name} for ${cls.label}` };
+    }
+  }
+
+  // home-tuition-in-{area}-{pincode}
+  m = slug.match(/^home-tuition-in-(.+)-(\d{6})$/);
+  if (m) {
+    const area = findArea(m[1]);
+    if (area) {
+      return { type: "area-pincode", slug, area: { ...area, pincode: m[2] }, keyword: `Home Tuition in ${area.name} ${m[2]}`,
+        title: `Home Tuition in ${area.name} (${m[2]}) | Tutors Parliament`,
+        metaDescription: `Looking for home tuition in ${area.name}, ${m[2]}? Verified tutors for all subjects. Book a free demo!`,
+        h1: `Home Tuition in ${area.name} — ${m[2]}` };
+    }
+  }
+
+  // home-tuition-in-{area}
+  m = slug.match(/^home-tuition-in-(.+)$/);
+  if (m) {
+    const area = findArea(m[1]);
+    if (area) {
+      return { type: "area-tuition", slug, area, keyword: `Home Tuition in ${area.name}`, isPillar: true,
+        title: `Home Tuition in ${area.name}, Delhi | Tutors Parliament`,
+        metaDescription: `Find expert home tuition in ${area.name}, Delhi (${area.pincode}). All subjects, all boards. Book a free demo!`,
+        h1: `Home Tuition in ${area.name}, Delhi` };
+    }
+  }
+
+  return null;
+}
+
+// Master parser — tries 2.0 first, then 1.0, then legacy
+export function parseSlug(slug: string): SeoPageData | null {
+  // SEO 2.0
+  const v2 = parseSlug2(slug);
+  if (v2) return v2;
+
+  // 1.0 patterns
+  const v1 = parseNewSlug(slug);
+  if (v1) return v1;
+
+  // Legacy: subject-area-delhi
   for (const subj of subjects) {
     for (const area of areas) {
       if (slug === `${subj.slug}-${area.slug}-delhi`) {
-        const keyword = `${subj.name} Home Tutor in ${area.name}, Delhi`;
-        return {
-          type: "subject-area",
-          slug,
-          subject: subj,
-          area,
-          keyword,
+        const kw = `${subj.name} Home Tutor in ${area.name}, Delhi`;
+        return { type: "subject-area", slug, subject: subj, area, keyword: kw, isPillar: true,
           title: `Best ${subj.name} Home Tutor in ${area.name}, Delhi | Tutors Parliament`,
-          metaDescription: `Find the best ${subj.name} home tutor in ${area.name}, Delhi. Verified tutors, personalized classes for CBSE/ICSE. Book a free demo today!`,
-          h1: `Best ${subj.name} Home Tutor in ${area.name}, Delhi`,
-        };
+          metaDescription: `Find the best ${subj.name} home tutor in ${area.name}, Delhi. Verified tutors, personalized classes. Book a free demo!`,
+          h1: `Best ${subj.name} Home Tutor in ${area.name}, Delhi` };
       }
     }
   }
 
-  // Try area-delhi pattern
+  // Legacy: area-delhi
   for (const area of areas) {
     if (slug === `${area.slug}-delhi`) {
-      const keyword = `Home Tutor in ${area.name}, Delhi`;
-      return {
-        type: "area",
-        slug,
-        area,
-        keyword,
+      return { type: "area", slug, area, keyword: `Home Tutor in ${area.name}, Delhi`,
         title: `Best Home Tutors in ${area.name}, Delhi | Tutors Parliament`,
-        metaDescription: `Looking for home tutors in ${area.name}, Delhi? Verified tutors for all subjects, CBSE & ICSE. Book a free demo class today!`,
-        h1: `Best Home Tutors in ${area.name}, Delhi`,
-      };
+        metaDescription: `Looking for home tutors in ${area.name}, Delhi? Verified tutors for all subjects. Book a free demo!`,
+        h1: `Best Home Tutors in ${area.name}, Delhi` };
     }
   }
 
-  // Try subject-delhi pattern
+  // Legacy: subject-delhi
   for (const subj of subjects) {
     if (slug === `${subj.slug}-delhi`) {
-      const keyword = `${subj.name} Home Tutor in Delhi`;
-      return {
-        type: "subject",
-        slug,
-        subject: subj,
-        keyword,
+      return { type: "subject", slug, subject: subj, keyword: `${subj.name} Home Tutor in Delhi`,
         title: `Best ${subj.name} Home Tutors in Delhi | Tutors Parliament`,
-        metaDescription: `Find experienced ${subj.name} home tutors in Delhi. One-on-one tuition for CBSE, ICSE & state boards. Book a free demo today!`,
-        h1: `Best ${subj.name} Home Tutors in Delhi`,
-      };
+        metaDescription: `Find experienced ${subj.name} home tutors in Delhi. One-on-one tuition for CBSE, ICSE & state boards. Book a free demo!`,
+        h1: `Best ${subj.name} Home Tutors in Delhi` };
     }
   }
 
   return null;
 }
 
-// Generate all possible slugs (for sitemap — HIGH ROI only)
-export function getAllSlugs(): string[] {
-  const slugs: string[] = [];
+// ===== CLUSTER LINKING =====
+// Returns pillar page + sibling pages for topical authority
 
-  // === LEGACY PATTERNS ===
-  // Subject-delhi (13 pages)
-  for (const subj of subjects) {
-    slugs.push(`${subj.slug}-delhi`);
+export interface ClusterLink {
+  href: string;
+  anchor: string;
+  isPillar: boolean;
+}
+
+export function getClusterLinks(pageData: SeoPageData): ClusterLink[] {
+  const links: ClusterLink[] = [];
+  const seen = new Set([pageData.slug]);
+
+  const add = (href: string, anchor: string, isPillar = false) => {
+    const s = href.replace(/^\//, "");
+    if (!seen.has(s)) { seen.add(s); links.push({ href, anchor, isPillar }); }
+  };
+
+  const subj = pageData.subject;
+  const area = pageData.area;
+
+  // Pillar: subject-area-delhi (if we're a child page)
+  if (subj && area) {
+    add(`/tutors/${subj.slug}-${area.slug}-delhi`, `${subj.name} Tutor in ${area.name}`, true);
   }
-  // Area-delhi (30 pages)
-  for (const area of areas) {
-    slugs.push(`${area.slug}-delhi`);
+  // Pillar: home-tuition-in-area
+  if (area) {
+    add(`/home-tuition-in-${area.slug}`, `Home Tuition in ${area.name}`, true);
+    add(`/best-home-tutors-in-${area.slug}`, `Best Tutors in ${area.name}`, true);
   }
-  // Subject-area-delhi — top 6x6 combos (36 pages)
-  const topSubjects = subjects.slice(0, 6);
-  const topAreas = areas.slice(0, 10);
-  for (const subj of topSubjects) {
-    for (const area of topAreas.slice(0, 6)) {
-      slugs.push(`${subj.slug}-${area.slug}-delhi`);
+
+  // Siblings: board variants
+  if (subj && area && pageData.classLevel) {
+    for (const b of boards) {
+      if (b.slug !== pageData.board?.slug) {
+        add(`/${subj.slug}-home-tutor-${area.slug}-class-${pageData.classLevel.slug}-${b.slug}`,
+          `${subj.name} ${b.name} Tutor — ${pageData.classLevel.label}`);
+      }
     }
   }
 
-  // === NEW PATTERNS ===
-  // home-tuition-in-{area} (30 pages)
-  for (const area of areas) {
-    slugs.push(`home-tuition-in-${area.slug}`);
+  // Siblings: fees variant
+  if (subj && area && pageData.intent !== "fees") {
+    add(`/${subj.slug}-home-tutor-${area.slug}-fees`, `${subj.name} Tutor Fees in ${area.name}`);
   }
-  // home-tuition-in-{area}-{pincode} — top 15 areas (15 pages)
+
+  // Siblings: female variant
+  if (subj && area && pageData.intent !== "female-tutors") {
+    add(`/female-${subj.slug}-home-tutor-${area.slug}`, `Female ${subj.name} Tutor in ${area.name}`);
+  }
+
+  // Money pages
+  if (area) {
+    add(`/home-tuition-fees-in-${area.slug}`, `Tuition Fees in ${area.name}`);
+    add(`/top-10-home-tutors-${area.slug}`, `Top 10 Tutors in ${area.name}`);
+  }
+
+  // Class variants
+  if (subj && area) {
+    for (const c of classes.filter(c => ["9", "10", "11", "12"].includes(c.slug) && c.slug !== pageData.classLevel?.slug)) {
+      add(`/${subj.slug}-tuition-in-${area.slug}-class-${c.slug}`, `${subj.name} — ${c.label} in ${area.name}`);
+      if (links.length >= 10) break;
+    }
+  }
+
+  return links.slice(0, 10);
+}
+
+// ===== GENERATE ALL SLUGS (for sitemap) =====
+export function getAllSlugs(): string[] {
+  const slugs: string[] = [];
+  const topSubjects = subjects.slice(0, 6);
+  const topAreas = areas.slice(0, 10);
+  const highClasses = classes.filter(c => ["8", "9", "10", "11", "12"].includes(c.slug));
+
+  // === LEGACY (v1.0) ===
+  for (const subj of subjects) slugs.push(`${subj.slug}-delhi`);
+  for (const area of areas) slugs.push(`${area.slug}-delhi`);
+  for (const subj of topSubjects) {
+    for (const area of topAreas.slice(0, 6)) slugs.push(`${subj.slug}-${area.slug}-delhi`);
+  }
+  for (const area of areas) slugs.push(`home-tuition-in-${area.slug}`);
   for (const area of areas.slice(0, 15)) {
     slugs.push(`home-tuition-in-${area.slug}-${area.pincode}`);
-  }
-  // best-home-tutors-in-{area} — top 15 (15 pages)
-  for (const area of areas.slice(0, 15)) {
     slugs.push(`best-home-tutors-in-${area.slug}`);
   }
-  // {subject}-tuition-in-{area}-class-{class} — top 6 subjects x 10 areas x key classes (180 pages)
-  const highRoiClasses = classes.filter(c => ["8", "9", "10", "11", "12"].includes(c.slug));
   for (const subj of topSubjects) {
     for (const area of topAreas) {
-      for (const cls of highRoiClasses) {
-        slugs.push(`${subj.slug}-tuition-in-${area.slug}-class-${cls.slug}`);
+      for (const cls of highClasses) slugs.push(`${subj.slug}-tuition-in-${area.slug}-class-${cls.slug}`);
+    }
+  }
+
+  // === SEO 2.0 ===
+  // Money pages: fees & top-10 for all areas (60 pages)
+  for (const area of areas) {
+    slugs.push(`home-tuition-fees-in-${area.slug}`);
+    slugs.push(`top-10-home-tutors-${area.slug}`);
+  }
+
+  // Board pages: top 4 subjects × top 10 areas × classes 10-12 × 3 boards (360 pages)
+  const boardSubjects = topSubjects.slice(0, 4);
+  const boardClasses = classes.filter(c => ["10", "11", "12"].includes(c.slug));
+  for (const subj of boardSubjects) {
+    for (const area of topAreas) {
+      for (const cls of boardClasses) {
+        for (const board of boards) {
+          slugs.push(`${subj.slug}-home-tutor-${area.slug}-class-${cls.slug}-${board.slug}`);
+        }
       }
+    }
+  }
+
+  // Female tutor pages: top 6 subjects × top 15 areas (90 pages)
+  for (const subj of topSubjects) {
+    for (const area of areas.slice(0, 15)) {
+      slugs.push(`female-${subj.slug}-home-tutor-${area.slug}`);
+    }
+  }
+
+  // Near-me pages: top 6 subjects × high classes (30 pages)
+  for (const subj of topSubjects) {
+    for (const cls of highClasses) {
+      slugs.push(`${subj.slug}-home-tutor-near-me-class-${cls.slug}`);
+    }
+  }
+
+  // Home vs online: top 15 areas (15 pages)
+  for (const area of areas.slice(0, 15)) {
+    slugs.push(`home-vs-online-tuition-${area.slug}`);
+  }
+
+  // Fees pages: top 6 subjects × top 10 areas (60 pages)
+  for (const subj of topSubjects) {
+    for (const area of topAreas) {
+      slugs.push(`${subj.slug}-home-tutor-${area.slug}-fees`);
     }
   }
 
