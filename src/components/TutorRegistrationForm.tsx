@@ -277,21 +277,83 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
                 <Input type="email" placeholder="your@email.com" value={form.email} onChange={e => set("email", e.target.value)} />
                 <FieldError field="email" />
               </div>
+              {/* Pincode - PRIMARY input */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">Pincode *</label>
+                <div className="relative">
+                  <Input
+                    placeholder="Enter 6-digit pincode"
+                    value={form.pincode}
+                    onChange={e => handlePincodeChange(e.target.value)}
+                    className="pr-10"
+                  />
+                  {pincodeLoading && (
+                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-muted-foreground" />
+                  )}
+                  {pincodeStatus === "success" && !pincodeLoading && (
+                    <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
+                  )}
+                </div>
+                {pincodeLoading && (
+                  <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                    <MapPin className="w-3 h-3" /> Auto-detecting your location...
+                  </p>
+                )}
+                {pincodeStatus === "success" && !pincodeLoading && (
+                  <p className="text-xs text-primary mt-1 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> Location detected
+                  </p>
+                )}
+                {pincodeStatus === "error" && (
+                  <p className="text-sm text-destructive mt-1">Invalid Pincode. Please enter a valid pincode or fill manually below.</p>
+                )}
+                <FieldError field="pincode" />
+              </div>
+
+              {/* State & City - auto-filled or manual */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">City *</label>
-                  <Select value={form.city} onValueChange={v => set("city", v)}>
-                    <SelectTrigger><SelectValue placeholder="Select city" /></SelectTrigger>
-                    <SelectContent>{CITIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-                  </Select>
-                  <FieldError field="city" />
+                  <label className="block text-sm font-medium text-foreground mb-1">State *</label>
+                  {locationLocked ? (
+                    <div className="flex items-center gap-2">
+                      <Input value={form.state} readOnly className="bg-muted/50" />
+                      <button type="button" onClick={() => { setLocationLocked(false); setPincodeStatus("manual"); }}
+                        className="text-xs text-primary hover:underline whitespace-nowrap">Edit</button>
+                    </div>
+                  ) : (
+                    <Select value={form.state} onValueChange={v => set("state", v)}>
+                      <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
+                      <SelectContent>{STATES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                    </Select>
+                  )}
+                  <FieldError field="state" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Pincode *</label>
-                  <Input placeholder="110001" value={form.pincode} onChange={e => set("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))} />
-                  <FieldError field="pincode" />
+                  <label className="block text-sm font-medium text-foreground mb-1">City *</label>
+                  {locationLocked ? (
+                    <div className="flex items-center gap-2">
+                      <Input value={form.city} readOnly className="bg-muted/50" />
+                    </div>
+                  ) : (
+                    <Select value={form.city} onValueChange={v => set("city", v)}>
+                      <SelectTrigger><SelectValue placeholder="Select city" /></SelectTrigger>
+                      <SelectContent>{CITIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                    </Select>
+                  )}
+                  <FieldError field="city" />
                 </div>
               </div>
+
+              {/* Post Office selector if multiple results */}
+              {pincodeStatus === "success" && postOffices.length > 1 && (
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">Area / Post Office</label>
+                  <Select onValueChange={v => set("preferredLocations", v)}>
+                    <SelectTrigger><SelectValue placeholder="Select your area" /></SelectTrigger>
+                    <SelectContent>{postOffices.map(po => <SelectItem key={po} value={po}>{po}</SelectItem>)}</SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
           )}
 
