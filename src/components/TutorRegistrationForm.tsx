@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Upload, Video, ArrowRight, ArrowLeft, X } from "lucide-react";
+import { CheckCircle2, Upload, Video, ArrowRight, ArrowLeft, X, Loader2, MapPin } from "lucide-react";
 import { toast } from "sonner";
 
 const STORAGE_KEY = "tutor_registration_draft";
@@ -27,11 +27,13 @@ const QUALIFICATIONS = ["12th Pass", "Undergraduate", "Graduate", "Post Graduate
 const EXPERIENCE_OPTIONS = ["0–1 years", "1–3 years", "3–5 years", "5+ years"];
 const STATUS_OPTIONS = ["Student", "Working Professional", "Full-time Tutor"];
 const CITIES = ["Delhi", "Noida", "Gurgaon", "Faridabad", "Ghaziabad"];
+const STATES = ["Delhi", "Haryana", "Uttar Pradesh", "Rajasthan", "Punjab", "Maharashtra", "Karnataka", "Tamil Nadu", "West Bengal", "Bihar", "Madhya Pradesh"];
 
 interface FormData {
   name: string;
   phone: string;
   email: string;
+  state: string;
   city: string;
   pincode: string;
   subjects: string[];
@@ -54,7 +56,7 @@ interface FormData {
 }
 
 const defaultForm: FormData = {
-  name: "", phone: "", email: "", city: "", pincode: "",
+  name: "", phone: "", email: "", state: "", city: "", pincode: "",
   subjects: [], classes: [], boards: [], teachingMode: "", preferredLocations: "", languages: [],
   qualification: "", specialization: "", experience: "", currentStatus: "", availableDays: [], timeSlots: [], expectedFees: "", travelWilling: "", travelRadius: "",
   bio: "", videoLink: "",
@@ -80,10 +82,54 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
   const [photoName, setPhotoName] = useState("");
   const [idProofName, setIdProofName] = useState("");
   const [resumeName, setResumeName] = useState("");
+  const [pincodeLoading, setPincodeLoading] = useState(false);
+  const [pincodeStatus, setPincodeStatus] = useState<"idle" | "success" | "error" | "manual">("idle");
+  const [postOffices, setPostOffices] = useState<string[]>([]);
+  const [locationLocked, setLocationLocked] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
+
+  const fetchPincodeData = useCallback(async (pincode: string) => {
+    if (!/^\d{6}$/.test(pincode)) return;
+    setPincodeLoading(true);
+    setPincodeStatus("idle");
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await res.json();
+      if (data?.[0]?.Status === "Success" && data[0].PostOffice?.length > 0) {
+        const offices = data[0].PostOffice;
+        const state = offices[0].State;
+        const district = offices[0].District;
+        setForm(prev => ({ ...prev, state, city: district }));
+        setPostOffices(offices.map((o: any) => o.Name));
+        setPincodeStatus("success");
+        setLocationLocked(true);
+        setErrors(prev => { const n = { ...prev }; delete n.state; delete n.city; delete n.pincode; return n; });
+      } else {
+        setPincodeStatus("error");
+        setLocationLocked(false);
+      }
+    } catch {
+      setPincodeStatus("manual");
+      setLocationLocked(false);
+    } finally {
+      setPincodeLoading(false);
+    }
+  }, []);
+
+  const handlePincodeChange = (value: string) => {
+    const clean = value.replace(/\D/g, "").slice(0, 6);
+    set("pincode", clean);
+    setPincodeStatus("idle");
+    setLocationLocked(false);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (clean.length === 6) {
+      debounceRef.current = setTimeout(() => fetchPincodeData(clean), 500);
+    }
+  };
 
   const set = (field: keyof FormData, value: string | string[]) => {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -101,8 +147,9 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
       if (!form.name.trim()) e.name = "Name is required";
       if (!form.phone.match(/^[6-9]\d{9}$/)) e.phone = "Valid 10-digit mobile required";
       if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "Valid email required";
-      if (!form.city) e.city = "Select city";
       if (!form.pincode.match(/^\d{6}$/)) e.pincode = "Valid 6-digit pincode required";
+      if (!form.state) e.state = "State is required";
+      if (!form.city) e.city = "City is required";
     }
     if (s === 2) {
       if (form.subjects.length === 0) e.subjects = "Select at least one subject";
@@ -230,21 +277,83 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
                 <Input type="email" placeholder="your@email.com" value={form.email} onChange={e => set("email", e.target.value)} />
                 <FieldError field="email" />
               </div>
+              {/* Pincode - PRIMARY input */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">Pincode *</label>
+                <div className="relative">
+                  <Input
+                    placeholder="Enter 6-digit pincode"
+                    value={form.pincode}
+                    onChange={e => handlePincodeChange(e.target.value)}
+                    className="pr-10"
+                  />
+                  {pincodeLoading && (
+                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-muted-foreground" />
+                  )}
+                  {pincodeStatus === "success" && !pincodeLoading && (
+                    <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
+                  )}
+                </div>
+                {pincodeLoading && (
+                  <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                    <MapPin className="w-3 h-3" /> Auto-detecting your location...
+                  </p>
+                )}
+                {pincodeStatus === "success" && !pincodeLoading && (
+                  <p className="text-xs text-primary mt-1 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> Location detected
+                  </p>
+                )}
+                {pincodeStatus === "error" && (
+                  <p className="text-sm text-destructive mt-1">Invalid Pincode. Please enter a valid pincode or fill manually below.</p>
+                )}
+                <FieldError field="pincode" />
+              </div>
+
+              {/* State & City - auto-filled or manual */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">City *</label>
-                  <Select value={form.city} onValueChange={v => set("city", v)}>
-                    <SelectTrigger><SelectValue placeholder="Select city" /></SelectTrigger>
-                    <SelectContent>{CITIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-                  </Select>
-                  <FieldError field="city" />
+                  <label className="block text-sm font-medium text-foreground mb-1">State *</label>
+                  {locationLocked ? (
+                    <div className="flex items-center gap-2">
+                      <Input value={form.state} readOnly className="bg-muted/50" />
+                      <button type="button" onClick={() => { setLocationLocked(false); setPincodeStatus("manual"); }}
+                        className="text-xs text-primary hover:underline whitespace-nowrap">Edit</button>
+                    </div>
+                  ) : (
+                    <Select value={form.state} onValueChange={v => set("state", v)}>
+                      <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
+                      <SelectContent>{STATES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                    </Select>
+                  )}
+                  <FieldError field="state" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Pincode *</label>
-                  <Input placeholder="110001" value={form.pincode} onChange={e => set("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))} />
-                  <FieldError field="pincode" />
+                  <label className="block text-sm font-medium text-foreground mb-1">City *</label>
+                  {locationLocked ? (
+                    <div className="flex items-center gap-2">
+                      <Input value={form.city} readOnly className="bg-muted/50" />
+                    </div>
+                  ) : (
+                    <Select value={form.city} onValueChange={v => set("city", v)}>
+                      <SelectTrigger><SelectValue placeholder="Select city" /></SelectTrigger>
+                      <SelectContent>{CITIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                    </Select>
+                  )}
+                  <FieldError field="city" />
                 </div>
               </div>
+
+              {/* Post Office selector if multiple results */}
+              {pincodeStatus === "success" && postOffices.length > 1 && (
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">Area / Post Office</label>
+                  <Select onValueChange={v => set("preferredLocations", v)}>
+                    <SelectTrigger><SelectValue placeholder="Select your area" /></SelectTrigger>
+                    <SelectContent>{postOffices.map(po => <SelectItem key={po} value={po}>{po}</SelectItem>)}</SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
           )}
 
