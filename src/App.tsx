@@ -19,6 +19,8 @@ const FAQ = lazy(() => import("./pages/FAQ.tsx"));
 const TutorSeoPage = lazy(() => import("./pages/TutorSeoPage.tsx"));
 const DemoBooking = lazy(() => import("./pages/DemoBooking.tsx"));
 const BecomeATutor = lazy(() => import("./pages/BecomeATutor.tsx"));
+const TutorRegistry = lazy(() => import("./pages/TutorRegistry.tsx"));
+const ReportTutor = lazy(() => import("./pages/ReportTutor.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -49,6 +51,8 @@ const App = () => (
               <Route path="/tutors/:slug" element={<TutorSeoPage />} />
               <Route path="/demo-booking" element={<DemoBooking />} />
               <Route path="/become-a-tutor" element={<BecomeATutor />} />
+              <Route path="/tutor-registry" element={<TutorRegistry />} />
+              <Route path="/report-tutor" element={<ReportTutor />} />
               <Route path="/:slug" element={<TutorSeoPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
