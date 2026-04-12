@@ -46,6 +46,9 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/tutors/:slug" element={<TutorSeoPage />} />
+              <Route path="/home-tuition-in-:slug" element={<TutorSeoPage />} />
+              <Route path="/best-home-tutors-in-:slug" element={<TutorSeoPage />} />
+              <Route path="/:subjectSlug-tuition-in-:areaSlug-class-:classSlug" element={<TutorSeoPage />} />
               <Route path="/demo-booking" element={<DemoBooking />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
