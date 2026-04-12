@@ -171,7 +171,7 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
     return (
       <div className="text-center py-12 px-6">
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }}>
-          <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto mb-6" />
+          <CheckCircle2 className="w-20 h-20 text-primary mx-auto mb-6" />
         </motion.div>
         <h2 className="text-2xl font-bold text-foreground mb-2">Profile Submitted 🎉</h2>
         <p className="text-muted-foreground mb-6">We'll connect you with students near you within 24 hours.</p>
