@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Upload, Video, ArrowRight, ArrowLeft, X } from "lucide-react";
+import { CheckCircle2, Upload, Video, ArrowRight, ArrowLeft, X, Loader2, MapPin } from "lucide-react";
 import { toast } from "sonner";
 
 const STORAGE_KEY = "tutor_registration_draft";
