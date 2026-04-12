@@ -1,10 +1,10 @@
-// ===== DYNAMIC CONTENT GENERATOR =====
-// Generates unique, varied content for SEO pages using deterministic seed-based selection.
-// Ensures 30%+ variation across pages with zero runtime cost.
+// ===== DYNAMIC CONTENT GENERATOR 2.0 =====
+// Generates unique, varied content for all SEO page types including money pages,
+// board-specific pages, and intent-based pages.
 
-import { areas, subjects, classes, type SeoPageData } from "./seoData";
+import { areas, subjects, classes, boards, type SeoPageData } from "./seoData";
 
-// ===== HASH FUNCTION (deterministic variation) =====
+// ===== HASH FUNCTION =====
 function hashStr(s: string): number {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
@@ -36,29 +36,83 @@ const introParagraphs = [
 
 const valueParagraphs = [
   (subj: string, area: string, cls: string) =>
-    `What sets our ${subj} tutors apart in ${area} is the rigorous vetting process — every educator is background-verified, qualification-checked, and demo-evaluated before joining our platform. ${cls ? `For ${cls}, ` : ""}We focus on building conceptual understanding through worksheets, mock tests, and chapter-wise analysis, ensuring students don't just pass exams but genuinely master the subject.`,
+    `What sets our ${subj} tutors apart in ${area} is the rigorous vetting process — every educator is background-verified, qualification-checked, and demo-evaluated. ${cls ? `For ${cls}, ` : ""}We focus on building conceptual understanding through worksheets, mock tests, and chapter-wise analysis.`,
   (subj: string, area: string, cls: string) =>
-    `Our ${area}-based ${subj} tutors bring an average of 5+ years of teaching experience${cls ? ` with specific expertise in ${cls} curriculum` : ""}. Fees start from ₹300–₹800 per hour depending on grade and subject complexity, making quality education accessible. Every session is structured around weak-area identification, concept reinforcement, and timed practice.`,
+    `Our ${area}-based ${subj} tutors bring an average of 5+ years of teaching experience${cls ? ` with specific expertise in ${cls} curriculum` : ""}. Fees start from ₹300–₹800 per hour depending on grade and subject complexity.`,
   (subj: string, area: string, cls: string) =>
-    `Choosing Tutors Parliament for ${subj} tuition in ${area} means access to flexible scheduling (morning, afternoon, or evening slots), both online and offline modes, and a satisfaction guarantee — if you're not happy with your tutor, we'll match you with another at no extra cost${cls ? `, ensuring ${cls} students never lose momentum` : ""}.`,
+    `Choosing Tutors Parliament for ${subj} tuition in ${area} means access to flexible scheduling, both online and offline modes, and a satisfaction guarantee${cls ? `, ensuring ${cls} students never lose momentum` : ""}.`,
   (subj: string, area: string, cls: string) =>
-    `Families in ${area} choose us because our ${subj} tutors don't just teach — they mentor${cls ? ` ${cls} students` : ""}. From helping with school assignments and project work to preparing for unit tests and board exams, our educators become a reliable academic partner. Fees are transparent, with no hidden registration charges.`,
+    `Families in ${area} choose us because our ${subj} tutors don't just teach — they mentor${cls ? ` ${cls} students` : ""}. From school assignments to board exams, our educators become a reliable academic partner.`,
   (subj: string, area: string, cls: string) =>
-    `With 10,000+ students already learning through Tutors Parliament, our ${subj} tutors in ${area} have a proven track record of grade improvements${cls ? ` for ${cls}` : ""}. Parents appreciate our regular progress reports, parent-teacher communication, and the flexibility to adjust session frequency as exams approach.`,
+    `With 10,000+ students already learning through Tutors Parliament, our ${subj} tutors in ${area} have a proven track record of grade improvements${cls ? ` for ${cls}` : ""}. Parents appreciate our regular progress reports and flexibility.`,
 ];
 
 const closingParagraphs = [
   (subj: string, area: string, cls: string) =>
-    `Don't let another exam season go by without the right ${subj} support${cls ? ` for your ${cls} child` : ""}. Book a free demo class in ${area} today and see the Tutors Parliament difference — experienced tutors, proven methods, and results that speak for themselves. Join 10,000+ happy families across Delhi NCR.`,
+    `Don't let another exam season go by without the right ${subj} support${cls ? ` for your ${cls} child` : ""}. Book a free demo class in ${area} today and see the Tutors Parliament difference.`,
   (subj: string, area: string, cls: string) =>
-    `Your child's academic journey in ${subj} deserves personalised attention${cls ? ` — especially at the ${cls} level where foundations are critical` : ""}. Start with a complimentary demo session in ${area}, meet your tutor, and experience quality tuition before committing. No registration fee, no obligation.`,
+    `Your child's academic journey in ${subj} deserves personalised attention${cls ? ` — especially at the ${cls} level` : ""}. Start with a complimentary demo session in ${area}, meet your tutor, and experience quality tuition.`,
   (subj: string, area: string, cls: string) =>
-    `Ready to transform your child's ${subj} performance${cls ? ` in ${cls}` : ""}? Connect with a verified tutor in ${area} within 24 hours. With 4.8★ average ratings, flexible scheduling, and coverage of CBSE, ICSE, IB, and state boards, Tutors Parliament is Delhi's most trusted home tuition platform.`,
+    `Ready to transform your child's ${subj} performance${cls ? ` in ${cls}` : ""}? Connect with a verified tutor in ${area} within 24 hours. 4.8★ average ratings, flexible scheduling, all boards covered.`,
   (subj: string, area: string, cls: string) =>
-    `From foundation building to board exam excellence, our ${subj} tutors in ${area} deliver measurable results${cls ? ` for ${cls} students` : ""}. Take the first step — schedule your free demo class now and join thousands of families who chose smarter, personalised learning with Tutors Parliament.`,
+    `From foundation building to board exam excellence, our ${subj} tutors in ${area} deliver measurable results${cls ? ` for ${cls} students` : ""}. Schedule your free demo class now.`,
   (subj: string, area: string, cls: string) =>
-    `Whether preparing for boards, olympiads, or entrance exams, the right ${subj} tutor makes all the difference${cls ? ` at the ${cls} stage` : ""}. In ${area}, Tutors Parliament is the go-to choice for verified, experienced, and passionate educators. Book your free demo and experience it first-hand.`,
+    `Whether preparing for boards, olympiads, or entrance exams, the right ${subj} tutor makes all the difference${cls ? ` at the ${cls} stage` : ""}. In ${area}, Tutors Parliament is the go-to choice.`,
 ];
+
+// ===== INTENT-SPECIFIC CONTENT =====
+
+const feesContent = [
+  (subj: string, area: string) =>
+    `Home tuition fees in ${area} vary based on subject, class level, and tutor experience. For ${subj}, expect ₹300–₹500/hr for classes 1–8, ₹400–₹600/hr for classes 9–10, and ₹500–₹800/hr for classes 11–12. Competitive exam coaching (JEE, NEET) may range ₹600–₹1,200/hr. At Tutors Parliament, there's no registration fee — you only pay for sessions taken.`,
+  (subj: string, area: string) =>
+    `Parents in ${area} often ask about ${subj} tuition costs. Our fee structure is transparent: ₹300–₹800 per hour depending on grade and complexity. Group tuition (2–3 students) is available at 30–40% lower rates. All fees are discussed upfront with no hidden charges. The first demo class is always free.`,
+];
+
+const femaleContent = [
+  (subj: string, area: string) =>
+    `Many families in ${area} prefer female ${subj} tutors for their children, especially for younger students. Tutors Parliament has a strong network of qualified female educators with 3–10+ years of experience in CBSE, ICSE, and IB curricula. All our female tutors are background-verified and ID-checked for your peace of mind.`,
+  (subj: string, area: string) =>
+    `Our pool of female ${subj} tutors in ${area} includes postgraduates, B.Ed holders, and working professionals with proven teaching track records. Whether for a young learner or a senior student, our female tutors bring patience, expertise, and a safe learning environment.`,
+];
+
+const homeVsOnlineContent = [
+  (area: string) =>
+    `Choosing between home tuition and online classes in ${area}? Home tuition offers distraction-free, face-to-face learning ideal for younger students (classes 1–8). Online classes provide flexibility and access to a wider tutor pool — perfect for classes 9–12 and exam prep. At Tutors Parliament, you can switch between modes anytime. Many students in ${area} use a hybrid approach: home tuition for core subjects and online sessions for supplementary learning.`,
+  (area: string) =>
+    `The home vs online debate in ${area} has a simple answer: it depends on the student. Younger children benefit from in-person attention, while older students often thrive with the convenience of online sessions. Our tutors in ${area} are trained in both modes. Fees are similar for both formats, and you can try each with a free demo before deciding.`,
+];
+
+const moneyPageContent = {
+  fees: (area: string) => ({
+    intro: `Understanding home tuition fees in ${area} helps you plan your child's education budget effectively. Here's a comprehensive breakdown of current tuition rates across subjects, classes, and boards.`,
+    breakdown: [
+      { range: "Classes 1–5", fee: "₹300–₹450/hr", note: "Foundation building, homework help" },
+      { range: "Classes 6–8", fee: "₹350–₹500/hr", note: "Subject strengthening, exam prep" },
+      { range: "Classes 9–10", fee: "₹400–₹600/hr", note: "Board exam preparation" },
+      { range: "Classes 11–12", fee: "₹500–₹800/hr", note: "Advanced subjects, entrance prep" },
+      { range: "Competitive Exams", fee: "₹600–₹1,200/hr", note: "JEE, NEET, CLAT coaching" },
+    ],
+    factors: [
+      "Subject complexity (Science/Maths cost more than languages)",
+      "Tutor experience (5+ years commands premium fees)",
+      "Session frequency (bulk bookings get 10–15% discount)",
+      "Teaching mode (online is typically 10–20% lower)",
+    ],
+  }),
+  topTutors: (area: string) => ({
+    intro: `Looking for the top 10 home tutors in ${area}? Our curated list features Delhi's most experienced, highest-rated educators serving ${area} and surrounding areas.`,
+    criteria: [
+      "5+ years verified teaching experience",
+      "4.5★+ average student rating",
+      "Board exam result track record",
+      "Background verified & ID checked",
+      "Specialization in CBSE, ICSE, or IB",
+    ],
+  }),
+};
+
+export { moneyPageContent };
 
 export function getEnrichedContent(pageData: SeoPageData): { intro: string; value: string; closing: string } {
   const seed = hashStr(pageData.slug);
@@ -67,6 +121,39 @@ export function getEnrichedContent(pageData: SeoPageData): { intro: string; valu
   const cls = pageData.classLevel?.label || "";
   const pin = pageData.area?.pincode || "";
 
+  // Intent-specific overrides
+  if (pageData.intent === "fees") {
+    return {
+      intro: pick(feesContent, seed)(subj, area),
+      value: pick(valueParagraphs, seed + 1)(subj, area, cls),
+      closing: pick(closingParagraphs, seed + 2)(subj, area, cls),
+    };
+  }
+  if (pageData.intent === "female-tutors") {
+    return {
+      intro: pick(femaleContent, seed)(subj, area),
+      value: pick(valueParagraphs, seed + 1)(subj, area, cls),
+      closing: pick(closingParagraphs, seed + 2)(subj, area, cls),
+    };
+  }
+  if (pageData.intent === "home-vs-online") {
+    return {
+      intro: pick(homeVsOnlineContent, seed)(area),
+      value: pick(valueParagraphs, seed + 1)("Home Tuition", area, cls),
+      closing: pick(closingParagraphs, seed + 2)("Home Tuition", area, cls),
+    };
+  }
+
+  // Board-specific enrichment
+  if (pageData.board) {
+    const boardIntro = `${subj} tuition for ${pageData.board.name} students in ${area}${cls ? ` (${cls})` : ""} requires tutors who deeply understand the ${pageData.board.name} syllabus structure, exam pattern, and marking scheme. At Tutors Parliament, our ${pageData.board.name}-specialist tutors bring chapter-wise mastery and years of board exam coaching experience.`;
+    return {
+      intro: boardIntro,
+      value: pick(valueParagraphs, seed + 1)(subj, area, cls),
+      closing: pick(closingParagraphs, seed + 2)(subj, area, cls),
+    };
+  }
+
   return {
     intro: pick(introParagraphs, seed)(subj, area, cls, pin),
     value: pick(valueParagraphs, seed + 1)(subj, area, cls),
@@ -74,21 +161,38 @@ export function getEnrichedContent(pageData: SeoPageData): { intro: string; valu
   };
 }
 
-// ===== ENRICHED FAQ GENERATOR (5 per page, highly varied) =====
+// ===== FAQ GENERATOR =====
 
 const faqPool = [
   (kw: string, area: string, cls: string) => ({ q: `What is the fee for ${kw}?`, a: `Fees for ${kw} typically range from ₹300 to ₹800 per hour, depending on the subject, class level${cls ? ` (${cls})` : ""}, and tutor experience. Contact us for a personalised quote — the first demo class is always free.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Are female tutors available${area ? ` in ${area}` : ""}?`, a: `Yes, we have a large pool of qualified female tutors available${area ? ` in ${area}` : ""} for home tuition. You can specify your preference when booking, and we'll match accordingly.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Which subjects are covered${cls ? ` for ${cls}` : ""}?`, a: `Our tutors cover all major subjects including Maths, Science, English, Hindi, Social Studies, Accounts, Economics, and more${cls ? ` for ${cls}` : ""}. We support CBSE, ICSE, IGCSE, IB, and state board curricula.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Is home tuition better than coaching classes?`, a: `Home tuition offers personalised attention, flexible scheduling, and curriculum-specific teaching that group coaching cannot match. Students typically show 20–30% faster improvement with one-on-one tuition, especially${cls ? ` in ${cls}` : ""} for board exam preparation.` }),
-  (kw: string, area: string, cls: string) => ({ q: `How quickly can I get a tutor${area ? ` in ${area}` : ""}?`, a: `We typically match you with a suitable tutor within 24–48 hours${area ? ` in ${area}` : ""}. After booking a free demo, our team reviews your requirements and assigns the best-fit educator promptly.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Do you provide online classes as well?`, a: `Absolutely! We offer both home tuition and online classes. Students can learn from anywhere with our flexible scheduling — morning, afternoon, or evening slots available${cls ? ` for ${cls}` : ""}.` }),
-  (kw: string, area: string, cls: string) => ({ q: `How are your tutors verified?`, a: `Every tutor goes through a multi-step verification process including identity checks, qualification verification, background screening, and a demo teaching evaluation before being listed on our platform.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Can I change my tutor if I'm not satisfied?`, a: `Yes, tutor replacement is free. If you or your child aren't satisfied after the initial sessions, we'll assign a new tutor at no additional cost until you find the perfect match.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Do tutors help with homework and assignments?`, a: `Yes, our tutors assist with daily homework, school projects, and assignments as part of regular sessions${cls ? ` for ${cls} students` : ""}. They also provide additional practice worksheets and mock tests for exam preparation.` }),
-  (kw: string, area: string, cls: string) => ({ q: `What boards do your tutors cover${area ? ` in ${area}` : ""}?`, a: `Our tutors are experienced in CBSE, ICSE, IGCSE, IB, and all state boards. Whether your school follows NCERT or a custom syllabus, we have tutors who specialise in your specific board.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Is there a registration fee to join?`, a: `No, there is zero registration fee. You only pay for the tuition sessions you take. The first demo class is completely free with no obligation to continue.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Do you offer group tuition${area ? ` in ${area}` : ""}?`, a: `We primarily focus on one-on-one home tuition for maximum attention, but small group sessions (2–3 students) can be arranged on request${area ? ` in ${area}` : ""}. Group tuition is available at discounted rates.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Are female tutors available${area ? ` in ${area}` : ""}?`, a: `Yes, we have a large pool of qualified female tutors available${area ? ` in ${area}` : ""} for home tuition. Specify your preference when booking.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Which subjects are covered${cls ? ` for ${cls}` : ""}?`, a: `Our tutors cover Maths, Science, English, Hindi, Social Studies, Accounts, Economics, and more${cls ? ` for ${cls}` : ""}. CBSE, ICSE, IGCSE, IB, and state board curricula supported.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Is home tuition better than coaching classes?`, a: `Home tuition offers personalised attention and flexible scheduling that group coaching cannot match. Students typically show 20–30% faster improvement with one-on-one tuition.` }),
+  (kw: string, area: string, cls: string) => ({ q: `How quickly can I get a tutor${area ? ` in ${area}` : ""}?`, a: `We typically match you with a suitable tutor within 24–48 hours${area ? ` in ${area}` : ""}. Book a free demo to get started.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Do you provide online classes as well?`, a: `Yes! Both home tuition and online classes available. Flexible morning, afternoon, or evening slots${cls ? ` for ${cls}` : ""}.` }),
+  (kw: string, area: string, cls: string) => ({ q: `How are your tutors verified?`, a: `Multi-step verification: identity checks, qualification verification, background screening, and demo teaching evaluation before listing.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Can I change my tutor if I'm not satisfied?`, a: `Yes, tutor replacement is free. We'll assign a new tutor at no additional cost until you find the perfect match.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Do tutors help with homework and assignments?`, a: `Yes, our tutors assist with homework, projects, and assignments${cls ? ` for ${cls}` : ""}. They also provide practice worksheets and mock tests.` }),
+  (kw: string, area: string, cls: string) => ({ q: `What boards do your tutors cover?`, a: `CBSE, ICSE, IGCSE, IB, and all state boards. Whether NCERT or custom syllabus, we have specialist tutors.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Is there a registration fee?`, a: `No registration fee. You only pay for sessions. First demo class is completely free.` }),
+  (kw: string, area: string, cls: string) => ({ q: `What is the difference between home and online tuition?`, a: `Home tuition offers face-to-face interaction ideal for younger students. Online classes provide flexibility and access to a wider tutor pool. Both are available at similar rates.` }),
+];
+
+// Intent-specific FAQs
+const feesFaqs = (area: string) => [
+  { q: `What are the average tuition fees in ${area}?`, a: `Home tuition fees in ${area} range from ₹300–₹800/hr depending on class, subject, and tutor experience. Competitive exam coaching may cost ₹600–₹1,200/hr.` },
+  { q: `Are there any hidden charges?`, a: `No hidden charges. You only pay for sessions taken. No registration fee, no material fee. The first demo class is always free.` },
+  { q: `Do you offer discounts for multiple subjects?`, a: `Yes! Students taking tuition in 2+ subjects get a 10–15% discount on the total fee. Group tuition (2–3 students) is available at 30–40% lower rates.` },
+  { q: `Can I pay monthly?`, a: `Yes, most families opt for monthly payments. We also offer flexible per-session billing. All payment terms are discussed upfront.` },
+  { q: `Are online classes cheaper than home tuition?`, a: `Online classes are typically 10–20% lower in fees since there's no travel involved for the tutor. Quality and session duration remain the same.` },
+];
+
+const femaleFaqs = (subj: string, area: string) => [
+  { q: `How many female ${subj} tutors are available in ${area}?`, a: `We have 50+ verified female ${subj} tutors in and around ${area}. New tutors join our platform regularly.` },
+  { q: `Can I request a female tutor specifically?`, a: `Absolutely. When booking, simply select "Female Tutor Preferred" and we'll match you with the best-fit female educator.` },
+  { q: `Are female tutors available for home visits?`, a: `Yes, our female tutors provide both home tuition and online classes. All tutors are background-verified for safety.` },
+  { q: `Do female tutors cover all boards?`, a: `Yes, our female tutors specialize in CBSE, ICSE, IB, and state boards with equal expertise.` },
+  { q: `What qualifications do female tutors have?`, a: `Our female tutors include B.Ed holders, postgraduates, PhD scholars, and working professionals with 3–10+ years of teaching experience.` },
 ];
 
 export function getEnrichedFaqs(pageData: SeoPageData): { q: string; a: string }[] {
@@ -96,8 +200,16 @@ export function getEnrichedFaqs(pageData: SeoPageData): { q: string; a: string }
   const kw = pageData.keyword;
   const area = pageData.area?.name || "";
   const cls = pageData.classLevel?.label || "";
-  
-  // Pick 5 unique FAQs based on seed
+
+  // Intent-specific FAQs
+  if (pageData.intent === "fees" || pageData.isMoneyPage && pageData.type === "tuition-fees-area") {
+    return feesFaqs(area);
+  }
+  if (pageData.intent === "female-tutors") {
+    return femaleFaqs(pageData.subject?.name || "Home Tuition", area);
+  }
+
+  // Default: pick 5 unique from pool
   const selected: { q: string; a: string }[] = [];
   const used = new Set<number>();
   for (let i = 0; i < 5; i++) {
@@ -150,7 +262,7 @@ export function getRelatedLinks(pageData: SeoPageData): InternalLink[] {
     }
   }
 
-  // 3. Same subject + area, different class
+  // 3. Class variants
   if (pageData.subject && pageData.area) {
     for (const c of classes.filter(c => ["9", "10", "11", "12"].includes(c.slug) && c.slug !== pageData.classLevel?.slug)) {
       addLink(`/${pageData.subject.slug}-tuition-in-${pageData.area.slug}-class-${c.slug}`, `${pageData.subject.name} Tuition for ${c.label} in ${pageData.area.name}`);
@@ -158,13 +270,21 @@ export function getRelatedLinks(pageData: SeoPageData): InternalLink[] {
     }
   }
 
-  // 4. Area tuition & best tutors links
+  // 4. Area hub pages
   if (pageData.area) {
     addLink(`/home-tuition-in-${pageData.area.slug}`, `Home Tuition in ${pageData.area.name}`);
     addLink(`/best-home-tutors-in-${pageData.area.slug}`, `Best Home Tutors in ${pageData.area.name}`);
+    addLink(`/home-tuition-fees-in-${pageData.area.slug}`, `Tuition Fees in ${pageData.area.name}`);
+    addLink(`/top-10-home-tutors-${pageData.area.slug}`, `Top 10 Tutors in ${pageData.area.name}`);
   }
 
-  // 5. Nearby pincodes
+  // 5. Board/intent variants
+  if (pageData.subject && pageData.area) {
+    addLink(`/female-${pageData.subject.slug}-home-tutor-${pageData.area.slug}`, `Female ${pageData.subject.name} Tutor in ${pageData.area.name}`);
+    addLink(`/${pageData.subject.slug}-home-tutor-${pageData.area.slug}-fees`, `${pageData.subject.name} Fees in ${pageData.area.name}`);
+  }
+
+  // 6. Nearby pincodes
   if (pageData.area) {
     const nearby = areas.filter(a => a.slug !== pageData.area?.slug).slice(0, 2);
     for (const a of nearby) {
@@ -181,11 +301,33 @@ export function getOptimizedMeta(pageData: SeoPageData): { title: string; descri
   const subj = pageData.subject?.name;
   const area = pageData.area?.name;
   const cls = pageData.classLevel?.label;
+  const board = pageData.board?.name;
   const seed = hashStr(pageData.slug);
 
-  // Title: max 60 chars, keyword + area + intent
   let title = "";
-  if (subj && area && cls) {
+
+  // Money pages
+  if (pageData.type === "tuition-fees-area") {
+    title = `Home Tuition Fees in ${area} (2025) | Tutors Parliament`;
+  } else if (pageData.type === "top-tutors-area") {
+    title = `Top 10 Home Tutors in ${area}, Delhi | Tutors Parliament`;
+  }
+  // Board-specific
+  else if (subj && area && cls && board) {
+    title = `${subj} ${board} Tutor ${area} ${cls} | Tutors Parliament`;
+  }
+  // Intent pages
+  else if (pageData.type === "female-subject-area") {
+    title = `Female ${subj} Tutor in ${area} | Tutors Parliament`;
+  } else if (pageData.type === "subject-near-me-class") {
+    title = `${subj} Home Tutor Near Me — ${cls} | Tutors Parliament`;
+  } else if (pageData.type === "home-vs-online-area") {
+    title = `Home vs Online Tuition ${area} | Tutors Parliament`;
+  } else if (pageData.type === "subject-area-fees") {
+    title = `${subj} Tutor Fees in ${area} | Tutors Parliament`;
+  }
+  // Standard pages
+  else if (subj && area && cls) {
     title = `${subj} Home Tutor in ${area} for ${cls} | Tutors Parliament`;
   } else if (subj && area) {
     title = `Best ${subj} Home Tutor in ${area}, Delhi | Tutors Parliament`;
@@ -201,18 +343,16 @@ export function getOptimizedMeta(pageData: SeoPageData): { title: string; descri
   } else {
     title = pageData.title;
   }
-  // Truncate to 60 chars
+
   if (title.length > 65) title = title.slice(0, 62) + "...";
 
-  // Description: 140-160 chars with benefit + trust + CTA
-  let desc = "";
   const descVariants = [
-    `Find verified ${subj || "home"} tutors${area ? ` in ${area}` : " in Delhi"}${cls ? ` for ${cls}` : ""}. Affordable fees, CBSE/ICSE experts, free demo class. Book now!`,
-    `Top-rated ${subj || "home"} tuition${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}. 4.8★ rated, background-verified tutors. Free demo available — start today!`,
-    `Experienced ${subj || "home"} tutors${area ? ` in ${area}` : " in Delhi"}${cls ? ` for ${cls}` : ""}. Personalized learning, all boards covered. Book a free demo!`,
-    `Looking for ${subj || "home"} tuition${area ? ` in ${area}` : ""}${cls ? ` (${cls})` : ""}? Verified tutors, flexible timings, 10K+ happy students. Free demo!`,
+    `Find verified ${subj || "home"} tutors${area ? ` in ${area}` : " in Delhi"}${cls ? ` for ${cls}` : ""}${board ? ` (${board})` : ""}. Affordable fees, free demo. Book now!`,
+    `Top-rated ${subj || "home"} tuition${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}${board ? `, ${board}` : ""}. 4.8★ rated, verified tutors. Free demo!`,
+    `Experienced ${subj || "home"} tutors${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}. Personalized learning, all boards. Book a free demo!`,
+    `Looking for ${subj || "home"} tuition${area ? ` in ${area}` : ""}${cls ? ` (${cls})` : ""}? Verified tutors, 10K+ students. Free demo!`,
   ];
-  desc = pick(descVariants, seed);
+  let desc = pick(descVariants, seed);
   if (desc.length > 160) desc = desc.slice(0, 157) + "...";
 
   return { title, description: desc };

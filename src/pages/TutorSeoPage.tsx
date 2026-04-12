@@ -5,34 +5,26 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Star, MapPin, ArrowRight, BookOpen, Clock, Users } from "lucide-react";
+import {
+  CheckCircle, Star, MapPin, ArrowRight, BookOpen, Clock, Users,
+  DollarSign, TrendingUp, Shield, Award,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
+  Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink,
+  BreadcrumbSeparator, BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import {
-  parseSlug,
-  parseNewSlug,
-  subjects,
-  areas,
-  classes,
+  parseSlug, parseNewSlug, parseSlug2,
+  subjects, areas, classes, boards,
+  getClusterLinks,
 } from "@/data/seoData";
 import {
-  getEnrichedContent,
-  getEnrichedFaqs,
-  getRelatedLinks,
-  getOptimizedMeta,
+  getEnrichedContent, getEnrichedFaqs, getRelatedLinks, getOptimizedMeta,
+  moneyPageContent,
 } from "@/data/seoContentGenerator";
 
 const TutorSeoPage = () => {
@@ -41,8 +33,11 @@ const TutorSeoPage = () => {
 
   const pageData = useMemo(() => {
     const path = location.pathname.replace(/^\//, "");
-    const newResult = parseNewSlug(path);
-    if (newResult) return newResult;
+    // Try direct (non /tutors/ prefix) patterns first
+    const v2 = parseSlug2(path);
+    if (v2) return v2;
+    const v1 = parseNewSlug(path);
+    if (v1) return v1;
     if (params.slug) return parseSlug(params.slug);
     return null;
   }, [params, location.pathname]);
@@ -62,83 +57,54 @@ const TutorSeoPage = () => {
     );
   }
 
-  // Enriched content
   const content = getEnrichedContent(pageData);
   const faqs = getEnrichedFaqs(pageData);
   const relatedLinks = getRelatedLinks(pageData);
   const meta = getOptimizedMeta(pageData);
+  const clusterLinks = getClusterLinks(pageData);
 
-  // Legacy internal links for subject/area/class browsing
   const relatedSubjects = subjects.filter(s => s.slug !== pageData.subject?.slug).slice(0, 6);
   const relatedAreas = areas.filter(a => a.slug !== pageData.area?.slug).slice(0, 6);
   const relatedClasses = classes.filter(c => ["8", "9", "10", "11", "12"].includes(c.slug) && c.slug !== pageData.classLevel?.slug).slice(0, 5);
 
   // Breadcrumbs
-  const breadcrumbs = [
-    { label: "Home", href: "/" },
-    { label: "Tutors", href: "/tutors/math-delhi" },
-  ];
-  if (pageData.subject) {
-    breadcrumbs.push({ label: pageData.subject.name, href: `/tutors/${pageData.subject.slug}-delhi` });
-  }
-  if (pageData.area && pageData.type !== "area") {
-    breadcrumbs.push({ label: pageData.area.name, href: `/tutors/${pageData.area.slug}-delhi` });
-  }
+  const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Tutors", href: "/tutors/math-delhi" }];
+  if (pageData.subject) breadcrumbs.push({ label: pageData.subject.name, href: `/tutors/${pageData.subject.slug}-delhi` });
+  if (pageData.area && pageData.type !== "area") breadcrumbs.push({ label: pageData.area.name, href: `/tutors/${pageData.area.slug}-delhi` });
+  if (pageData.board) breadcrumbs.push({ label: pageData.board.name, href: "#" });
 
-  // JSON-LD schemas
   const pageUrl = `https://tutorsparliament.com/${pageData.slug}`;
+  const showPincode = !!pageData.area?.pincode;
 
+  // JSON-LD
   const educationalOrgJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "EducationalOrganization",
-    name: "Tutors Parliament",
-    description: meta.description,
-    url: pageUrl,
+    "@context": "https://schema.org", "@type": "EducationalOrganization",
+    name: "Tutors Parliament", description: meta.description, url: pageUrl,
     areaServed: { "@type": "City", name: pageData.area?.name || "Delhi" },
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: pageData.area?.name || "Delhi",
-      addressRegion: "Delhi",
-      postalCode: pageData.area?.pincode || "110001",
-      addressCountry: "IN",
-    },
+    address: { "@type": "PostalAddress", addressLocality: pageData.area?.name || "Delhi", addressRegion: "Delhi", postalCode: pageData.area?.pincode || "110001", addressCountry: "IN" },
   };
-
   const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map(f => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
+    "@context": "https://schema.org", "@type": "FAQPage",
+    mainEntity: faqs.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   };
-
   const localBusinessJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: `Tutors Parliament — ${pageData.area?.name || "Delhi"}`,
-    description: meta.description,
-    url: pageUrl,
+    "@context": "https://schema.org", "@type": "LocalBusiness",
+    name: `Tutors Parliament — ${pageData.area?.name || "Delhi"}`, description: meta.description, url: pageUrl,
     telephone: "+91-9873101564",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: pageData.area?.name || "Delhi",
-      addressRegion: "Delhi",
-      postalCode: pageData.area?.pincode || "110001",
-      addressCountry: "IN",
-    },
+    address: { "@type": "PostalAddress", addressLocality: pageData.area?.name || "Delhi", addressRegion: "Delhi", postalCode: pageData.area?.pincode || "110001", addressCountry: "IN" },
     aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "2500" },
   };
 
-  const showPincode = !!pageData.area?.pincode;
+  // Money page data
+  const isFeesPage = pageData.type === "tuition-fees-area" || pageData.type === "subject-area-fees";
+  const isTopTutorsPage = pageData.type === "top-tutors-area";
 
   return (
     <>
       <SEOHead
         title={meta.title}
         description={meta.description}
-        keywords={`${pageData.keyword}, home tutor Delhi, tuition classes Delhi, CBSE ICSE tutor${pageData.area ? `, tutor ${pageData.area.name}` : ""}${pageData.classLevel ? `, ${pageData.classLevel.label} tutor` : ""}`}
+        keywords={`${pageData.keyword}, home tutor Delhi, tuition classes Delhi, CBSE ICSE tutor${pageData.area ? `, tutor ${pageData.area.name}` : ""}${pageData.classLevel ? `, ${pageData.classLevel.label} tutor` : ""}${pageData.board ? `, ${pageData.board.name} tutor` : ""}${pageData.intent ? `, ${pageData.intent}` : ""}`}
         canonical={pageUrl}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(educationalOrgJsonLd) }} />
@@ -153,9 +119,7 @@ const TutorSeoPage = () => {
               {breadcrumbs.map((bc, i) => (
                 <BreadcrumbItem key={i}>
                   {i > 0 && <BreadcrumbSeparator />}
-                  <BreadcrumbLink asChild>
-                    <Link to={bc.href}>{bc.label}</Link>
-                  </BreadcrumbLink>
+                  <BreadcrumbLink asChild><Link to={bc.href}>{bc.label}</Link></BreadcrumbLink>
                 </BreadcrumbItem>
               ))}
               <BreadcrumbItem>
@@ -169,11 +133,22 @@ const TutorSeoPage = () => {
         {/* Hero */}
         <section className="section-padding bg-gradient-to-br from-primary/5 to-secondary/5">
           <div className="container mx-auto max-w-4xl text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="font-heading font-bold text-3xl md:text-5xl text-foreground mb-6"
-            >
+            {pageData.isMoneyPage && (
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
+                {isFeesPage ? "💰 Fee Guide 2025" : "🏆 Top Rated Tutors"}
+              </motion.span>
+            )}
+            {pageData.board && (
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="inline-block px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-semibold mb-4">
+                {pageData.board.name} Specialist
+              </motion.span>
+            )}
+            {pageData.intent === "female-tutors" && (
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="inline-block px-3 py-1 rounded-full bg-pink-100 text-pink-700 text-xs font-semibold mb-4">
+                👩‍🏫 Female Tutors Available
+              </motion.span>
+            )}
+            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-heading font-bold text-3xl md:text-5xl text-foreground mb-6">
               {pageData.h1}
             </motion.h1>
             {showPincode && (
@@ -181,12 +156,7 @@ const TutorSeoPage = () => {
                 Serving pincode: <strong>{pageData.area!.pincode}</strong>
               </motion.p>
             )}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl mx-auto"
-            >
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
               {content.intro}
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex flex-wrap gap-4 justify-center">
@@ -201,22 +171,135 @@ const TutorSeoPage = () => {
               <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-primary" /> Verified Tutors</span>
               <span className="flex items-center gap-1.5"><Star className="h-4 w-4 text-yellow-500" /> 4.8★ Rating</span>
               <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-secondary" /> Serving Delhi NCR</span>
+              {pageData.board && <span className="flex items-center gap-1.5"><Award className="h-4 w-4 text-primary" /> {pageData.board.name} Experts</span>}
             </div>
           </div>
         </section>
 
-        {/* Enriched Content Section */}
+        {/* === MONEY PAGE: Fee Breakdown === */}
+        {isFeesPage && pageData.area && (
+          <section className="section-padding">
+            <div className="container mx-auto max-w-4xl">
+              <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-2 text-center">
+                <DollarSign className="inline h-7 w-7 text-primary mr-2" />
+                Tuition Fee Breakdown — {pageData.area.name}
+              </h2>
+              <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
+                {moneyPageContent.fees(pageData.area.name).intro}
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left p-3 font-heading font-semibold text-foreground">Class Range</th>
+                      <th className="text-left p-3 font-heading font-semibold text-foreground">Fee Range</th>
+                      <th className="text-left p-3 font-heading font-semibold text-foreground hidden sm:table-cell">Includes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {moneyPageContent.fees(pageData.area.name).breakdown.map((row, i) => (
+                      <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                        <td className="p-3 text-foreground font-medium">{row.range}</td>
+                        <td className="p-3 text-primary font-bold">{row.fee}</td>
+                        <td className="p-3 text-muted-foreground text-sm hidden sm:table-cell">{row.note}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-8">
+                <h3 className="font-heading font-semibold text-lg text-foreground mb-3">Factors Affecting Fees</h3>
+                <ul className="space-y-2">
+                  {moneyPageContent.fees(pageData.area.name).factors.map((f, i) => (
+                    <li key={i} className="flex items-start gap-2 text-muted-foreground text-sm">
+                      <TrendingUp className="h-4 w-4 text-primary mt-0.5 shrink-0" /> {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* === MONEY PAGE: Top Tutors === */}
+        {isTopTutorsPage && pageData.area && (
+          <section className="section-padding">
+            <div className="container mx-auto max-w-4xl">
+              <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-2 text-center">
+                <Award className="inline h-7 w-7 text-primary mr-2" />
+                Selection Criteria
+              </h2>
+              <p className="text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
+                {moneyPageContent.topTutors(pageData.area.name).intro}
+              </p>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {moneyPageContent.topTutors(pageData.area.name).criteria.map((c, i) => (
+                  <div key={i} className="flex items-center gap-3 p-4 rounded-xl border border-border bg-background">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold text-sm shrink-0">
+                      {i + 1}
+                    </div>
+                    <span className="text-foreground text-sm">{c}</span>
+                  </div>
+                ))}
+              </div>
+              {/* Sample tutor cards */}
+              <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  { name: "Priya Sharma", exp: "8 yrs", subj: "Maths & Science", rating: "4.9" },
+                  { name: "Rajesh Kumar", exp: "12 yrs", subj: "Physics & Chemistry", rating: "4.8" },
+                  { name: "Anita Verma", exp: "6 yrs", subj: "English & Hindi", rating: "4.9" },
+                  { name: "Suresh Gupta", exp: "10 yrs", subj: "Accounts & Economics", rating: "4.7" },
+                  { name: "Meena Devi", exp: "7 yrs", subj: "Biology & Chemistry", rating: "4.8" },
+                  { name: "Amit Tiwari", exp: "9 yrs", subj: "Maths (JEE)", rating: "4.9" },
+                ].map((t, i) => (
+                  <div key={i} className="p-4 rounded-xl border border-border bg-background card-shadow">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">{t.name[0]}</div>
+                      <div>
+                        <div className="font-heading font-semibold text-foreground text-sm">{t.name}</div>
+                        <div className="text-xs text-muted-foreground">{t.exp} experience</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">{t.subj}</span>
+                      <span className="flex items-center gap-1 text-yellow-500"><Star className="h-3 w-3" />{t.rating}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Enriched Content */}
         <section className="section-padding">
           <div className="container mx-auto max-w-3xl prose prose-gray dark:prose-invert">
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-4">
-              Why {pageData.subject?.name || "Home Tuition"} Matters{pageData.area ? ` in ${pageData.area.name}` : ""}
+              {pageData.intent === "home-vs-online"
+                ? "Home Tuition vs Online Classes — Which is Better?"
+                : `Why ${pageData.subject?.name || "Home Tuition"} Matters${pageData.area ? ` in ${pageData.area.name}` : ""}`}
             </h2>
             <p className="text-muted-foreground leading-relaxed">{content.value}</p>
             <p className="text-muted-foreground leading-relaxed mt-4">{content.closing}</p>
+
+            {/* Board-specific content */}
+            {pageData.board && (
+              <div className="mt-6 p-4 rounded-xl border border-primary/20 bg-primary/5">
+                <h3 className="font-heading font-semibold text-foreground mb-2">
+                  {pageData.board.name} Curriculum Focus
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Our {pageData.board.name}-specialist tutors understand the specific syllabus structure, internal assessment patterns, and marking schemes.
+                  {pageData.board.slug === "cbse" && " NCERT-aligned teaching with focus on HOTS questions and competency-based learning."}
+                  {pageData.board.slug === "icse" && " Application-oriented approach covering the detailed ICSE syllabus with emphasis on practical understanding."}
+                  {pageData.board.slug === "ib" && " Inquiry-based learning aligned with IB assessment criteria, TOK integration, and extended essay guidance."}
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
-        {/* Benefits Section */}
+        {/* Benefits */}
         <section className="section-padding bg-muted/20">
           <div className="container mx-auto max-w-4xl">
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-8 text-center">
@@ -228,8 +311,8 @@ const TutorSeoPage = () => {
                 { icon: Users, title: "Personalized Learning", desc: "One-on-one attention tailored to your child's pace and learning style." },
                 { icon: Clock, title: "Flexible Scheduling", desc: "Choose online or home tuition at times that work for your family." },
                 { icon: BookOpen, title: "Free Demo Class", desc: "Try before you commit — experience our teaching quality risk-free." },
-                { icon: Star, title: "All Boards Covered", desc: "CBSE, ICSE, IGCSE, IB, and state board curricula supported." },
-                { icon: MapPin, title: "Local Tutors", desc: `Tutors available right in your area${pageData.area ? ` — ${pageData.area.name}` : ""}.` },
+                { icon: Star, title: "All Boards Covered", desc: `CBSE, ICSE, IGCSE, IB, and state board curricula supported.` },
+                { icon: Shield, title: "Satisfaction Guarantee", desc: "Not happy? We'll assign a new tutor at no extra cost." },
               ].map((item, i) => (
                 <div key={i} className="p-6 rounded-xl border border-border bg-background card-shadow">
                   <item.icon className="h-6 w-6 text-primary mb-3" />
@@ -241,29 +324,37 @@ const TutorSeoPage = () => {
           </div>
         </section>
 
-        {/* Subjects Offered */}
+        {/* Subjects / Boards Offered */}
         {pageData.subject && (
           <section className="section-padding">
             <div className="container mx-auto max-w-4xl">
               <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-6 text-center">
                 {pageData.subject.name} & Other Subjects{pageData.area ? ` in ${pageData.area.name}` : ""}
               </h2>
-              <div className="flex flex-wrap gap-3 justify-center">
+              <div className="flex flex-wrap gap-3 justify-center mb-6">
                 {subjects.map(s => (
-                  <Link
-                    key={s.slug}
-                    to={`/tutors/${s.slug}${pageData.area ? `-${pageData.area.slug}` : ""}-delhi`}
-                    className={`px-4 py-2 rounded-full text-sm border transition-colors ${s.slug === pageData.subject?.slug ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
-                  >
+                  <Link key={s.slug} to={`/tutors/${s.slug}${pageData.area ? `-${pageData.area.slug}` : ""}-delhi`}
+                    className={`px-4 py-2 rounded-full text-sm border transition-colors ${s.slug === pageData.subject?.slug ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border text-muted-foreground hover:border-primary hover:text-primary"}`}>
                     {s.name}
                   </Link>
                 ))}
               </div>
+              {/* Board quick links */}
+              {pageData.area && pageData.classLevel && (
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {boards.map(b => (
+                    <Link key={b.slug} to={`/${pageData.subject!.slug}-home-tutor-${pageData.area!.slug}-class-${pageData.classLevel!.slug}-${b.slug}`}
+                      className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${b.slug === pageData.board?.slug ? "bg-secondary text-secondary-foreground border-secondary" : "bg-background border-border text-muted-foreground hover:border-secondary"}`}>
+                      {b.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         )}
 
-        {/* Local Trust Section */}
+        {/* Local Trust */}
         {pageData.area && (
           <section className="section-padding bg-muted/20">
             <div className="container mx-auto max-w-3xl text-center">
@@ -273,7 +364,6 @@ const TutorSeoPage = () => {
               <p className="text-muted-foreground leading-relaxed mb-6">
                 We serve students across {pageData.area.name} and nearby areas including{" "}
                 {areas.filter(a => a.slug !== pageData.area?.slug).slice(0, 4).map(a => a.name).join(", ")}.
-                Our tutors understand local curriculum requirements and provide doorstep tuition at your convenience.
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
                 {[
@@ -292,7 +382,7 @@ const TutorSeoPage = () => {
           </section>
         )}
 
-        {/* FAQs with Schema */}
+        {/* FAQs */}
         <section className="section-padding">
           <div className="container mx-auto max-w-3xl">
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-8 text-center">
@@ -313,7 +403,29 @@ const TutorSeoPage = () => {
           </div>
         </section>
 
-        {/* Related Pages (Internal Linking) */}
+        {/* Topical Authority Cluster Links */}
+        {clusterLinks.length > 0 && (
+          <section className="section-padding bg-primary/5">
+            <div className="container mx-auto max-w-4xl">
+              <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-2 text-center">
+                Explore This Topic
+              </h2>
+              <p className="text-muted-foreground text-center text-sm mb-6">Related pages in this cluster</p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {clusterLinks.map((link, i) => (
+                  <Link key={i} to={link.href}
+                    className={`flex items-center gap-2 p-3 rounded-lg border transition-colors text-sm ${link.isPillar ? "border-primary bg-primary/5 text-primary font-semibold" : "border-border bg-background text-muted-foreground hover:border-primary hover:text-primary"}`}>
+                    <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+                    {link.isPillar && <span className="text-[10px] uppercase tracking-wider bg-primary/10 px-1.5 py-0.5 rounded">Pillar</span>}
+                    {link.anchor}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Related Pages */}
         <section className="section-padding bg-muted/20">
           <div className="container mx-auto max-w-4xl">
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-6 text-center">
@@ -321,11 +433,7 @@ const TutorSeoPage = () => {
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {relatedLinks.map((link, i) => (
-                <Link
-                  key={i}
-                  to={link.href}
-                  className="flex items-center gap-2 p-3 rounded-lg border border-border bg-background hover:border-primary hover:text-primary transition-colors text-sm text-muted-foreground"
-                >
+                <Link key={i} to={link.href} className="flex items-center gap-2 p-3 rounded-lg border border-border bg-background hover:border-primary hover:text-primary transition-colors text-sm text-muted-foreground">
                   <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                   {link.anchor}
                 </Link>
@@ -334,7 +442,7 @@ const TutorSeoPage = () => {
           </div>
         </section>
 
-        {/* Browse by Subject / Area / Class */}
+        {/* Browse by Subject/Area/Class */}
         <section className="section-padding">
           <div className="container mx-auto max-w-4xl">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -344,8 +452,7 @@ const TutorSeoPage = () => {
                   {relatedSubjects.map(s => (
                     <li key={s.slug}>
                       <Link to={`/tutors/${s.slug}${pageData.area ? `-${pageData.area.slug}` : ""}-delhi`} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
-                        <ArrowRight className="h-3.5 w-3.5" />
-                        {s.name} Tutor in {pageData.area?.name || "Delhi"}
+                        <ArrowRight className="h-3.5 w-3.5" />{s.name} Tutor in {pageData.area?.name || "Delhi"}
                       </Link>
                     </li>
                   ))}
@@ -357,8 +464,7 @@ const TutorSeoPage = () => {
                   {relatedAreas.map(a => (
                     <li key={a.slug}>
                       <Link to={`/tutors/${pageData.subject ? `${pageData.subject.slug}-` : ""}${a.slug}-delhi`} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
-                        <ArrowRight className="h-3.5 w-3.5" />
-                        {pageData.subject?.name || "Home"} Tutor in {a.name}
+                        <ArrowRight className="h-3.5 w-3.5" />{pageData.subject?.name || "Home"} Tutor in {a.name}
                       </Link>
                     </li>
                   ))}
@@ -371,8 +477,7 @@ const TutorSeoPage = () => {
                     {relatedClasses.map(c => (
                       <li key={c.slug}>
                         <Link to={`/${(pageData.subject?.slug || "math")}-tuition-in-${(pageData.area?.slug || "rohini")}-class-${c.slug}`} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
-                          <ArrowRight className="h-3.5 w-3.5" />
-                          {pageData.subject?.name || "Maths"} Tuition — {c.label}
+                          <ArrowRight className="h-3.5 w-3.5" />{pageData.subject?.name || "Maths"} Tuition — {c.label}
                         </Link>
                       </li>
                     ))}
