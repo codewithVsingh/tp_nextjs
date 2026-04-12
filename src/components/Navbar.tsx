@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import TutorRegistrationModal from "./TutorRegistrationModal";
 
 const navLinks = [
   { label: "Home", href: "/" },
