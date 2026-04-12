@@ -272,6 +272,33 @@ export function parseSlug2(slug: string): SeoPageData | null {
     }
   }
 
+  // {exam}-coaching-{area}
+  m = slug.match(/^(.+)-coaching-(.+)$/);
+  if (m) {
+    const exam = findExam(m[1]);
+    const area = findArea(m[2]);
+    if (exam && area) {
+      const kw = `${exam.name} Coaching in ${area.name}`;
+      return { type: "subject-area" as PageType, slug, area, keyword: kw,
+        title: `${exam.name} Coaching in ${area.name}, Delhi | Tutors Parliament`,
+        metaDescription: `Top ${exam.name} coaching in ${area.name}. Expert tutors, mock tests, personalized study plans. Book free demo!`,
+        h1: `Best ${exam.name} Coaching in ${area.name}, Delhi` };
+    }
+  }
+
+  // {exam}-coaching-near-me
+  m = slug.match(/^(.+)-coaching-near-me$/);
+  if (m) {
+    const exam = findExam(m[1]);
+    if (exam) {
+      const kw = `${exam.name} Coaching Near Me`;
+      return { type: "subject-near-me-class" as PageType, slug, keyword: kw, intent: "near-me",
+        title: `${exam.name} Coaching Near Me — Delhi | Tutors Parliament`,
+        metaDescription: `Find the best ${exam.name} coaching near you in Delhi. Verified tutors, free demo class. Start preparing today!`,
+        h1: kw };
+    }
+  }
+
   return null;
 }
 
@@ -513,6 +540,14 @@ export function getAllSlugs(): string[] {
   for (const subj of topSubjects) {
     for (const area of topAreas) {
       slugs.push(`${subj.slug}-home-tutor-${area.slug}-fees`);
+    }
+  }
+
+  // Exam coaching pages: 7 exams × top 15 areas + near-me (120 pages)
+  for (const exam of examTypes) {
+    slugs.push(`${exam.slug}-coaching-near-me`);
+    for (const area of areas.slice(0, 15)) {
+      slugs.push(`${exam.slug}-coaching-${area.slug}`);
     }
   }
 
