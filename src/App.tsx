@@ -47,6 +47,7 @@ const App = () => (
               <Route path="/faq" element={<FAQ />} />
               <Route path="/tutors/:slug" element={<TutorSeoPage />} />
               <Route path="/demo-booking" element={<DemoBooking />} />
+              <Route path="/:slug" element={<TutorSeoPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
