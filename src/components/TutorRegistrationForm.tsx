@@ -82,10 +82,54 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
   const [photoName, setPhotoName] = useState("");
   const [idProofName, setIdProofName] = useState("");
   const [resumeName, setResumeName] = useState("");
+  const [pincodeLoading, setPincodeLoading] = useState(false);
+  const [pincodeStatus, setPincodeStatus] = useState<"idle" | "success" | "error" | "manual">("idle");
+  const [postOffices, setPostOffices] = useState<string[]>([]);
+  const [locationLocked, setLocationLocked] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
   }, [form]);
+
+  const fetchPincodeData = useCallback(async (pincode: string) => {
+    if (!/^\d{6}$/.test(pincode)) return;
+    setPincodeLoading(true);
+    setPincodeStatus("idle");
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await res.json();
+      if (data?.[0]?.Status === "Success" && data[0].PostOffice?.length > 0) {
+        const offices = data[0].PostOffice;
+        const state = offices[0].State;
+        const district = offices[0].District;
+        setForm(prev => ({ ...prev, state, city: district }));
+        setPostOffices(offices.map((o: any) => o.Name));
+        setPincodeStatus("success");
+        setLocationLocked(true);
+        setErrors(prev => { const n = { ...prev }; delete n.state; delete n.city; delete n.pincode; return n; });
+      } else {
+        setPincodeStatus("error");
+        setLocationLocked(false);
+      }
+    } catch {
+      setPincodeStatus("manual");
+      setLocationLocked(false);
+    } finally {
+      setPincodeLoading(false);
+    }
+  }, []);
+
+  const handlePincodeChange = (value: string) => {
+    const clean = value.replace(/\D/g, "").slice(0, 6);
+    set("pincode", clean);
+    setPincodeStatus("idle");
+    setLocationLocked(false);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (clean.length === 6) {
+      debounceRef.current = setTimeout(() => fetchPincodeData(clean), 500);
+    }
+  };
 
   const set = (field: keyof FormData, value: string | string[]) => {
     setForm(prev => ({ ...prev, [field]: value }));
