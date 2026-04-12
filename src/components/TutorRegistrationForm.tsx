@@ -56,7 +56,7 @@ interface FormData {
 }
 
 const defaultForm: FormData = {
-  name: "", phone: "", email: "", city: "", pincode: "",
+  name: "", phone: "", email: "", state: "", city: "", pincode: "",
   subjects: [], classes: [], boards: [], teachingMode: "", preferredLocations: "", languages: [],
   qualification: "", specialization: "", experience: "", currentStatus: "", availableDays: [], timeSlots: [], expectedFees: "", travelWilling: "", travelRadius: "",
   bio: "", videoLink: "",
