@@ -24,30 +24,26 @@ import {
 import {
   parseSlug,
   parseNewSlug,
-  getIntro,
-  getFaqs,
   subjects,
   areas,
   classes,
 } from "@/data/seoData";
+import {
+  getEnrichedContent,
+  getEnrichedFaqs,
+  getRelatedLinks,
+  getOptimizedMeta,
+} from "@/data/seoContentGenerator";
 
 const TutorSeoPage = () => {
   const params = useParams();
   const location = useLocation();
 
   const pageData = useMemo(() => {
-    // Build slug from URL path for new patterns
     const path = location.pathname.replace(/^\//, "");
-
-    // Try new patterns from full path
     const newResult = parseNewSlug(path);
     if (newResult) return newResult;
-
-    // Legacy /tutors/:slug
-    if (params.slug) {
-      return parseSlug(params.slug);
-    }
-
+    if (params.slug) return parseSlug(params.slug);
     return null;
   }, [params, location.pathname]);
 
@@ -66,17 +62,15 @@ const TutorSeoPage = () => {
     );
   }
 
-  const idx = pageData.slug.length;
-  const intro = getIntro(pageData.keyword, "Delhi", idx, pageData.area?.pincode);
-  const faqs = getFaqs(pageData.keyword, pageData.area?.name, idx, pageData.classLevel?.label);
+  // Enriched content
+  const content = getEnrichedContent(pageData);
+  const faqs = getEnrichedFaqs(pageData);
+  const relatedLinks = getRelatedLinks(pageData);
+  const meta = getOptimizedMeta(pageData);
 
-  // Related links
-  const relatedSubjects = subjects
-    .filter((s) => s.slug !== pageData.subject?.slug)
-    .slice(0, 6);
-  const relatedAreas = areas
-    .filter((a) => a.slug !== pageData.area?.slug)
-    .slice(0, 6);
+  // Legacy internal links for subject/area/class browsing
+  const relatedSubjects = subjects.filter(s => s.slug !== pageData.subject?.slug).slice(0, 6);
+  const relatedAreas = areas.filter(a => a.slug !== pageData.area?.slug).slice(0, 6);
   const relatedClasses = classes.filter(c => ["8", "9", "10", "11", "12"].includes(c.slug) && c.slug !== pageData.classLevel?.slug).slice(0, 5);
 
   // Breadcrumbs
@@ -85,29 +79,22 @@ const TutorSeoPage = () => {
     { label: "Tutors", href: "/tutors/math-delhi" },
   ];
   if (pageData.subject) {
-    breadcrumbs.push({
-      label: pageData.subject.name,
-      href: `/tutors/${pageData.subject.slug}-delhi`,
-    });
+    breadcrumbs.push({ label: pageData.subject.name, href: `/tutors/${pageData.subject.slug}-delhi` });
   }
   if (pageData.area && pageData.type !== "area") {
-    breadcrumbs.push({
-      label: pageData.area.name,
-      href: `/tutors/${pageData.area.slug}-delhi`,
-    });
+    breadcrumbs.push({ label: pageData.area.name, href: `/tutors/${pageData.area.slug}-delhi` });
   }
 
   // JSON-LD schemas
+  const pageUrl = `https://tutorsparliament.com/${pageData.slug}`;
+
   const educationalOrgJsonLd = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     name: "Tutors Parliament",
-    description: pageData.metaDescription,
-    url: `https://tutorsparliament.com/${pageData.slug}`,
-    areaServed: {
-      "@type": "City",
-      name: pageData.area?.name || "Delhi",
-    },
+    description: meta.description,
+    url: pageUrl,
+    areaServed: { "@type": "City", name: pageData.area?.name || "Delhi" },
     address: {
       "@type": "PostalAddress",
       addressLocality: pageData.area?.name || "Delhi",
@@ -120,7 +107,7 @@ const TutorSeoPage = () => {
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faqs.map((f: { q: string; a: string }) => ({
+    mainEntity: faqs.map(f => ({
       "@type": "Question",
       name: f.q,
       acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -131,8 +118,8 @@ const TutorSeoPage = () => {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: `Tutors Parliament — ${pageData.area?.name || "Delhi"}`,
-    description: pageData.metaDescription,
-    url: `https://tutorsparliament.com/${pageData.slug}`,
+    description: meta.description,
+    url: pageUrl,
     telephone: "+91-9873101564",
     address: {
       "@type": "PostalAddress",
@@ -141,23 +128,18 @@ const TutorSeoPage = () => {
       postalCode: pageData.area?.pincode || "110001",
       addressCountry: "IN",
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      reviewCount: "2500",
-    },
+    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "2500" },
   };
 
-  const showClassSection = !!pageData.classLevel;
   const showPincode = !!pageData.area?.pincode;
 
   return (
     <>
       <SEOHead
-        title={pageData.title}
-        description={pageData.metaDescription}
+        title={meta.title}
+        description={meta.description}
         keywords={`${pageData.keyword}, home tutor Delhi, tuition classes Delhi, CBSE ICSE tutor${pageData.area ? `, tutor ${pageData.area.name}` : ""}${pageData.classLevel ? `, ${pageData.classLevel.label} tutor` : ""}`}
-        canonical={`https://tutorsparliament.com/${pageData.slug}`}
+        canonical={pageUrl}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(educationalOrgJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
@@ -195,12 +177,7 @@ const TutorSeoPage = () => {
               {pageData.h1}
             </motion.h1>
             {showPincode && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.05 }}
-                className="text-sm text-muted-foreground mb-2"
-              >
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }} className="text-sm text-muted-foreground mb-2">
                 Serving pincode: <strong>{pageData.area!.pincode}</strong>
               </motion.p>
             )}
@@ -210,14 +187,9 @@ const TutorSeoPage = () => {
               transition={{ delay: 0.1 }}
               className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl mx-auto"
             >
-              {intro}
+              {content.intro}
             </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex flex-wrap gap-4 justify-center">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
                 <Link to="/demo-booking">Start Free Demo</Link>
               </Button>
@@ -225,8 +197,6 @@ const TutorSeoPage = () => {
                 <a href="tel:+919873101564">Call: +91-9873101564</a>
               </Button>
             </motion.div>
-
-            {/* Trust signals */}
             <div className="flex flex-wrap gap-6 justify-center mt-8 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-primary" /> Verified Tutors</span>
               <span className="flex items-center gap-1.5"><Star className="h-4 w-4 text-yellow-500" /> 4.8★ Rating</span>
@@ -235,8 +205,19 @@ const TutorSeoPage = () => {
           </div>
         </section>
 
-        {/* Benefits Section */}
+        {/* Enriched Content Section */}
         <section className="section-padding">
+          <div className="container mx-auto max-w-3xl prose prose-gray dark:prose-invert">
+            <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-4">
+              Why {pageData.subject?.name || "Home Tuition"} Matters{pageData.area ? ` in ${pageData.area.name}` : ""}
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">{content.value}</p>
+            <p className="text-muted-foreground leading-relaxed mt-4">{content.closing}</p>
+          </div>
+        </section>
+
+        {/* Benefits Section */}
+        <section className="section-padding bg-muted/20">
           <div className="container mx-auto max-w-4xl">
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-8 text-center">
               Why Choose Tutors Parliament{pageData.area ? ` in ${pageData.area.name}` : ""}?
@@ -260,9 +241,9 @@ const TutorSeoPage = () => {
           </div>
         </section>
 
-        {/* Subjects Offered (dynamic) */}
+        {/* Subjects Offered */}
         {pageData.subject && (
-          <section className="section-padding bg-muted/20">
+          <section className="section-padding">
             <div className="container mx-auto max-w-4xl">
               <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-6 text-center">
                 {pageData.subject.name} & Other Subjects{pageData.area ? ` in ${pageData.area.name}` : ""}
@@ -272,11 +253,7 @@ const TutorSeoPage = () => {
                   <Link
                     key={s.slug}
                     to={`/tutors/${s.slug}${pageData.area ? `-${pageData.area.slug}` : ""}-delhi`}
-                    className={`px-4 py-2 rounded-full text-sm border transition-colors ${
-                      s.slug === pageData.subject?.slug
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-background border-border text-muted-foreground hover:border-primary hover:text-primary"
-                    }`}
+                    className={`px-4 py-2 rounded-full text-sm border transition-colors ${s.slug === pageData.subject?.slug ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
                   >
                     {s.name}
                   </Link>
@@ -288,7 +265,7 @@ const TutorSeoPage = () => {
 
         {/* Local Trust Section */}
         {pageData.area && (
-          <section className="section-padding">
+          <section className="section-padding bg-muted/20">
             <div className="container mx-auto max-w-3xl text-center">
               <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-4">
                 Trusted by Students in {pageData.area.name}
@@ -299,40 +276,31 @@ const TutorSeoPage = () => {
                 Our tutors understand local curriculum requirements and provide doorstep tuition at your convenience.
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
-                <div className="p-4 rounded-xl bg-primary/5 text-center">
-                  <div className="text-2xl font-bold text-primary">10K+</div>
-                  <div className="text-xs text-muted-foreground mt-1">Students</div>
-                </div>
-                <div className="p-4 rounded-xl bg-primary/5 text-center">
-                  <div className="text-2xl font-bold text-primary">4.8★</div>
-                  <div className="text-xs text-muted-foreground mt-1">Rating</div>
-                </div>
-                <div className="p-4 rounded-xl bg-primary/5 text-center">
-                  <div className="text-2xl font-bold text-primary">500+</div>
-                  <div className="text-xs text-muted-foreground mt-1">Tutors</div>
-                </div>
-                <div className="p-4 rounded-xl bg-primary/5 text-center">
-                  <div className="text-2xl font-bold text-primary">24h</div>
-                  <div className="text-xs text-muted-foreground mt-1">Matching</div>
-                </div>
+                {[
+                  { val: "10K+", label: "Students" },
+                  { val: "4.8★", label: "Rating" },
+                  { val: "500+", label: "Tutors" },
+                  { val: "24h", label: "Matching" },
+                ].map((s, i) => (
+                  <div key={i} className="p-4 rounded-xl bg-primary/5 text-center">
+                    <div className="text-2xl font-bold text-primary">{s.val}</div>
+                    <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
         )}
 
-        {/* FAQs */}
-        <section className="section-padding bg-muted/30">
+        {/* FAQs with Schema */}
+        <section className="section-padding">
           <div className="container mx-auto max-w-3xl">
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-8 text-center">
               Frequently Asked Questions
             </h2>
             <Accordion type="single" collapsible className="space-y-3">
-              {faqs.map((faq: { q: string; a: string }, i: number) => (
-                <AccordionItem
-                  key={i}
-                  value={`faq-${i}`}
-                  className="bg-background rounded-xl px-6 border border-border card-shadow"
-                >
+              {faqs.map((faq, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="bg-background rounded-xl px-6 border border-border card-shadow">
                   <AccordionTrigger className="text-left font-heading font-semibold text-foreground hover:no-underline">
                     {faq.q}
                   </AccordionTrigger>
@@ -345,20 +313,37 @@ const TutorSeoPage = () => {
           </div>
         </section>
 
-        {/* Internal Links */}
+        {/* Related Pages (Internal Linking) */}
+        <section className="section-padding bg-muted/20">
+          <div className="container mx-auto max-w-4xl">
+            <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-6 text-center">
+              Related Pages
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {relatedLinks.map((link, i) => (
+                <Link
+                  key={i}
+                  to={link.href}
+                  className="flex items-center gap-2 p-3 rounded-lg border border-border bg-background hover:border-primary hover:text-primary transition-colors text-sm text-muted-foreground"
+                >
+                  <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+                  {link.anchor}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Browse by Subject / Area / Class */}
         <section className="section-padding">
           <div className="container mx-auto max-w-4xl">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {/* Related Subjects */}
               <div>
                 <h2 className="font-heading font-bold text-xl text-foreground mb-4">Browse by Subject</h2>
                 <ul className="space-y-2">
-                  {relatedSubjects.map((s) => (
+                  {relatedSubjects.map(s => (
                     <li key={s.slug}>
-                      <Link
-                        to={`/tutors/${s.slug}${pageData.area ? `-${pageData.area.slug}` : ""}-delhi`}
-                        className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm"
-                      >
+                      <Link to={`/tutors/${s.slug}${pageData.area ? `-${pageData.area.slug}` : ""}-delhi`} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
                         <ArrowRight className="h-3.5 w-3.5" />
                         {s.name} Tutor in {pageData.area?.name || "Delhi"}
                       </Link>
@@ -366,16 +351,12 @@ const TutorSeoPage = () => {
                   ))}
                 </ul>
               </div>
-              {/* Related Areas */}
               <div>
                 <h2 className="font-heading font-bold text-xl text-foreground mb-4">Browse by Location</h2>
                 <ul className="space-y-2">
-                  {relatedAreas.map((a) => (
+                  {relatedAreas.map(a => (
                     <li key={a.slug}>
-                      <Link
-                        to={`/tutors/${pageData.subject ? `${pageData.subject.slug}-` : ""}${a.slug}-delhi`}
-                        className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm"
-                      >
+                      <Link to={`/tutors/${pageData.subject ? `${pageData.subject.slug}-` : ""}${a.slug}-delhi`} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
                         <ArrowRight className="h-3.5 w-3.5" />
                         {pageData.subject?.name || "Home"} Tutor in {a.name}
                       </Link>
@@ -383,17 +364,13 @@ const TutorSeoPage = () => {
                   ))}
                 </ul>
               </div>
-              {/* Related Classes */}
               {relatedClasses.length > 0 && (
                 <div>
                   <h2 className="font-heading font-bold text-xl text-foreground mb-4">Browse by Class</h2>
                   <ul className="space-y-2">
-                    {relatedClasses.map((c) => (
+                    {relatedClasses.map(c => (
                       <li key={c.slug}>
-                        <Link
-                          to={`/${(pageData.subject?.slug || "math")}-tuition-in-${(pageData.area?.slug || "rohini")}-class-${c.slug}`}
-                          className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm"
-                        >
+                        <Link to={`/${(pageData.subject?.slug || "math")}-tuition-in-${(pageData.area?.slug || "rohini")}-class-${c.slug}`} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
                           <ArrowRight className="h-3.5 w-3.5" />
                           {pageData.subject?.name || "Maths"} Tuition — {c.label}
                         </Link>
@@ -409,9 +386,7 @@ const TutorSeoPage = () => {
         {/* CTA */}
         <section className="section-padding bg-primary text-primary-foreground text-center">
           <div className="container mx-auto max-w-2xl">
-            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-4">
-              Start Learning Today
-            </h2>
+            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-4">Start Learning Today</h2>
             <p className="opacity-90 mb-6">
               Book a free demo class and experience personalized tutoring with Tutors Parliament.
             </p>
