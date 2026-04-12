@@ -80,6 +80,17 @@ export const intentModifiers = [
   { slug: "home-vs-online", name: "Home vs Online", label: "Home vs Online Tuition" },
 ] as const;
 
+export const examTypes = [
+  { slug: "jee", name: "JEE" },
+  { slug: "neet", name: "NEET" },
+  { slug: "cuet", name: "CUET" },
+  { slug: "ntse", name: "NTSE" },
+  { slug: "olympiad", name: "Olympiad" },
+  { slug: "navodaya", name: "Navodaya (JNVST)" },
+  { slug: "sainik-school", name: "Sainik School" },
+];
+function findExam(s: string) { return examTypes.find(e => e.slug === s); }
+
 export type IntentModifier = typeof intentModifiers[number];
 
 export type PageType =
@@ -257,6 +268,33 @@ export function parseSlug2(slug: string): SeoPageData | null {
       return { type: "subject-area-fees", slug, subject: subj, area, keyword: kw, intent: "fees",
         title: `${subj.name} Tutor Fees in ${area.name} | Tutors Parliament`,
         metaDescription: `${subj.name} home tuition fees in ${area.name}: ₹300–₹800/hr. Transparent pricing, free demo. Book now!`,
+        h1: kw };
+    }
+  }
+
+  // {exam}-coaching-{area}
+  m = slug.match(/^(.+)-coaching-(.+)$/);
+  if (m) {
+    const exam = findExam(m[1]);
+    const area = findArea(m[2]);
+    if (exam && area) {
+      const kw = `${exam.name} Coaching in ${area.name}`;
+      return { type: "subject-area" as PageType, slug, area, keyword: kw,
+        title: `${exam.name} Coaching in ${area.name}, Delhi | Tutors Parliament`,
+        metaDescription: `Top ${exam.name} coaching in ${area.name}. Expert tutors, mock tests, personalized study plans. Book free demo!`,
+        h1: `Best ${exam.name} Coaching in ${area.name}, Delhi` };
+    }
+  }
+
+  // {exam}-coaching-near-me
+  m = slug.match(/^(.+)-coaching-near-me$/);
+  if (m) {
+    const exam = findExam(m[1]);
+    if (exam) {
+      const kw = `${exam.name} Coaching Near Me`;
+      return { type: "subject-near-me-class" as PageType, slug, keyword: kw, intent: "near-me",
+        title: `${exam.name} Coaching Near Me — Delhi | Tutors Parliament`,
+        metaDescription: `Find the best ${exam.name} coaching near you in Delhi. Verified tutors, free demo class. Start preparing today!`,
         h1: kw };
     }
   }
@@ -502,6 +540,14 @@ export function getAllSlugs(): string[] {
   for (const subj of topSubjects) {
     for (const area of topAreas) {
       slugs.push(`${subj.slug}-home-tutor-${area.slug}-fees`);
+    }
+  }
+
+  // Exam coaching pages: 7 exams × top 15 areas + near-me (120 pages)
+  for (const exam of examTypes) {
+    slugs.push(`${exam.slug}-coaching-near-me`);
+    for (const area of areas.slice(0, 15)) {
+      slugs.push(`${exam.slug}-coaching-${area.slug}`);
     }
   }
 
