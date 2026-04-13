@@ -32,6 +32,17 @@ export const areas = [
   { slug: "connaught-place", name: "Connaught Place", pincode: "110001" },
   { slug: "lajpat-nagar", name: "Lajpat Nagar", pincode: "110024" },
   { slug: "kalkaji", name: "Kalkaji", pincode: "110019" },
+  // NCR Areas
+  { slug: "noida", name: "Noida", pincode: "201301" },
+  { slug: "greater-noida", name: "Greater Noida", pincode: "201310" },
+  { slug: "gurgaon", name: "Gurgaon", pincode: "122001" },
+  { slug: "ghaziabad", name: "Ghaziabad", pincode: "201001" },
+  { slug: "faridabad", name: "Faridabad", pincode: "121001" },
+  { slug: "indirapuram", name: "Indirapuram", pincode: "201014" },
+  { slug: "vaishali", name: "Vaishali", pincode: "201010" },
+  { slug: "sector-62-noida", name: "Sector 62 Noida", pincode: "201309" },
+  { slug: "dlf-phase-3", name: "DLF Phase 3", pincode: "122002" },
+  { slug: "sohna-road", name: "Sohna Road", pincode: "122018" },
 ];
 
 export const subjects = [
