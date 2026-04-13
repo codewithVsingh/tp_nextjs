@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import AntiAIInsight from "@/components/AntiAIInsight";
 import TrustBar from "@/components/TrustBar";
 import FeaturesSection from "@/components/FeaturesSection";
 import CoursesSection from "@/components/CoursesSection";
@@ -28,6 +29,7 @@ const Index = () => {
       <Navbar />
       <main className="pb-16 md:pb-0">
         <HeroSection />
+        <AntiAIInsight />
         <TrustBar />
         <FeaturesSection />
         <CoursesSection />
