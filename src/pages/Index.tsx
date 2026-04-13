@@ -8,7 +8,6 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import HowItWorks from "@/components/HowItWorks";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import BehaviorPopup from "@/components/BehaviorPopup";
 import ScrollTracker from "@/components/ScrollTracker";
@@ -27,7 +26,7 @@ const Index = () => {
         keywords="best home tutors Delhi, private tutors near me, online tuition classes India, CBSE ICSE tuition Delhi, home tutor Delhi NCR"
       />
       <Navbar />
-      <main>
+      <main className="pb-16 md:pb-0">
         <HeroSection />
         <TrustBar />
         <FeaturesSection />
@@ -38,7 +37,7 @@ const Index = () => {
         <FinalCTA />
       </main>
       <Footer />
-      <WhatsAppButton />
+      {/* Removed floating WhatsApp FAB — merged into bottom CTA bar */}
       <StickyMobileCTA onCtaClick={() => setShowModal(true)} />
       <BehaviorPopup />
       <ScrollTracker />

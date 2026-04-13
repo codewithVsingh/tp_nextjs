@@ -27,6 +27,8 @@ const navLinks = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showLazyCta, setShowLazyCta] = useState(false);
+  const [lazyCTADismissed, setLazyCTADismissed] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const [tutorModalOpen, setTutorModalOpen] = useState(false);
@@ -36,7 +38,16 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+      // Show lazy CTA after 40% scroll
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0 && window.scrollY / docHeight >= 0.4) {
+        setShowLazyCta(true);
+      } else {
+        setShowLazyCta(false);
+      }
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -100,7 +111,7 @@ const Navbar = () => {
         return (
           <div key={link.label}>
             <button
-              className={`${mobileLinkClass} flex items-center gap-1 w-full`}
+              className={`${mobileLinkClass} flex items-center gap-1 w-full min-h-[44px]`}
               onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
             >
               {link.label} <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${mobileDropdownOpen ? "rotate-180" : ""}`} />
@@ -114,7 +125,7 @@ const Navbar = () => {
                   className="pl-4 space-y-1 overflow-hidden"
                 >
                   {link.children.map((child) => (
-                    <Link key={child.label} to={child.href} className={mobileLinkClass} onClick={() => handleNavClick(child.href)}>
+                    <Link key={child.label} to={child.href} className={`${mobileLinkClass} min-h-[44px] flex items-center`} onClick={() => handleNavClick(child.href)}>
                       {child.label}
                     </Link>
                   ))}
@@ -204,7 +215,7 @@ const Navbar = () => {
           <Button variant="cta" size="lg" onClick={() => navigate("/demo-booking")}>Start Free Demo</Button>
         </div>
 
-        <button className="md:hidden text-foreground" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
+        <button className="md:hidden text-foreground p-2 min-w-[44px] min-h-[44px] flex items-center justify-center" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
@@ -218,18 +229,36 @@ const Navbar = () => {
             className="md:hidden bg-background border-b border-border px-4 pb-4 overflow-hidden"
           >
             {navLinks.map((link) => renderLink(link, true))}
-            <Button variant="outline" className="w-full mt-2" onClick={() => { setIsOpen(false); setTutorModalOpen(true); }}>Become a Tutor</Button>
-            <Button variant="cta" className="w-full mt-2" onClick={() => { setIsOpen(false); navigate("/demo-booking"); }}>Start Free Demo</Button>
+            <Button variant="outline" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); setTutorModalOpen(true); }}>Become a Tutor</Button>
+            <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/demo-booking"); }}>Start Free Demo</Button>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Sticky Mobile CTA */}
-      <div className="fixed bottom-4 left-4 right-4 z-40 md:hidden">
-        <Button variant="cta" className="w-full shadow-xl" onClick={() => setTutorModalOpen(true)}>
-          Teach & Earn 💰
-        </Button>
-      </div>
+      {/* Lazy sticky "Become a Tutor" — appears after 40% scroll, dismissible */}
+      <AnimatePresence>
+        {showLazyCta && !lazyCTADismissed && (
+          <motion.div
+            initial={{ y: -40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -40, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="hidden md:flex fixed top-16 left-0 right-0 z-40 bg-primary/95 backdrop-blur-sm items-center justify-center gap-3 py-2 text-primary-foreground text-sm"
+          >
+            <span>Want to teach? Join 1000+ tutors earning with Tutors Parliament.</span>
+            <Button variant="hero" size="sm" className="h-8 text-xs" onClick={() => setTutorModalOpen(true)}>
+              Become a Tutor
+            </Button>
+            <button
+              onClick={() => setLazyCTADismissed(true)}
+              className="absolute right-4 p-1 hover:bg-primary-foreground/10 rounded"
+              aria-label="Dismiss"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <TutorRegistrationModal open={tutorModalOpen} onOpenChange={setTutorModalOpen} />
     </nav>
