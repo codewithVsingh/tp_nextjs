@@ -17,28 +17,6 @@ const fadeUp = {
 
 const whatsappMsg = encodeURIComponent("Hi, I need a home tutor for my child. I'm concerned about AI dependency.");
 
-const SectionCTA = () => {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="flex flex-col sm:flex-row items-center gap-3 pt-4">
-      <Button size="lg" className="w-full sm:w-auto font-semibold" style={{ background: "var(--cta-gradient)" }} onClick={() => setOpen(true)}>
-        Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
-      </Button>
-      <Button variant="outline" size="lg" className="w-full sm:w-auto font-semibold" asChild>
-        <a href={`https://wa.me/919873101564?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer">
-          <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp
-        </a>
-      </Button>
-      <Button variant="outline" size="lg" className="w-full sm:w-auto font-semibold" asChild>
-        <a href="tel:+919873101564">
-          <Phone className="w-4 h-4 mr-1" /> Call Now
-        </a>
-      </Button>
-      <LeadCaptureModal open={open} onOpenChange={setOpen} source="ai_guide_section" />
-    </div>
-  );
-};
-
 const BulletList = ({ items, icon: Icon }: { items: string[]; icon: React.ElementType }) => (
   <ul className="space-y-3">
     {items.map((item, i) => (
@@ -64,7 +42,7 @@ const AIEducationGuide = () => {
       <Navbar />
 
       <main className="pb-16 md:pb-0">
-        {/* Hero */}
+        {/* Hero — single CTA only */}
         <section className="py-16 md:py-24" style={{ background: "var(--hero-gradient)" }}>
           <div className="container max-w-4xl mx-auto px-4 text-center text-primary-foreground">
             <motion.div {...fadeUp} className="space-y-5">
@@ -74,14 +52,14 @@ const AIEducationGuide = () => {
               <p className="text-base md:text-lg max-w-2xl mx-auto opacity-90 leading-relaxed">
                 From ChatGPT to AI homework solvers — understand the real impact on your child's academic growth and what you can do about it.
               </p>
-              <Button size="lg" className="font-bold text-primary" variant="secondary" onClick={() => setShowModal(true)}>
+              <Button size="lg" variant="cta" className="font-bold" onClick={() => setShowModal(true)}>
                 Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </motion.div>
           </div>
         </section>
 
-        {/* Short-Term Effects */}
+        {/* Short-Term Effects — NO CTA */}
         <section className="py-12 md:py-16 bg-background">
           <div className="container max-w-3xl mx-auto px-4">
             <motion.div {...fadeUp} className="space-y-6">
@@ -99,12 +77,11 @@ const AIEducationGuide = () => {
                   "Teachers can't identify real learning gaps when AI masks them",
                 ]}
               />
-              <SectionCTA />
             </motion.div>
           </div>
         </section>
 
-        {/* Long-Term Impact */}
+        {/* Long-Term Impact — NO CTA */}
         <section className="py-12 md:py-16 bg-muted/50">
           <div className="container max-w-3xl mx-auto px-4">
             <motion.div {...fadeUp} className="space-y-6">
@@ -122,12 +99,11 @@ const AIEducationGuide = () => {
                   "Widening gap between AI-assisted performance and actual competence",
                 ]}
               />
-              <SectionCTA />
             </motion.div>
           </div>
         </section>
 
-        {/* What Parents Should Do */}
+        {/* What Parents Should Do — NO CTA */}
         <section className="py-12 md:py-16 bg-background">
           <div className="container max-w-3xl mx-auto px-4">
             <motion.div {...fadeUp} className="space-y-6">
@@ -146,12 +122,11 @@ const AIEducationGuide = () => {
                   "Have open conversations about academic honesty and real understanding",
                 ]}
               />
-              <SectionCTA />
             </motion.div>
           </div>
         </section>
 
-        {/* Why Human Tutors Matter */}
+        {/* Why Human Tutors Matter + single WhatsApp CTA after */}
         <section className="py-12 md:py-16 bg-muted/50">
           <div className="container max-w-3xl mx-auto px-4">
             <motion.div {...fadeUp} className="space-y-6">
@@ -169,7 +144,13 @@ const AIEducationGuide = () => {
                   </div>
                 ))}
               </div>
-              <SectionCTA />
+              <div className="pt-4 flex justify-center">
+                <Button variant="outline" size="lg" className="font-semibold border-primary text-primary hover:bg-primary/5" asChild>
+                  <a href={`https://wa.me/919873101564?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer">
+                    <MessageCircle className="w-4 h-4 mr-1.5" /> Chat on WhatsApp
+                  </a>
+                </Button>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -195,7 +176,7 @@ const AIEducationGuide = () => {
           </div>
         </section>
 
-        {/* Final CTA */}
+        {/* Final CTA — ALL THREE buttons */}
         <section className="py-16 md:py-20" style={{ background: "var(--hero-gradient)" }}>
           <div className="container max-w-3xl mx-auto px-4 text-center text-primary-foreground">
             <motion.div {...fadeUp} className="space-y-6">
@@ -204,15 +185,15 @@ const AIEducationGuide = () => {
                 Don't let AI replace genuine understanding. Connect with a verified home tutor today and see the difference guided learning makes.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <Button size="lg" variant="secondary" className="w-full sm:w-auto font-bold text-primary" onClick={() => setShowModal(true)}>
+                <Button size="lg" variant="cta" className="w-full sm:w-auto font-bold" onClick={() => setShowModal(true)}>
                   Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto font-semibold border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" asChild>
                   <a href={`https://wa.me/919873101564?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp Us
+                    <MessageCircle className="w-4 h-4 mr-1" /> Chat on WhatsApp
                   </a>
                 </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto font-semibold border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" asChild>
+                <Button size="lg" variant="ghost" className="w-full sm:w-auto font-semibold text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10" asChild>
                   <a href="tel:+919873101564">
                     <Phone className="w-4 h-4 mr-1" /> Call Now
                   </a>
