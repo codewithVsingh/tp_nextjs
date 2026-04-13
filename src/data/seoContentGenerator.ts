@@ -2,7 +2,7 @@
 // Generates unique, varied content for all SEO page types including money pages,
 // board-specific pages, and intent-based pages.
 
-import { areas, subjects, classes, boards, type SeoPageData } from "./seoData";
+import { areas, subjects, classes, boards, services, type SeoPageData } from "./seoData";
 
 // ===== HASH FUNCTION =====
 function hashStr(s: string): number {
@@ -120,6 +120,16 @@ export function getEnrichedContent(pageData: SeoPageData): { intro: string; valu
   const area = pageData.area?.name || "Delhi";
   const cls = pageData.classLevel?.label || "";
   const pin = pageData.area?.pincode || "";
+
+  // Service page content
+  if (pageData.service) {
+    const svc = pageData.service;
+    return {
+      intro: getServiceIntro(svc, area, seed),
+      value: getServiceValue(svc, area, seed),
+      closing: getServiceClosing(svc, area, seed),
+    };
+  }
 
   // Intent-specific overrides
   if (pageData.intent === "fees") {
