@@ -9,14 +9,12 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "Courses", href: "/courses" },
   {
-    label: "Areas",
+    label: "Counselling",
     href: "#",
     children: [
-      { label: "Delhi", href: "/tutors/south-delhi-delhi" },
-      { label: "Noida", href: "/tutors/noida-delhi" },
-      { label: "Gurgaon", href: "/tutors/gurgaon-delhi" },
-      { label: "Ghaziabad", href: "/tutors/ghaziabad-delhi" },
-      { label: "All Locations", href: "/contact" },
+      { label: "Student Counselling", href: "/counselling/student" },
+      { label: "Parent Counselling", href: "/counselling/parent" },
+      { label: "Personal Counselling", href: "/counselling/personal" },
     ],
   },
   { label: "About", href: "/about" },
