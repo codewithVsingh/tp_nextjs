@@ -357,6 +357,49 @@ export function parseSlug2(slug: string): SeoPageData | null {
     }
   }
 
+  // === SERVICE PAGES ===
+  // {service-slug}-{area} e.g. coding-classes-for-kids-rohini
+  for (const svc of services) {
+    for (const area of areas) {
+      if (slug === `${svc.slug}-${area.slug}`) {
+        const h1 = svc.h1Tpl.replace("{area}", area.name);
+        const desc = svc.descTpl.replace("{area}", area.name);
+        return {
+          type: "service-area", slug, service: svc, area, keyword: h1,
+          title: `${h1} | Tutors Parliament`,
+          metaDescription: desc, h1,
+        };
+      }
+    }
+    // {service-slug}-delhi e.g. coding-classes-for-kids-delhi
+    if (slug === `${svc.slug}-delhi`) {
+      const h1 = svc.h1Tpl.replace("{area}", "Delhi");
+      const desc = svc.descTpl.replace("{area}", "Delhi");
+      return {
+        type: "service-city", slug, service: svc,
+        area: { slug: "delhi", name: "Delhi", pincode: "110001" },
+        keyword: h1,
+        title: `${h1} | Tutors Parliament`,
+        metaDescription: desc, h1,
+      };
+    }
+    // {service-slug}-noida, gurgaon, ghaziabad
+    for (const city of ["noida", "gurgaon", "ghaziabad", "faridabad"]) {
+      if (slug === `${svc.slug}-${city}`) {
+        const area = findArea(city);
+        if (area) {
+          const h1 = svc.h1Tpl.replace("{area}", area.name);
+          const desc = svc.descTpl.replace("{area}", area.name);
+          return {
+            type: "service-city", slug, service: svc, area, keyword: h1,
+            title: `${h1} | Tutors Parliament`,
+            metaDescription: desc, h1,
+          };
+        }
+      }
+    }
+  }
+
   return null;
 }
 
