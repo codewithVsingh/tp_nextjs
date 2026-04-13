@@ -296,6 +296,13 @@ export function getEnrichedFaqs(pageData: SeoPageData): { q: string; a: string }
   const area = pageData.area?.name || "";
   const cls = pageData.classLevel?.label || "";
 
+  // Service-specific FAQs
+  if (pageData.service) {
+    const cat = pageData.service.category;
+    const faqFn = serviceFaqPool[cat] || serviceFaqPool.academic;
+    return faqFn(pageData.service.name, area);
+  }
+
   // Intent-specific FAQs
   if (pageData.intent === "fees" || pageData.isMoneyPage && pageData.type === "tuition-fees-area") {
     return feesFaqs(area);
