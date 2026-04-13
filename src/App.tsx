@@ -22,6 +22,7 @@ const BecomeATutor = lazy(() => import("./pages/BecomeATutor.tsx"));
 const TutorRegistry = lazy(() => import("./pages/TutorRegistry.tsx"));
 const ReportTutor = lazy(() => import("./pages/ReportTutor.tsx"));
 const DecisionPage = lazy(() => import("./pages/DecisionPage.tsx"));
+const ExamPage = lazy(() => import("./pages/ExamPage.tsx"));
 
 const queryClient = new QueryClient();
 
