@@ -128,11 +128,7 @@ const Footer = () => {
               <ul className="space-y-2.5 text-sm">
                 {section.items.map((item) => (
                   <li key={item.label}>
-                    {item.external ? (
-                      <a href={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</a>
-                    ) : (
-                      <Link to={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</Link>
-                    )}
+                    <Link to={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</Link>
                   </li>
                 ))}
               </ul>
