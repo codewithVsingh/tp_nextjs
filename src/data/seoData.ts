@@ -652,5 +652,20 @@ export function getAllSlugs(): string[] {
     }
   }
 
+  // === SEO 3.0: SERVICE PAGES ===
+  // High-priority services × Delhi + top 10 areas + NCR cities
+  const priorityServices = services.slice(0, 20); // top 20 services
+  const serviceAreas = areas.slice(0, 10); // top 10 Delhi areas
+  const ncrCities = ["noida", "gurgaon", "ghaziabad", "faridabad"];
+  for (const svc of priorityServices) {
+    slugs.push(`${svc.slug}-delhi`);
+    for (const city of ncrCities) {
+      slugs.push(`${svc.slug}-${city}`);
+    }
+    for (const area of serviceAreas) {
+      slugs.push(`${svc.slug}-${area.slug}`);
+    }
+  }
+
   return slugs;
 }
