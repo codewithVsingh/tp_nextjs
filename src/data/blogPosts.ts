@@ -1715,8 +1715,6 @@ const comparisonBlogPosts: BlogPost[] = [
 blogPosts.push(...examBlogPosts, ...costBlogPosts, ...problemBlogPosts, ...locationBlogPosts, ...comparisonBlogPosts);
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
-
-export function getPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
 }
 
