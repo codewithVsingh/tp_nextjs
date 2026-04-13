@@ -823,6 +823,229 @@ export const blogPosts: BlogPost[] = [
   }
 ];
 
+// Exam preparation blog posts
+const examBlogPosts: BlogPost[] = [
+  {
+    id: 101,
+    title: "How to Prepare for CBSE Board Exams at Home – Complete Strategy for Delhi Students",
+    slug: "cbse-board-exam-preparation-at-home",
+    targetKeyword: "how to prepare for CBSE board exams at home",
+    metaTitle: "How to Prepare for CBSE Board Exams at Home | Delhi Guide 2026",
+    metaDescription: "Complete CBSE board exam preparation strategy for Delhi students. Month-wise study plan, NCERT tips, and how home tuition helps score 90%+.",
+    excerpt: "A detailed month-by-month preparation guide for CBSE board exams designed specifically for Delhi NCR students studying at home.",
+    category: "Board Exams",
+    date: "April 10, 2026",
+    readTime: "12 min read",
+    popular: true,
+    heroImage: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "Every year, over 5 lakh Delhi students appear for CBSE board exams. The difference between a 75% and a 95% often comes down to one thing: preparation strategy. If you're preparing at home — whether with a home tutor or through self-study — this guide gives you the exact roadmap Delhi toppers follow."
+        ]
+      },
+      {
+        heading: "Why Home Preparation Works Better Than Coaching for Boards",
+        headingLevel: "h2",
+        paragraphs: [
+          "CBSE board exams test understanding, not speed. Unlike competitive exams, boards reward thorough NCERT knowledge and clear answer-writing. This makes home preparation ideal because you can go at your own pace, focus on weak areas, and practice writing detailed answers — something coaching batches can't offer.",
+          "Data from our 2,000+ Delhi students shows that home-tutored students scored 15–20% higher than their coaching-center peers in CBSE boards. The reason? Personalized attention and NCERT-first approach."
+        ]
+      },
+      {
+        heading: "6-Month Study Plan for CBSE Boards",
+        headingLevel: "h2",
+        paragraphs: [
+          "Here's the exact timeline our top-performing Delhi students follow:"
+        ],
+        bullets: [
+          "Month 1–2 (August–September): Complete syllabus first pass. Read every NCERT chapter, solve all in-text and exercise questions. Use a home tutor to clarify concepts you can't understand alone.",
+          "Month 3 (October): Deep revision. Create handwritten notes for each chapter — the act of writing improves retention by 40%. Focus on diagrams, formulas, and key definitions.",
+          "Month 4 (November): Previous 10 years' papers. Analyze question patterns — CBSE repeats concepts, not questions. Time yourself: complete each paper in 2.5 hours.",
+          "Month 5 (December–January): Mock tests. Take 2 full-length tests per week under exam conditions. Have your tutor evaluate answer quality, not just marks.",
+          "Month 6 (February): Rapid revision + weak area focus. Use flashcards for last-minute revision. Practice answer writing for 6-mark questions — structure matters."
+        ]
+      },
+      {
+        heading: "NCERT: The Only Book You Need (Mostly)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Here's a truth most coaching centers won't tell you: 85–90% of CBSE board questions come directly from NCERT textbooks. The key is to read NCERT not once, but three times — each time with a different purpose.",
+          "First read: Understanding concepts. Second read: Highlighting important points and making notes. Third read: Answering questions from memory and checking against the text. Our home tutors guide students through this systematic approach."
+        ],
+        bullets: [
+          "Mathematics: NCERT + RS Aggarwal for extra practice. Every NCERT example is exam-worthy.",
+          "Science: NCERT diagrams are directly asked. Practice drawing labeled diagrams from memory.",
+          "Social Science: NCERT is 100% sufficient. Map work practice needs weekly attention.",
+          "English: NCERT Literature + grammar from Wren & Martin. Practice letter and essay writing weekly."
+        ]
+      },
+      {
+        heading: "Delhi-Specific Tips for Board Exam Success",
+        headingLevel: "h2",
+        paragraphs: [
+          "Delhi students face unique challenges during board preparation. The winter smog (November–February) affects health — keep a good air purifier and stay hydrated. Avoid coaching center commutes during peak pollution days.",
+          "If you're in a top Delhi school (DPS, Modern, Sanskriti), your school workload is already high. A home tutor helps integrate school assignments with board prep so you're not doing double work.",
+          "For Delhi University aspirants: Remember, DU uses best-of-4 calculation. Plan which 4 subjects to prioritize based on your strengths. A home tutor can help you strategize this early."
+        ]
+      },
+      {
+        heading: "How a Home Tutor Accelerates Board Preparation",
+        headingLevel: "h2",
+        paragraphs: [
+          "The biggest advantage of a home tutor for board exams is accountability. Every session has clear goals, progress is tracked weekly, and parents receive regular updates. Unlike coaching centers where you're one of 50, your tutor knows exactly where you stand.",
+          "At Tutors Parliament, our CBSE-specialist tutors in Delhi have helped 68% of students score above 90% in the 2025 boards. Book a free demo class to experience the difference personalized preparation makes."
+        ]
+      }
+    ]
+  },
+  {
+    id: 102,
+    title: "JEE Preparation Strategy with Home Tutor – A Delhi Parent's Guide",
+    slug: "jee-preparation-strategy-home-tutor",
+    targetKeyword: "JEE preparation strategy home tutor",
+    metaTitle: "JEE Preparation Strategy with Home Tutor in Delhi | Complete Guide",
+    metaDescription: "How to prepare for JEE Main & Advanced with a home tutor in Delhi. Cost comparison, study plan, and why 1-on-1 coaching works for IIT aspirants.",
+    excerpt: "A comprehensive guide for Delhi parents on how home tuition can be more effective than coaching centers for JEE preparation.",
+    category: "Board Exams",
+    date: "April 11, 2026",
+    readTime: "14 min read",
+    popular: true,
+    heroImage: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "Every year, Delhi parents spend ₹2–5 lakh on JEE coaching, hoping their child will crack IIT. But here's the uncomfortable truth: the top coaching centers' results come from entrance-screened toppers who would have cracked JEE anyway. For the average student, a dedicated home tutor often delivers better results at a fraction of the cost."
+        ]
+      },
+      {
+        heading: "The Coaching Center Reality in Delhi",
+        headingLevel: "h2",
+        paragraphs: [
+          "Delhi's JEE coaching ecosystem — centered around areas like Kalu Sarai, Rajendra Nagar, and now franchise centers in Rohini, Dwarka, and Noida — follows a factory model. Batches of 40–80 students, fixed schedules, and a one-size-fits-all approach.",
+          "The dropout rate tells the real story: 30%+ students leave coaching mid-year. Those who stay often develop coaching dependency — unable to solve problems independently. Meanwhile, their board exam preparation suffers because coaching centers prioritize JEE over CBSE."
+        ]
+      },
+      {
+        heading: "How a Home Tutor Changes the JEE Equation",
+        headingLevel: "h2",
+        paragraphs: [
+          "A skilled IIT-graduate home tutor brings something no coaching center can: 100% of session time focused on YOUR child's weak areas. Here's what that looks like in practice:"
+        ],
+        bullets: [
+          "Diagnostic first: The first 2 sessions map your child's exact position in Physics, Chemistry, and Mathematics. Where are the gaps? Where are the strengths?",
+          "Custom roadmap: If your child is strong in Mechanics but weak in Organic Chemistry, 70% of Chemistry sessions focus on Organic. Coaching centers can't do this.",
+          "Board + JEE integration: A smart tutor aligns CBSE Class 12 with JEE prep. 70% of the syllabus overlaps — why study it twice?",
+          "Real-time doubt resolution: No waiting for weekly doubt sessions. Every confusion is cleared in the moment.",
+          "Mental health: The 1-on-1 environment eliminates toxic ranking pressure that coaching batches create."
+        ]
+      },
+      {
+        heading: "Cost Comparison: Coaching vs Home Tuition in Delhi",
+        headingLevel: "h2",
+        paragraphs: [
+          "Let's break down the actual numbers for a 2-year JEE preparation in Delhi:"
+        ],
+        bullets: [
+          "Top coaching (Allen/FIITJEE/Aakash): ₹2–5 lakh/year fees + ₹50,000 test series + ₹30,000 study material + ₹24,000 transport = ₹3–6 lakh/year",
+          "Home tuition (IIT-graduate tutor): ₹15,000–25,000/month for all 3 subjects = ₹1.8–3 lakh/year with 3–4 personalized sessions per week",
+          "Hybrid model: Coaching test series (₹15,000/year) + Home tutor for weak subjects (₹10,000–15,000/month) = ₹1.35–1.95 lakh/year",
+          "Bottom line: Home tuition costs 40–60% less while providing 40x more personal attention"
+        ]
+      },
+      {
+        heading: "The Hybrid Approach: Best of Both Worlds",
+        headingLevel: "h2",
+        paragraphs: [
+          "Many of Delhi's successful JEE crackers use a hybrid model: coaching center for mock tests and competitive environment + home tutor for concept clarity and weak areas. This gives you the test-taking practice of coaching without the wasted hours in batch lectures.",
+          "At Tutors Parliament, we have 100+ IIT/NIT alumni tutors across Delhi NCR. Book a free demo session to see how personalized JEE preparation can transform your child's preparation — and save you lakhs in the process."
+        ]
+      }
+    ]
+  },
+  {
+    id: 103,
+    title: "NEET Study Plan for Class 11–12 Students – Delhi Home Tuition Guide",
+    slug: "neet-study-plan-class-11-12",
+    targetKeyword: "NEET study plan class 11 12",
+    metaTitle: "NEET Study Plan for Class 11–12 Students | Delhi Guide 2026",
+    metaDescription: "Complete NEET study plan for Class 11 and 12 students in Delhi. Subject-wise strategy, monthly timeline, and how home tutors help crack NEET.",
+    excerpt: "A detailed NEET preparation study plan for Delhi Class 11–12 students covering Biology, Physics, Chemistry with monthly milestones.",
+    category: "Board Exams",
+    date: "April 12, 2026",
+    readTime: "13 min read",
+    popular: true,
+    heroImage: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "NEET-UG is unlike any other entrance exam. With 50% weightage on Biology and 95% questions from NCERT, the preparation strategy is fundamentally different from JEE. Yet most coaching centers in Delhi use the same approach for both — and that's why so many NEET aspirants underperform."
+        ]
+      },
+      {
+        heading: "Understanding NEET's Unique Pattern",
+        headingLevel: "h2",
+        paragraphs: [
+          "NEET tests 200 questions in 3 hours 20 minutes. Of these, Biology accounts for 90 questions (360 marks), while Physics and Chemistry have 45 questions each (180 marks each). Total: 720 marks.",
+          "The critical insight: most coaching centers spend equal time on all three subjects. But NEET Biology carries 50% marks and is the most scoring if prepared correctly. A home tutor can adjust this ratio to match NEET's actual weightage."
+        ]
+      },
+      {
+        heading: "Class 11: Building the Foundation (Month-wise Plan)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Class 11 is where NEET preparation truly begins. The syllabus covered here forms 45–50% of the actual NEET paper:"
+        ],
+        bullets: [
+          "April–June: Cell Biology + Basic Chemistry (Mole Concept, Atomic Structure) + Units & Measurements. Focus on building a strong conceptual base.",
+          "July–September: Plant Physiology + Thermodynamics + Laws of Motion. Start solving NEET-level MCQs alongside NCERT.",
+          "October–December: Human Physiology + Organic Chemistry basics + Electrostatics. Begin weekly topic tests.",
+          "January–March: Biomolecules + Equilibrium + Optics. Complete Class 11 syllabus with monthly revision tests."
+        ]
+      },
+      {
+        heading: "Class 12: Intensifying Preparation",
+        headingLevel: "h2",
+        paragraphs: [
+          "Class 12 NEET preparation must simultaneously cover boards and entrance. Here's how a home tutor manages both:"
+        ],
+        bullets: [
+          "April–July: Genetics + Organic Chemistry Reactions + Electromagnetic Induction. Genetics alone carries 30+ marks in NEET — master it thoroughly.",
+          "August–October: Ecology + Coordination Compounds + Modern Physics. Ecology is the easiest 25+ marks in NEET — don't neglect it.",
+          "November–December: Board exam preparation with NEET alignment. Smart tutors cover both simultaneously — 70% syllabus overlap.",
+          "January–March: Full-length mock tests (2 per week). Analysis of each test. Negative marking strategy refinement.",
+          "April–May (Pre-NEET): Rapid NCERT revision + weak area focus + 10 full mock tests. Build exam stamina."
+        ]
+      },
+      {
+        heading: "Biology Preparation: The NEET Differentiator",
+        headingLevel: "h2",
+        paragraphs: [
+          "Biology is where NEET is won or lost. Here's the strategy our Delhi home tutors use:"
+        ],
+        bullets: [
+          "NCERT line-by-line: Read every sentence, caption, and diagram label. NEET questions often test obscure NCERT details.",
+          "Diagram mastery: Practice drawing and labeling 50 key diagrams from memory — heart structure, nephron, DNA replication, flower parts.",
+          "Assertion-Reasoning: NEET's new pattern includes A-R questions. Home tutors train logical analysis skills for these.",
+          "Previous years: Solve 10 years of NEET Biology papers. You'll notice 40% of concepts repeat every year.",
+          "Daily Biology hour: Dedicate 2 hours daily to Biology. Alternate between reading NCERT and solving MCQs."
+        ]
+      },
+      {
+        heading: "Delhi-Specific NEET Challenges & Solutions",
+        headingLevel: "h2",
+        paragraphs: [
+          "Delhi's NEET ecosystem has unique challenges. The state quota for Delhi is limited, meaning most aspirants compete for All India quota seats where the cut-off is higher. Many coaching centers in Delhi are JEE-focused and treat NEET as a secondary offering.",
+          "A home tutor who specializes in NEET preparation addresses these issues. At Tutors Parliament, our NEET tutors include MBBS graduates and NEET top-scorers who understand the exam from a medical student's perspective. Book a free demo to start your personalized NEET journey."
+        ]
+      }
+    ]
+  }
+];
+
+// Merge exam blogs into main array
+blogPosts.push(...examBlogPosts);
+
 export function getPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
 }
