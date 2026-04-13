@@ -7,21 +7,20 @@ import TutorRegistrationModal from "./TutorRegistrationModal";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
   { label: "Courses", href: "/courses" },
   {
-    label: "Counselling",
+    label: "Areas",
     href: "#",
     children: [
-      { label: "Student Counselling", href: "/counselling/student" },
-      { label: "Parent Counselling", href: "/counselling/parent" },
-      { label: "Personal Counselling", href: "/counselling/personal" },
+      { label: "Delhi", href: "/tutors/south-delhi-delhi" },
+      { label: "Noida", href: "/tutors/noida-delhi" },
+      { label: "Gurgaon", href: "/tutors/gurgaon-delhi" },
+      { label: "Ghaziabad", href: "/tutors/ghaziabad-delhi" },
+      { label: "All Locations", href: "/contact" },
     ],
   },
-  { label: "Tutors", href: "/#tutors" },
-  { label: "Results", href: "/#testimonials" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/#contact" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const Navbar = () => {
@@ -211,7 +210,7 @@ const Navbar = () => {
 
         <div className="hidden md:flex items-center gap-4">
           {navLinks.map((link) => renderLink(link))}
-          <Button variant="outline" size="sm" onClick={() => setTutorModalOpen(true)}>Become a Tutor</Button>
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary" onClick={() => navigate("/contact")}>Talk to Expert</Button>
           <Button variant="cta" size="lg" onClick={() => navigate("/demo-booking")}>Start Free Demo</Button>
         </div>
 
@@ -229,7 +228,7 @@ const Navbar = () => {
             className="md:hidden bg-background border-b border-border px-4 pb-4 overflow-hidden"
           >
             {navLinks.map((link) => renderLink(link, true))}
-            <Button variant="outline" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); setTutorModalOpen(true); }}>Become a Tutor</Button>
+            <Button variant="outline" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/contact"); }}>Talk to Expert</Button>
             <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/demo-booking"); }}>Start Free Demo</Button>
           </motion.div>
         )}
