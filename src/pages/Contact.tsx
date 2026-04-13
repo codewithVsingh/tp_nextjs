@@ -2,15 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   CheckCircle,
   Users,
@@ -30,6 +21,7 @@ import Footer from "@/components/Footer";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import SEOHead from "@/components/SEOHead";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
+import DemoBookingForm from "@/components/DemoBookingForm";
 import { trackCTAClick } from "@/lib/analytics";
 
 const trustStats = [
@@ -77,34 +69,9 @@ const solutions = [
 const Contact = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    classLevel: "",
-    subject: "",
-    area: "",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validate = () => {
-    const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = "Name is required";
-    if (!form.phone.trim() || form.phone.replace(/\D/g, "").length < 10) e.phone = "Valid phone required";
-    if (!form.classLevel) e.classLevel = "Select a class";
-    return e;
-  };
-
-  const handleSubmit = (ev: React.FormEvent) => {
-    ev.preventDefault();
-    const e = validate();
-    if (Object.keys(e).length) { setErrors(e); return; }
-    trackCTAClick("contact_form_submit", "/contact");
-    setSubmitted(true);
-  };
 
   const whatsappMsg = encodeURIComponent(
-    `Hi, I need a home tutor${form.area ? ` in ${form.area}` : " in Delhi NCR"}${form.classLevel ? ` for ${form.classLevel}` : ""}`
+    "Hi, I need a home tutor in Delhi NCR"
   );
 
   const fade = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.5 } };
@@ -180,7 +147,6 @@ const Contact = () => {
                 Tutor Information — <span className="text-primary">Delhi NCR</span>
               </h2>
               <div className="grid md:grid-cols-3 gap-6">
-                {/* Popular Searches */}
                 <div className="bg-muted/50 rounded-2xl p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <Search className="w-5 h-5 text-primary" />
@@ -194,7 +160,6 @@ const Contact = () => {
                     ))}
                   </ul>
                 </div>
-                {/* Fee Ranges */}
                 <div className="bg-muted/50 rounded-2xl p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <IndianRupee className="w-5 h-5 text-primary" />
@@ -209,7 +174,6 @@ const Contact = () => {
                     ))}
                   </ul>
                 </div>
-                {/* Availability */}
                 <div className="bg-muted/50 rounded-2xl p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <Clock className="w-5 h-5 text-primary" />
@@ -269,63 +233,18 @@ const Contact = () => {
           </div>
         </section>
 
-        {/* LEAD FORM */}
+        {/* LEAD FORM — uses unified DemoBookingForm */}
         <section className="py-12 md:py-20 bg-muted/30">
           <div className="container mx-auto px-4">
             <motion.div {...fade} className="max-w-lg mx-auto">
               <div className="bg-background rounded-2xl card-shadow p-6 md:p-8">
-                {submitted ? (
-                  <div className="text-center py-8">
-                    <CheckCircle className="w-16 h-16 text-primary mx-auto mb-4" />
-                    <h3 className="font-heading font-bold text-xl text-foreground mb-2">Thank You!</h3>
-                    <p className="text-muted-foreground">We will contact you within 24 hours to schedule your free demo.</p>
-                  </div>
-                ) : (
-                  <>
-                    <h3 className="font-heading font-bold text-xl md:text-2xl text-foreground mb-2 text-center">
-                      Get Your Free Demo
-                    </h3>
-                    <p className="text-muted-foreground text-sm text-center mb-6">Fill in your details — we'll match a tutor in 24 hrs</p>
-                    <form className="space-y-4" onSubmit={handleSubmit}>
-                      <div>
-                        <Label htmlFor="name">Name *</Label>
-                        <Input id="name" placeholder="Your name" value={form.name} onChange={(e) => { setForm({...form, name: e.target.value}); setErrors({...errors, name: ""}); }} className={errors.name ? "border-destructive" : ""} />
-                        {errors.name && <p className="text-destructive text-xs mt-1">{errors.name}</p>}
-                      </div>
-                      <div>
-                        <Label htmlFor="phone">Phone *</Label>
-                        <Input id="phone" type="tel" placeholder="10-digit phone number" value={form.phone} onChange={(e) => { setForm({...form, phone: e.target.value}); setErrors({...errors, phone: ""}); }} className={errors.phone ? "border-destructive" : ""} />
-                        {errors.phone && <p className="text-destructive text-xs mt-1">{errors.phone}</p>}
-                      </div>
-                      <div>
-                        <Label htmlFor="class">Class *</Label>
-                        <Select value={form.classLevel} onValueChange={(v) => { setForm({...form, classLevel: v}); setErrors({...errors, classLevel: ""}); }}>
-                          <SelectTrigger className={errors.classLevel ? "border-destructive" : ""}>
-                            <SelectValue placeholder="Select class" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {["KG", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6", "Class 7", "Class 8", "Class 9", "Class 10", "Class 11", "Class 12"].map(c => (
-                              <SelectItem key={c} value={c}>{c}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        {errors.classLevel && <p className="text-destructive text-xs mt-1">{errors.classLevel}</p>}
-                      </div>
-                      <div>
-                        <Label htmlFor="subject">Subject (optional)</Label>
-                        <Input id="subject" placeholder="e.g. Maths, Science" value={form.subject} onChange={(e) => setForm({...form, subject: e.target.value})} />
-                      </div>
-                      <div>
-                        <Label htmlFor="area">Area / Pincode</Label>
-                        <Input id="area" placeholder="e.g. Rohini, 110085" value={form.area} onChange={(e) => setForm({...form, area: e.target.value})} />
-                      </div>
-                      <Button type="submit" variant="cta" className="w-full h-12 text-base font-bold" onClick={() => trackCTAClick("contact_form_submit", "/contact")}>
-                        Get Free Demo Now <ArrowRight className="w-4 h-4 ml-1" />
-                      </Button>
-                    </form>
-                    <p className="text-xs text-muted-foreground mt-3 text-center">⚡ Takes less than 30 seconds</p>
-                  </>
-                )}
+                <h3 className="font-heading font-bold text-xl md:text-2xl text-foreground mb-2 text-center">
+                  Get Your Free Demo
+                </h3>
+                <p className="text-muted-foreground text-sm text-center mb-6">
+                  Fill in your details — we'll match a tutor in 24 hrs
+                </p>
+                <DemoBookingForm source="contact_page" ctaLabel="Get Free Demo Now" />
               </div>
             </motion.div>
           </div>
