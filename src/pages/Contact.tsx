@@ -30,7 +30,7 @@ import Footer from "@/components/Footer";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import SEOHead from "@/components/SEOHead";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
-import { trackCTAClick, trackFormSubmission } from "@/lib/analytics";
+import { trackCTAClick } from "@/lib/analytics";
 
 const trustStats = [
   { icon: Users, value: "10,000+", label: "Students Trained" },
@@ -99,7 +99,7 @@ const Contact = () => {
     ev.preventDefault();
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
-    trackFormSubmission("contact_lead_form");
+    trackCTAClick("contact_form_submit", "/contact");
     setSubmitted(true);
   };
 
