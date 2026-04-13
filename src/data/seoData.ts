@@ -170,13 +170,14 @@ export interface SeoPageData {
   area?: { slug: string; name: string; pincode: string };
   classLevel?: { slug: string; name: string; label: string };
   board?: { slug: string; name: string };
+  service?: ServiceCategory;
   intent?: string;
   keyword: string;
   title: string;
   metaDescription: string;
   h1: string;
-  isPillar?: boolean;       // cluster pillar page
-  isMoneyPage?: boolean;    // high-conversion money page
+  isPillar?: boolean;
+  isMoneyPage?: boolean;
 }
 
 // ===== HELPERS =====
