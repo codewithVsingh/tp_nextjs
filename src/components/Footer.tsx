@@ -33,7 +33,7 @@ const footerSections = [
     title: "Support",
     items: [
       { label: "FAQs", href: "/faq" },
-      { label: "Contact Us", href: "mailto:info@tutorsparliament.com", external: true },
+      { label: "Contact Us", href: "/contact" },
       { label: "Privacy Policy", href: "#" },
       { label: "Terms & Conditions", href: "#" },
     ],
@@ -101,9 +101,9 @@ const Footer = () => {
 
           <div className="flex flex-col items-start lg:items-end gap-4">
             <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-primary-foreground/60">
-              <span>✔ 8500+ Students</span>
-              <span>✔ Verified Tutors</span>
-              <span>✔ 4.8 Rating</span>
+              <span>✔ 10,000+ Students</span>
+              <span>✔ 2,500+ Verified Tutors</span>
+              <span>✔ 4.8★ Rating</span>
               <span>✔ Serving Delhi NCR</span>
             </div>
             <div className="flex gap-3">
@@ -128,11 +128,7 @@ const Footer = () => {
               <ul className="space-y-2.5 text-sm">
                 {section.items.map((item) => (
                   <li key={item.label}>
-                    {item.external ? (
-                      <a href={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</a>
-                    ) : (
-                      <Link to={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</Link>
-                    )}
+                    <Link to={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -177,11 +173,7 @@ const Footer = () => {
                   <ul className="space-y-1 text-sm">
                     {section.items.map((item) => (
                       <li key={item.label}>
-                        {item.external ? (
-                          <a href={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</a>
-                        ) : (
-                          <Link to={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</Link>
-                        )}
+                        <Link to={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</Link>
                       </li>
                     ))}
                   </ul>

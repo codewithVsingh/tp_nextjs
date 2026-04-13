@@ -3,8 +3,8 @@ import { Star, Users, Award, BookOpen } from "lucide-react";
 
 const stats = [
   { icon: Users, value: "10,000+", label: "Students Trained" },
-  { icon: Star, value: "4.9/5", label: "Student Rating" },
-  { icon: Award, value: "500+", label: "Expert Tutors" },
+  { icon: Star, value: "4.8★", label: "Parent Rating" },
+  { icon: Award, value: "2,500+", label: "Verified Tutors" },
   { icon: BookOpen, value: "50+", label: "Courses Available" },
 ];
 
