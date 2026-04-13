@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, ArrowRight, ChevronDown } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,6 +7,38 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
+const footerSections = [
+  {
+    id: "explore",
+    title: "Explore",
+    items: [
+      { label: "Home", href: "/" },
+      { label: "About Us", href: "/about" },
+      { label: "Courses", href: "/courses" },
+      { label: "Blog", href: "/blog" },
+    ],
+  },
+  {
+    id: "services",
+    title: "Services",
+    items: [
+      { label: "Home Tuition", href: "/courses" },
+      { label: "Online Tuition", href: "/courses" },
+      { label: "Counselling", href: "/counselling/student" },
+    ],
+  },
+  {
+    id: "support",
+    title: "Support",
+    items: [
+      { label: "FAQs", href: "/faq" },
+      { label: "Contact Us", href: "mailto:info@tutorsparliament.com", external: true },
+      { label: "Privacy Policy", href: "#" },
+      { label: "Terms & Conditions", href: "#" },
+    ],
+  },
+];
 
 const seoSections = [
   {
@@ -50,10 +82,9 @@ const seoSections = [
 const Footer = () => {
   return (
     <footer id="contact" className="bg-foreground text-primary-foreground/70">
-      {/* Top: Brand + Trust + CTA */}
       <div className="container mx-auto px-4 py-12 md:py-16">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 mb-12">
-          {/* Left: Brand */}
+        {/* Brand + Trust + CTA */}
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-10">
           <div className="max-w-md">
             <Link to="/" className="flex items-center gap-2.5 mb-3">
               <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
@@ -68,59 +99,45 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Right: Trust + CTAs */}
-          <div className="flex flex-col items-start lg:items-end gap-5">
-            <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-primary-foreground/60">
+          <div className="flex flex-col items-start lg:items-end gap-4">
+            <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-primary-foreground/60">
               <span>✔ 8500+ Students</span>
               <span>✔ Verified Tutors</span>
               <span>✔ 4.8 Rating</span>
               <span>✔ Serving Delhi NCR</span>
             </div>
             <div className="flex gap-3">
-              <Button variant="cta" size="sm" asChild>
-                <Link to="/demo">Find a Tutor</Link>
+              <Button variant="cta" size="sm" className="h-12 px-6 active:scale-[0.96] transition-transform" asChild>
+                <Link to="/demo">Start Free Demo</Link>
               </Button>
-              <Button variant="hero-outline" size="sm" asChild>
+              <Button variant="hero-outline" size="sm" className="h-12 px-6 active:scale-[0.96] transition-transform" asChild>
                 <Link to="/become-a-tutor">Become a Tutor</Link>
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-primary-foreground/10 mb-10" />
+        <div className="border-t border-primary-foreground/10 mb-8" />
 
-        {/* Middle: 3 columns + Contact */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
-          <div>
-            <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-4">Explore</h4>
-            <ul className="space-y-2.5 text-sm">
-              <li><Link to="/" className="hover:text-primary-foreground transition-colors">Home</Link></li>
-              <li><Link to="/about" className="hover:text-primary-foreground transition-colors">About Us</Link></li>
-              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Courses</Link></li>
-              <li><Link to="/blog" className="hover:text-primary-foreground transition-colors">Blog</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-4">Services</h4>
-            <ul className="space-y-2.5 text-sm">
-              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Home Tuition</Link></li>
-              <li><Link to="/courses" className="hover:text-primary-foreground transition-colors">Online Tuition</Link></li>
-              <li><Link to="/counselling/student" className="hover:text-primary-foreground transition-colors">Counselling</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-4">Support</h4>
-            <ul className="space-y-2.5 text-sm">
-              <li><Link to="/faq" className="hover:text-primary-foreground transition-colors">FAQs</Link></li>
-              <li><a href="mailto:info@tutorsparliament.com" className="hover:text-primary-foreground transition-colors">Contact Us</a></li>
-              <li><span className="cursor-default">Privacy Policy</span></li>
-              <li><span className="cursor-default">Terms &amp; Conditions</span></li>
-            </ul>
-          </div>
-
+        {/* Desktop: Grid layout | Mobile: Accordion */}
+        {/* Desktop columns */}
+        <div className="hidden md:grid grid-cols-4 gap-8 mb-10">
+          {footerSections.map((section) => (
+            <div key={section.id}>
+              <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-4">{section.title}</h4>
+              <ul className="space-y-2.5 text-sm">
+                {section.items.map((item) => (
+                  <li key={item.label}>
+                    {item.external ? (
+                      <a href={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</a>
+                    ) : (
+                      <Link to={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
           <div>
             <h4 className="font-heading font-semibold text-primary-foreground text-sm mb-4">Contact</h4>
             <ul className="space-y-3 text-sm">
@@ -148,14 +165,68 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Divider */}
+        {/* Mobile accordion */}
+        <div className="md:hidden mb-8">
+          <Accordion type="multiple">
+            {footerSections.map((section) => (
+              <AccordionItem key={section.id} value={section.id} className="border-primary-foreground/10">
+                <AccordionTrigger className="text-sm font-heading font-semibold text-primary-foreground/80 hover:text-primary-foreground hover:no-underline py-3 min-h-[44px]">
+                  {section.title}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-1 text-sm">
+                    {section.items.map((item) => (
+                      <li key={item.label}>
+                        {item.external ? (
+                          <a href={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</a>
+                        ) : (
+                          <Link to={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+            <AccordionItem value="contact" className="border-primary-foreground/10">
+              <AccordionTrigger className="text-sm font-heading font-semibold text-primary-foreground/80 hover:text-primary-foreground hover:no-underline py-3 min-h-[44px]">
+                Contact
+              </AccordionTrigger>
+              <AccordionContent>
+                <ul className="space-y-3 text-sm">
+                  <li className="flex items-center gap-2 min-h-[44px]">
+                    <Mail className="w-4 h-4 text-secondary shrink-0" />
+                    <span>info@tutorsparliament.com</span>
+                  </li>
+                  <li className="flex items-center gap-2 min-h-[44px]">
+                    <Phone className="w-4 h-4 text-secondary shrink-0" />
+                    <a href="tel:+919873101564" className="hover:text-primary-foreground transition-colors">+91-9873101564</a>
+                  </li>
+                  <li className="flex items-start gap-2 min-h-[44px]">
+                    <MapPin className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
+                    <span>New Delhi, India</span>
+                  </li>
+                </ul>
+                <a
+                  href="https://wa.me/919873101564?text=Hi%2C%20I%27m%20interested%20in%20learning%20more%20about%20Tutors%20Parliament"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mt-3 text-xs font-medium text-primary-foreground bg-[#25D366]/20 hover:bg-[#25D366]/30 px-3 py-2 rounded-full transition-colors min-h-[44px]"
+                >
+                  💬 Chat on WhatsApp
+                </a>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+
         <div className="border-t border-primary-foreground/10 mb-8" />
 
-        {/* SEO Accordion */}
+        {/* SEO Accordion — both desktop and mobile */}
         <Accordion type="multiple" className="mb-8">
           {seoSections.map((section) => (
             <AccordionItem key={section.id} value={section.id} className="border-primary-foreground/10">
-              <AccordionTrigger className="text-sm font-heading font-semibold text-primary-foreground/80 hover:text-primary-foreground hover:no-underline py-3">
+              <AccordionTrigger className="text-sm font-heading font-semibold text-primary-foreground/80 hover:text-primary-foreground hover:no-underline py-3 min-h-[44px]">
                 {section.title}
               </AccordionTrigger>
               <AccordionContent>
@@ -164,7 +235,7 @@ const Footer = () => {
                     <li key={item.slug}>
                       <Link
                         to={`/tutors/${item.slug}`}
-                        className="flex items-center gap-1 hover:text-primary-foreground transition-colors"
+                        className="flex items-center gap-1 hover:text-primary-foreground transition-colors py-1 min-h-[44px]"
                       >
                         <ArrowRight className="w-3 h-3 text-secondary shrink-0" />
                         {item.label}
