@@ -221,78 +221,210 @@ export function getEnrichedFaqs(pageData: SeoPageData): { q: string; a: string }
   return selected;
 }
 
-// ===== INTERNAL LINKING ENGINE =====
+// ===== PROXIMITY-BASED AREA GRAPH =====
+// Maps each area to its geographically nearest neighbours for smarter linking
+
+const areaProximity: Record<string, string[]> = {
+  "rohini": ["pitampura", "model-town", "ashok-vihar", "paschim-vihar", "north-delhi"],
+  "dwarka": ["janakpuri", "vikaspuri", "uttam-nagar", "west-delhi", "gurgaon"],
+  "laxmi-nagar": ["preet-vihar", "mayur-vihar", "east-delhi", "vaishali", "indirapuram"],
+  "janakpuri": ["dwarka", "vikaspuri", "tilak-nagar", "rajouri-garden", "uttam-nagar"],
+  "pitampura": ["rohini", "model-town", "ashok-vihar", "north-delhi", "paschim-vihar"],
+  "karol-bagh": ["rajouri-garden", "connaught-place", "kamla-nagar", "north-delhi", "west-delhi"],
+  "rajouri-garden": ["karol-bagh", "janakpuri", "tilak-nagar", "vikaspuri", "west-delhi"],
+  "vikaspuri": ["janakpuri", "dwarka", "uttam-nagar", "tilak-nagar", "paschim-vihar"],
+  "mayur-vihar": ["laxmi-nagar", "preet-vihar", "east-delhi", "noida", "indirapuram"],
+  "ashok-vihar": ["pitampura", "rohini", "model-town", "kamla-nagar", "north-delhi"],
+  "south-delhi": ["saket", "malviya-nagar", "hauz-khas", "greater-kailash", "defence-colony"],
+  "north-delhi": ["model-town", "kamla-nagar", "pitampura", "rohini", "ashok-vihar"],
+  "east-delhi": ["laxmi-nagar", "preet-vihar", "mayur-vihar", "ghaziabad", "vaishali"],
+  "west-delhi": ["rajouri-garden", "janakpuri", "vikaspuri", "paschim-vihar", "tilak-nagar"],
+  "saket": ["malviya-nagar", "hauz-khas", "greater-kailash", "south-delhi", "nehru-place"],
+  "malviya-nagar": ["saket", "hauz-khas", "south-delhi", "greater-kailash", "kalkaji"],
+  "hauz-khas": ["malviya-nagar", "saket", "south-delhi", "vasant-kunj", "greater-kailash"],
+  "preet-vihar": ["laxmi-nagar", "mayur-vihar", "east-delhi", "vaishali", "indirapuram"],
+  "model-town": ["pitampura", "ashok-vihar", "north-delhi", "kamla-nagar", "rohini"],
+  "kamla-nagar": ["model-town", "north-delhi", "karol-bagh", "connaught-place", "ashok-vihar"],
+  "vasant-kunj": ["hauz-khas", "saket", "south-delhi", "malviya-nagar", "dlf-phase-3"],
+  "greater-kailash": ["defence-colony", "south-delhi", "saket", "kalkaji", "nehru-place"],
+  "defence-colony": ["greater-kailash", "lajpat-nagar", "south-delhi", "nehru-place", "kalkaji"],
+  "paschim-vihar": ["rohini", "pitampura", "vikaspuri", "west-delhi", "janakpuri"],
+  "tilak-nagar": ["rajouri-garden", "janakpuri", "vikaspuri", "west-delhi", "dwarka"],
+  "uttam-nagar": ["dwarka", "janakpuri", "vikaspuri", "tilak-nagar", "west-delhi"],
+  "nehru-place": ["kalkaji", "greater-kailash", "defence-colony", "south-delhi", "lajpat-nagar"],
+  "connaught-place": ["karol-bagh", "kamla-nagar", "north-delhi", "lajpat-nagar", "nehru-place"],
+  "lajpat-nagar": ["defence-colony", "nehru-place", "greater-kailash", "south-delhi", "kalkaji"],
+  "kalkaji": ["nehru-place", "greater-kailash", "lajpat-nagar", "south-delhi", "faridabad"],
+  // NCR
+  "noida": ["mayur-vihar", "sector-62-noida", "greater-noida", "indirapuram", "east-delhi"],
+  "greater-noida": ["noida", "sector-62-noida", "faridabad", "ghaziabad", "indirapuram"],
+  "gurgaon": ["dwarka", "dlf-phase-3", "sohna-road", "vasant-kunj", "south-delhi"],
+  "ghaziabad": ["east-delhi", "vaishali", "indirapuram", "laxmi-nagar", "noida"],
+  "faridabad": ["kalkaji", "greater-kailash", "south-delhi", "noida", "greater-noida"],
+  "indirapuram": ["ghaziabad", "vaishali", "mayur-vihar", "noida", "east-delhi"],
+  "vaishali": ["indirapuram", "ghaziabad", "east-delhi", "laxmi-nagar", "preet-vihar"],
+  "sector-62-noida": ["noida", "greater-noida", "indirapuram", "mayur-vihar", "ghaziabad"],
+  "dlf-phase-3": ["gurgaon", "sohna-road", "dwarka", "vasant-kunj", "south-delhi"],
+  "sohna-road": ["gurgaon", "dlf-phase-3", "faridabad", "south-delhi", "dwarka"],
+};
+
+export function getNearbyAreas(areaSlug: string): typeof areas {
+  const neighbours = areaProximity[areaSlug] || [];
+  return neighbours
+    .map(slug => areas.find(a => a.slug === slug))
+    .filter(Boolean) as typeof areas;
+}
+
+// ===== BLOG MATCHING ENGINE =====
+
+interface BlogLink { href: string; title: string; }
+
+const blogIndex: { slug: string; title: string; keywords: string[] }[] = [
+  { slug: "tuition-classes-delhi-guide", title: "Best Tuition Classes in Delhi (Complete Guide)", keywords: ["tuition", "delhi", "class", "coaching"] },
+  { slug: "home-tutor-delhi-guide", title: "How to Find the Best Home Tutor in Delhi", keywords: ["home tutor", "delhi", "find", "tutor"] },
+  { slug: "cbse-study-tips-delhi", title: "CBSE Study Tips for Delhi Students", keywords: ["cbse", "study", "tips", "board"] },
+  { slug: "study-techniques-for-students", title: "Effective Study Techniques for Students", keywords: ["study", "techniques", "effective", "students"] },
+  { slug: "study-plan-board-exams-delhi", title: "Study Plan for Board Exams in Delhi", keywords: ["board exam", "study plan", "cbse", "icse"] },
+  { slug: "personalized-tutoring-delhi", title: "Benefits of Personalized Tutoring in Delhi", keywords: ["personalized", "tutoring", "one-on-one", "benefits"] },
+  { slug: "online-vs-home-tuition-delhi", title: "Online vs Home Tuition in Delhi", keywords: ["online", "home tuition", "comparison", "delhi"] },
+  { slug: "daily-routine-students-delhi", title: "Daily Routine Tips for Delhi Students", keywords: ["routine", "daily", "students", "time"] },
+  { slug: "exam-mistakes-students", title: "Common Exam Mistakes Students Make", keywords: ["exam", "mistakes", "tips", "board"] },
+  { slug: "fun-learning-kids", title: "Fun Learning Activities for Kids", keywords: ["fun", "kids", "learning", "activities"] },
+];
+
+export function getRelevantBlogs(pageData: SeoPageData): BlogLink[] {
+  const seed = hashStr(pageData.slug);
+  const subj = pageData.subject?.slug || "";
+  const cls = pageData.classLevel?.slug ? parseInt(pageData.classLevel.slug) : 0;
+  const intent = pageData.intent || "";
+
+  // Score each blog by relevance
+  const scored = blogIndex.map(blog => {
+    let score = 0;
+    if (intent === "home-vs-online" && blog.slug.includes("online")) score += 5;
+    if (intent === "fees" && blog.keywords.includes("tuition")) score += 3;
+    if (cls >= 9 && blog.keywords.some(k => k.includes("board") || k.includes("exam"))) score += 3;
+    if (cls <= 5 && blog.keywords.some(k => k.includes("kids") || k.includes("fun"))) score += 4;
+    if (blog.keywords.includes("tutor") || blog.keywords.includes("tuition")) score += 1;
+    if (blog.keywords.includes("study")) score += 1;
+    // Add seed-based tiebreaker for variety
+    score += (hashStr(blog.slug + pageData.slug) % 3);
+    return { ...blog, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, 2).map(b => ({ href: `/blog/${b.slug}`, title: b.title }));
+}
+
+// ===== ENHANCED INTERNAL LINKING ENGINE =====
 
 interface InternalLink {
   href: string;
   anchor: string;
+  category: "subject" | "area" | "intent" | "decision" | "exam" | "blog";
 }
 
-export function getRelatedLinks(pageData: SeoPageData): InternalLink[] {
+export function getSmartInternalLinks(pageData: SeoPageData): InternalLink[] {
   const links: InternalLink[] = [];
-  const currentSlug = pageData.slug;
   const seen = new Set<string>();
-  seen.add(currentSlug);
+  seen.add(pageData.slug);
 
-  const addLink = (href: string, anchor: string) => {
+  const add = (href: string, anchor: string, category: InternalLink["category"]) => {
     const slug = href.replace(/^\//, "");
-    if (!seen.has(slug) && links.length < 10) {
+    if (!seen.has(slug)) {
       seen.add(slug);
-      links.push({ href, anchor });
+      links.push({ href, anchor, category });
     }
   };
 
-  // 1. Same area, different subjects
-  if (pageData.area) {
-    const shuffledSubjects = [...subjects].sort((a, b) => hashStr(a.slug + currentSlug) - hashStr(b.slug + currentSlug));
-    for (const s of shuffledSubjects) {
-      if (s.slug === pageData.subject?.slug) continue;
-      addLink(`/tutors/${s.slug}-${pageData.area.slug}-delhi`, `${s.name} Home Tutor in ${pageData.area.name}`);
-      if (links.length >= 3) break;
+  const seed = hashStr(pageData.slug);
+  const area = pageData.area;
+  const subj = pageData.subject;
+  const cls = pageData.classLevel;
+  const classNum = cls?.slug ? parseInt(cls.slug) : 0;
+
+  // === 1. SUBJECT LINKS (3 related subjects, same class & area) ===
+  if (area) {
+    const shuffled = [...subjects].sort((a, b) => hashStr(a.slug + pageData.slug) - hashStr(b.slug + pageData.slug));
+    let count = 0;
+    for (const s of shuffled) {
+      if (s.slug === subj?.slug) continue;
+      const anchor = cls
+        ? `${s.name} Tuition for ${cls.label} in ${area.name}`
+        : `Best ${s.name} Home Tutor in ${area.name}`;
+      const href = cls
+        ? `/${s.slug}-tuition-in-${area.slug}-class-${cls.slug}`
+        : `/tutors/${s.slug}-${area.slug}-delhi`;
+      add(href, anchor, "subject");
+      if (++count >= 3) break;
     }
   }
 
-  // 2. Same subject, nearby areas
-  if (pageData.subject) {
-    const shuffledAreas = [...areas].sort((a, b) => hashStr(a.slug + currentSlug) - hashStr(b.slug + currentSlug));
-    for (const a of shuffledAreas) {
-      if (a.slug === pageData.area?.slug) continue;
-      addLink(`/tutors/${pageData.subject.slug}-${a.slug}-delhi`, `${pageData.subject.name} Tutor in ${a.name}`);
-      if (links.length >= 6) break;
+  // === 2. AREA LINKS (5 nearby via proximity graph) ===
+  if (area) {
+    const nearby = getNearbyAreas(area.slug);
+    for (const a of nearby.slice(0, 5)) {
+      const anchor = subj
+        ? `${subj.name} Home Tutor in ${a.name}`
+        : `Home Tuition in ${a.name}`;
+      const href = subj
+        ? `/tutors/${subj.slug}-${a.slug}-delhi`
+        : `/home-tuition-in-${a.slug}`;
+      add(href, anchor, "area");
     }
   }
 
-  // 3. Class variants
-  if (pageData.subject && pageData.area) {
-    for (const c of classes.filter(c => ["9", "10", "11", "12"].includes(c.slug) && c.slug !== pageData.classLevel?.slug)) {
-      addLink(`/${pageData.subject.slug}-tuition-in-${pageData.area.slug}-class-${c.slug}`, `${pageData.subject.name} Tuition for ${c.label} in ${pageData.area.name}`);
-      if (links.length >= 8) break;
+  // === 3. INTENT LINKS (fees, female, near-me) ===
+  if (area && pageData.intent !== "fees") {
+    add(`/home-tuition-fees-in-${area.slug}`, `Home Tuition Fees in ${area.name}`, "intent");
+  }
+  if (subj && area && pageData.intent !== "female-tutors") {
+    add(`/female-${subj.slug}-home-tutor-${area.slug}`, `Female ${subj.name} Tutor in ${area.name}`, "intent");
+  }
+  if (subj && pageData.intent !== "near-me") {
+    const nearMeClass = cls?.slug || "10";
+    add(`/${subj.slug}-home-tutor-near-me-class-${nearMeClass}`, `${subj.name} Tutor Near Me`, "intent");
+  }
+  if (subj && area && pageData.intent !== "fees") {
+    add(`/${subj.slug}-home-tutor-${area.slug}-fees`, `${subj.name} Tuition Fees in ${area.name}`, "intent");
+  }
+
+  // === 4. DECISION LINKS ===
+  if (area && pageData.intent !== "home-vs-online") {
+    add(`/home-vs-online-tuition-${area.slug}`, `Home vs Online Tuition in ${area.name}`, "decision");
+  }
+  add("/blog/online-vs-home-tuition-delhi", "Online vs Home Tuition — Complete Comparison", "decision");
+
+  // === 5. EXAM LINKS (class 9+) ===
+  if (classNum >= 9) {
+    if (area) {
+      add(`/home-tuition-in-${area.slug}`, `CBSE Board Exam Prep in ${area.name}`, "exam");
+    }
+    const scienceSlugs = ["math", "physics", "chemistry", "biology", "science"];
+    const isScience = subj ? scienceSlugs.includes(subj.slug) : false;
+    if (isScience) {
+      add(area ? `/jee-coaching-${area.slug}` : "/jee-coaching-near-me", `JEE Coaching${area ? ` in ${area.name}` : " Near Me"}`, "exam");
+    }
+    if (isScience && subj?.slug !== "math") {
+      add(area ? `/neet-coaching-${area.slug}` : "/neet-coaching-near-me", `NEET Coaching${area ? ` in ${area.name}` : " Near Me"}`, "exam");
+    }
+    if (classNum >= 11) {
+      add(area ? `/cuet-coaching-${area.slug}` : "/cuet-coaching-near-me", `CUET Preparation${area ? ` in ${area.name}` : ""}`, "exam");
     }
   }
 
-  // 4. Area hub pages
-  if (pageData.area) {
-    addLink(`/home-tuition-in-${pageData.area.slug}`, `Home Tuition in ${pageData.area.name}`);
-    addLink(`/best-home-tutors-in-${pageData.area.slug}`, `Best Home Tutors in ${pageData.area.name}`);
-    addLink(`/home-tuition-fees-in-${pageData.area.slug}`, `Tuition Fees in ${pageData.area.name}`);
-    addLink(`/top-10-home-tutors-${pageData.area.slug}`, `Top 10 Tutors in ${pageData.area.name}`);
+  // === 6. BLOG LINKS (1-2 relevant) ===
+  const blogs = getRelevantBlogs(pageData);
+  for (const b of blogs) {
+    add(b.href, b.title, "blog");
   }
 
-  // 5. Board/intent variants
-  if (pageData.subject && pageData.area) {
-    addLink(`/female-${pageData.subject.slug}-home-tutor-${pageData.area.slug}`, `Female ${pageData.subject.name} Tutor in ${pageData.area.name}`);
-    addLink(`/${pageData.subject.slug}-home-tutor-${pageData.area.slug}-fees`, `${pageData.subject.name} Fees in ${pageData.area.name}`);
-  }
+  return links;
+}
 
-  // 6. Nearby pincodes
-  if (pageData.area) {
-    const nearby = areas.filter(a => a.slug !== pageData.area?.slug).slice(0, 2);
-    for (const a of nearby) {
-      addLink(`/home-tuition-in-${a.slug}-${a.pincode}`, `Home Tuition in ${a.name} (${a.pincode})`);
-    }
-  }
-
-  return links.slice(0, 10);
+// Keep legacy function for backward compat
+export function getRelatedLinks(pageData: SeoPageData): { href: string; anchor: string }[] {
+  return getSmartInternalLinks(pageData).map(l => ({ href: l.href, anchor: l.anchor }));
 }
 
 // ===== OPTIMIZED META GENERATOR =====
