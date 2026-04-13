@@ -3,9 +3,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   CheckCircle, Star, Shield, Users, Clock, MapPin, ArrowRight,
-  IndianRupee, GraduationCap, BookOpen, MessageCircle,
+  IndianRupee, GraduationCap, BookOpen, MessageCircle, FileText,
+  Scale, Newspaper,
 } from "lucide-react";
 import { areas, subjects, examTypes, type SeoPageData } from "@/data/seoData";
+import { getSmartInternalLinks } from "@/data/seoContentGenerator";
 
 // ===== TRUST LAYER =====
 export const TrustLayer = ({ pageData }: { pageData: SeoPageData }) => {
@@ -197,89 +199,79 @@ export const TopTutorsNearYou = ({ pageData }: { pageData: SeoPageData }) => {
   );
 };
 
-// ===== INTERNAL LINKING BLOCK =====
+// ===== AUTOMATED INTERNAL LINKING BLOCK =====
 export const InternalLinkingBlock = ({ pageData }: { pageData: SeoPageData }) => {
-  const currentArea = pageData.area;
-  const currentSubj = pageData.subject;
+  const allLinks = getSmartInternalLinks(pageData);
 
-  // Related subjects (3)
-  const relatedSubjects = subjects
-    .filter(s => s.slug !== currentSubj?.slug)
-    .slice(0, 3);
+  const subjectLinks = allLinks.filter(l => l.category === "subject");
+  const areaLinks = allLinks.filter(l => l.category === "area");
+  const intentLinks = allLinks.filter(l => l.category === "intent");
+  const decisionLinks = allLinks.filter(l => l.category === "decision");
+  const examLinks = allLinks.filter(l => l.category === "exam");
+  const blogLinks = allLinks.filter(l => l.category === "blog");
 
-  // Nearby NCR areas (5)
-  const ncrAreas = areas
-    .filter(a => a.slug !== currentArea?.slug)
-    .slice(0, 5);
+  const categoryIcon = {
+    subject: BookOpen,
+    area: MapPin,
+    intent: FileText,
+    decision: Scale,
+    exam: GraduationCap,
+    blog: Newspaper,
+  };
 
-  // Intent links
-  const intentLinks = currentArea ? [
-    { href: `/home-tuition-fees-in-${currentArea.slug}`, label: `Tuition Fees in ${currentArea.name}` },
-    ...(currentSubj ? [{ href: `/female-${currentSubj.slug}-home-tutor-${currentArea.slug}`, label: `Female ${currentSubj.name} Tutors in ${currentArea.name}` }] : []),
-    ...(currentSubj ? [{ href: `/${currentSubj.slug}-home-tutor-near-me-class-10`, label: `${currentSubj.name} Tutor Near Me` }] : []),
-  ] : [];
+  const sections = [
+    { title: "Related Subjects", links: subjectLinks, icon: categoryIcon.subject },
+    { title: "Nearby Areas (Delhi NCR)", links: areaLinks, icon: categoryIcon.area },
+    { title: "Find What You Need", links: intentLinks, icon: categoryIcon.intent },
+    { title: "Compare & Decide", links: decisionLinks, icon: categoryIcon.decision },
+    { title: "Exam Preparation", links: examLinks, icon: categoryIcon.exam },
+    { title: "Helpful Reads", links: blogLinks, icon: categoryIcon.blog },
+  ].filter(s => s.links.length > 0);
+
+  if (sections.length === 0) return null;
 
   return (
     <section className="py-12">
       <div className="container mx-auto max-w-5xl px-4">
-        <h2 className="font-heading font-bold text-2xl text-foreground mb-6 text-center">Explore More</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Related Subjects */}
-          <div>
-            <h3 className="font-heading font-semibold text-sm text-foreground mb-3 flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-primary" /> Related Subjects
-            </h3>
-            <ul className="space-y-2">
-              {relatedSubjects.map(s => (
-                <li key={s.slug}>
-                  <Link
-                    to={currentArea ? `/tutors/${s.slug}-${currentArea.slug}-delhi` : `/tutors/${s.slug}-delhi`}
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <ArrowRight className="h-3 w-3 shrink-0" />
-                    {s.name} Tutor{currentArea ? ` in ${currentArea.name}` : ""}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Nearby Areas */}
-          <div>
-            <h3 className="font-heading font-semibold text-sm text-foreground mb-3 flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-primary" /> Nearby Areas (Delhi NCR)
-            </h3>
-            <ul className="space-y-2">
-              {ncrAreas.map(a => (
-                <li key={a.slug}>
-                  <Link
-                    to={currentSubj ? `/tutors/${currentSubj.slug}-${a.slug}-delhi` : `/home-tuition-in-${a.slug}`}
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <ArrowRight className="h-3 w-3 shrink-0" />
-                    {currentSubj?.name || "Home"} Tutor in {a.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Intent Pages */}
-          <div>
-            <h3 className="font-heading font-semibold text-sm text-foreground mb-3 flex items-center gap-2">
-              <GraduationCap className="h-4 w-4 text-primary" /> Quick Links
-            </h3>
-            <ul className="space-y-2">
-              {intentLinks.map((l, i) => (
-                <li key={i}>
-                  <Link to={l.href} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                    <ArrowRight className="h-3 w-3 shrink-0" />
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <motion.h2
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="font-heading font-bold text-2xl text-foreground mb-8 text-center"
+        >
+          Explore Related Pages
+        </motion.h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sections.map((section, si) => {
+            const Icon = section.icon;
+            return (
+              <motion.div
+                key={si}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: si * 0.06 }}
+                className="p-5 rounded-xl border border-border bg-background card-shadow"
+              >
+                <h3 className="font-heading font-semibold text-sm text-foreground mb-3 flex items-center gap-2">
+                  <Icon className="h-4 w-4 text-primary shrink-0" /> {section.title}
+                </h3>
+                <ul className="space-y-2">
+                  {section.links.map((l, li) => (
+                    <li key={li}>
+                      <Link
+                        to={l.href}
+                        className="flex items-start gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
+                      >
+                        <ArrowRight className="h-3 w-3 shrink-0 mt-1 group-hover:translate-x-0.5 transition-transform" />
+                        <span>{l.anchor}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
