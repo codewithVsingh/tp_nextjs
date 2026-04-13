@@ -121,7 +121,7 @@ const FAQ = () => (
   <>
     <SEOHead
       title="FAQs – Home Tuition & Counselling in Delhi"
-      description="Find answers to common questions about home tutors, online classes, and student counselling in Delhi. Tutors Parliament — trusted by 8500+ students."
+      description="Find answers to common questions about home tutors, online classes, and student counselling in Delhi. Tutors Parliament — trusted by 10,000+ students."
     />
     <Navbar />
     <main className="pt-20">
