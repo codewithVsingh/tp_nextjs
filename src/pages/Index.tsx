@@ -9,9 +9,16 @@ import HowItWorks from "@/components/HowItWorks";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import StickyMobileCTA from "@/components/StickyMobileCTA";
+import BehaviorPopup from "@/components/BehaviorPopup";
+import ScrollTracker from "@/components/ScrollTracker";
 import SEOHead from "@/components/SEOHead";
+import LeadCaptureModal from "@/components/LeadCaptureModal";
+import { useState } from "react";
 
 const Index = () => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <>
       <SEOHead
@@ -32,6 +39,10 @@ const Index = () => {
       </main>
       <Footer />
       <WhatsAppButton />
+      <StickyMobileCTA onCtaClick={() => setShowModal(true)} />
+      <BehaviorPopup />
+      <ScrollTracker />
+      <LeadCaptureModal open={showModal} onOpenChange={setShowModal} source="homepage_sticky" />
     </>
   );
 };
