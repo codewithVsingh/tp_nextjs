@@ -423,7 +423,7 @@ export function getRelevantBlogs(pageData: SeoPageData): BlogLink[] {
 interface InternalLink {
   href: string;
   anchor: string;
-  category: "subject" | "area" | "intent" | "decision" | "exam" | "blog";
+  category: "subject" | "area" | "intent" | "decision" | "exam" | "blog" | "service";
 }
 
 export function getSmartInternalLinks(pageData: SeoPageData): InternalLink[] {
@@ -519,6 +519,21 @@ export function getSmartInternalLinks(pageData: SeoPageData): InternalLink[] {
   const blogs = getRelevantBlogs(pageData);
   for (const b of blogs) {
     add(b.href, b.title, "blog");
+  }
+
+  // === 7. SERVICE CROSS-LINKS (3-4 related services) ===
+  const areaSlug = area?.slug || "delhi";
+  const currentServiceSlug = pageData.service?.slug;
+  const currentCategory = pageData.service?.category;
+
+  // Pick services from same category + different categories
+  const relatedServices = services.filter(s => s.slug !== currentServiceSlug);
+  const sameCat = relatedServices.filter(s => s.category === currentCategory).slice(0, 2);
+  const diffCat = relatedServices.filter(s => s.category !== currentCategory)
+    .sort((a, b) => hashStr(a.slug + pageData.slug) - hashStr(b.slug + pageData.slug))
+    .slice(0, 2);
+  for (const svc of [...sameCat, ...diffCat].slice(0, 4)) {
+    add(`/${svc.slug}-${areaSlug}`, `${svc.name} in ${area?.name || "Delhi"}`, "service");
   }
 
   return links;
