@@ -1,0 +1,233 @@
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import StickyMobileCTA from "@/components/StickyMobileCTA";
+import LeadCaptureModal from "@/components/LeadCaptureModal";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, MessageCircle, Phone, CheckCircle2, ShieldCheck, Users, BarChart3, Brain, AlertTriangle, Lightbulb } from "lucide-react";
+import { useState } from "react";
+import { motion } from "framer-motion";
+
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.45 },
+};
+
+const whatsappMsg = encodeURIComponent("Hi, I need a home tutor for my child. I'm concerned about AI dependency.");
+
+const SectionCTA = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex flex-col sm:flex-row items-center gap-3 pt-4">
+      <Button size="lg" className="w-full sm:w-auto font-semibold" style={{ background: "var(--cta-gradient)" }} onClick={() => setOpen(true)}>
+        Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
+      </Button>
+      <Button variant="outline" size="lg" className="w-full sm:w-auto font-semibold" asChild>
+        <a href={`https://wa.me/919873101564?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer">
+          <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp
+        </a>
+      </Button>
+      <Button variant="outline" size="lg" className="w-full sm:w-auto font-semibold" asChild>
+        <a href="tel:+919873101564">
+          <Phone className="w-4 h-4 mr-1" /> Call Now
+        </a>
+      </Button>
+      <LeadCaptureModal open={open} onOpenChange={setOpen} source="ai_guide_section" />
+    </div>
+  );
+};
+
+const BulletList = ({ items, icon: Icon }: { items: string[]; icon: React.ElementType }) => (
+  <ul className="space-y-3">
+    {items.map((item, i) => (
+      <li key={i} className="flex items-start gap-3 text-foreground">
+        <Icon className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+        <span className="text-sm md:text-base leading-relaxed">{item}</span>
+      </li>
+    ))}
+  </ul>
+);
+
+const AIEducationGuide = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <SEOHead
+        title="AI in Education for Kids: Benefits, Risks & What Parents Should Know"
+        description="Learn how AI tools impact your child's learning, risks of overuse, and how guided tutoring helps build real understanding."
+        keywords="AI in education, AI for kids, ChatGPT for students, AI risks children, home tutor vs AI, guided learning Delhi"
+        canonical="https://www.example.com/ai-in-education-for-kids-guide"
+      />
+      <Navbar />
+
+      <main className="pb-16 md:pb-0">
+        {/* Hero */}
+        <section className="py-16 md:py-24" style={{ background: "var(--hero-gradient)" }}>
+          <div className="container max-w-4xl mx-auto px-4 text-center text-primary-foreground">
+            <motion.div {...fadeUp} className="space-y-5">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                Is AI Helping or Hurting<br className="hidden sm:block" /> Your Child's Learning?
+              </h1>
+              <p className="text-base md:text-lg max-w-2xl mx-auto opacity-90 leading-relaxed">
+                From ChatGPT to AI homework solvers — understand the real impact on your child's academic growth and what you can do about it.
+              </p>
+              <Button size="lg" className="font-bold text-primary" variant="secondary" onClick={() => setShowModal(true)}>
+                Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Short-Term Effects */}
+        <section className="py-12 md:py-16 bg-background">
+          <div className="container max-w-3xl mx-auto px-4">
+            <motion.div {...fadeUp} className="space-y-6">
+              <div className="flex items-center gap-2 text-primary font-semibold text-sm uppercase tracking-wider">
+                <AlertTriangle className="w-4 h-4" /> Short-Term Effects
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">What Happens When Kids Rely on AI</h2>
+              <BulletList
+                icon={AlertTriangle}
+                items={[
+                  "Homework gets 'completed' without understanding core concepts",
+                  "Students copy-paste AI answers, skipping the thinking process entirely",
+                  "False confidence — high grades on AI-assisted work but low test scores",
+                  "Reduced attention span and inability to focus on problem-solving",
+                  "Teachers can't identify real learning gaps when AI masks them",
+                ]}
+              />
+              <SectionCTA />
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Long-Term Impact */}
+        <section className="py-12 md:py-16 bg-muted/50">
+          <div className="container max-w-3xl mx-auto px-4">
+            <motion.div {...fadeUp} className="space-y-6">
+              <div className="flex items-center gap-2 text-destructive font-semibold text-sm uppercase tracking-wider">
+                <Brain className="w-4 h-4" /> Long-Term Impact
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">The Hidden Cost of AI Dependency</h2>
+              <BulletList
+                icon={Brain}
+                items={[
+                  "Critical thinking and analytical skills fail to develop properly",
+                  "Students struggle in competitive exams (JEE, NEET) where AI isn't available",
+                  "Poor communication and writing skills due to AI-generated content reliance",
+                  "Lack of resilience — giving up quickly when answers aren't instant",
+                  "Widening gap between AI-assisted performance and actual competence",
+                ]}
+              />
+              <SectionCTA />
+            </motion.div>
+          </div>
+        </section>
+
+        {/* What Parents Should Do */}
+        <section className="py-12 md:py-16 bg-background">
+          <div className="container max-w-3xl mx-auto px-4">
+            <motion.div {...fadeUp} className="space-y-6">
+              <div className="flex items-center gap-2 text-primary font-semibold text-sm uppercase tracking-wider">
+                <Lightbulb className="w-4 h-4" /> Parent Action Plan
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">What Parents Should Do Right Now</h2>
+              <BulletList
+                icon={CheckCircle2}
+                items={[
+                  "Set clear boundaries — AI can assist learning, not replace it",
+                  "Monitor homework process, not just the final answers",
+                  "Encourage your child to explain concepts verbally after studying",
+                  "Invest in a tutor who teaches thinking, not just answers",
+                  "Use AI as a supplementary tool, not the primary learning source",
+                  "Have open conversations about academic honesty and real understanding",
+                ]}
+              />
+              <SectionCTA />
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Why Human Tutors Matter */}
+        <section className="py-12 md:py-16 bg-muted/50">
+          <div className="container max-w-3xl mx-auto px-4">
+            <motion.div {...fadeUp} className="space-y-6">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Why Human Tutors Still Matter More Than Ever</h2>
+              <div className="grid gap-4 sm:grid-cols-3">
+                {[
+                  { icon: Brain, title: "Concept Clarity", desc: "Tutors identify exactly where your child is stuck and explain in a way that clicks." },
+                  { icon: BarChart3, title: "Progress Tracking", desc: "Weekly assessments and real feedback — no AI hallucinations or guesswork." },
+                  { icon: Users, title: "Personalized Teaching", desc: "Adapts to your child's pace, learning style, and emotional state." },
+                ].map((card, i) => (
+                  <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-3">
+                    <card.icon className="w-8 h-8 text-primary" />
+                    <h3 className="font-semibold text-foreground">{card.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{card.desc}</p>
+                  </div>
+                ))}
+              </div>
+              <SectionCTA />
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Trust Section */}
+        <section className="py-12 md:py-16 bg-background">
+          <div className="container max-w-3xl mx-auto px-4 text-center">
+            <motion.div {...fadeUp} className="space-y-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Trusted by 5,000+ Delhi/NCR Parents</h2>
+              <div className="grid gap-4 sm:grid-cols-3">
+                {[
+                  { icon: ShieldCheck, label: "Verified & Background-Checked Tutors" },
+                  { icon: CheckCircle2, label: "Free Demo Class — No Commitment" },
+                  { icon: Users, label: "Proven Improvement in 30 Days" },
+                ].map((item, i) => (
+                  <div key={i} className="flex flex-col items-center gap-2 p-4">
+                    <item.icon className="w-8 h-8 text-primary" />
+                    <span className="text-sm font-medium text-foreground">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="py-16 md:py-20" style={{ background: "var(--hero-gradient)" }}>
+          <div className="container max-w-3xl mx-auto px-4 text-center text-primary-foreground">
+            <motion.div {...fadeUp} className="space-y-6">
+              <h2 className="text-2xl md:text-3xl font-bold">Give Your Child the Gift of Real Learning</h2>
+              <p className="opacity-90 max-w-xl mx-auto">
+                Don't let AI replace genuine understanding. Connect with a verified home tutor today and see the difference guided learning makes.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Button size="lg" variant="secondary" className="w-full sm:w-auto font-bold text-primary" onClick={() => setShowModal(true)}>
+                  Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto font-semibold border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" asChild>
+                  <a href={`https://wa.me/919873101564?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer">
+                    <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp Us
+                  </a>
+                </Button>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto font-semibold border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" asChild>
+                  <a href="tel:+919873101564">
+                    <Phone className="w-4 h-4 mr-1" /> Call Now
+                  </a>
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+      <StickyMobileCTA onCtaClick={() => setShowModal(true)} />
+      <LeadCaptureModal open={showModal} onOpenChange={setShowModal} source="ai_guide_page" />
+    </>
+  );
+};
+
+export default AIEducationGuide;
