@@ -91,6 +91,49 @@ export const intentModifiers = [
   { slug: "home-vs-online", name: "Home vs Online", label: "Home vs Online Tuition" },
 ] as const;
 
+// ===== SERVICE CATEGORIES (Non-academic + Niche Academic) =====
+export const services = [
+  // Core Academic Help
+  { slug: "home-tutor-for-kids", name: "Home Tutor for Kids", category: "academic", h1Tpl: "Best Home Tutors for Kids in {area}", descTpl: "Find trusted, verified home tutors for kids in {area}. Age-appropriate teaching, all subjects. Book a free demo!" },
+  { slug: "1-on-1-home-tutor", name: "1-on-1 Home Tutor", category: "academic", h1Tpl: "1-on-1 Home Tutors in {area}", descTpl: "Get personalized 1-on-1 home tuition in {area}. Focused learning, flexible schedule. Free demo class!" },
+  { slug: "affordable-tuition-classes", name: "Affordable Tuition Classes", category: "academic", h1Tpl: "Affordable Tuition Classes in {area}", descTpl: "Budget-friendly tuition classes in {area} starting ₹300/hr. All subjects, verified tutors. Book free demo!" },
+  { slug: "after-school-homework-help", name: "After School Homework Help", category: "academic", h1Tpl: "After School Homework Help in {area}", descTpl: "Struggling with homework? Get after-school homework help in {area}. Experienced tutors, all subjects. Free demo!" },
+  { slug: "exam-crash-course", name: "Exam Crash Course", category: "academic", h1Tpl: "Exam Crash Course in {area}", descTpl: "Intensive exam crash courses in {area}. Board & competitive exam prep. Expert tutors. Book free demo!" },
+
+  // Skill Development
+  { slug: "coding-classes-for-kids", name: "Coding Classes for Kids", category: "skill", h1Tpl: "Coding Classes for Kids in {area}", descTpl: "Fun, interactive coding classes for kids in {area}. Python, Scratch, web dev. Expert instructors. Free demo!" },
+  { slug: "robotics-classes", name: "Robotics Classes", category: "skill", h1Tpl: "Robotics Classes for Kids in {area}", descTpl: "Hands-on robotics classes in {area}. Build, code & innovate. Ages 6-16. Book a free demo session!" },
+  { slug: "vedic-maths-classes", name: "Vedic Maths Classes", category: "skill", h1Tpl: "Vedic Maths Classes in {area}", descTpl: "Speed up mental math with Vedic Maths classes in {area}. Fun techniques for kids. Free demo!" },
+  { slug: "public-speaking-for-kids", name: "Public Speaking for Kids", category: "skill", h1Tpl: "Public Speaking Classes for Kids in {area}", descTpl: "Build confidence with public speaking classes in {area}. Debate, elocution & presentation skills. Free demo!" },
+  { slug: "chess-classes-for-kids", name: "Chess Classes for Kids", category: "skill", h1Tpl: "Chess Classes for Kids in {area}", descTpl: "Sharpen your child's mind with chess classes in {area}. Beginner to advanced. Book a free demo!" },
+  { slug: "abacus-classes-for-kids", name: "Abacus Classes for Kids", category: "skill", h1Tpl: "Abacus Classes for Kids in {area}", descTpl: "Boost mental arithmetic with abacus classes in {area}. Ages 4-14. Certified trainers. Free demo!" },
+
+  // Hobby + Activity
+  { slug: "summer-camp-for-kids", name: "Summer Camp for Kids", category: "hobby", h1Tpl: "Summer Camp for Kids in {area}", descTpl: "Fun summer camp activities in {area}. Art, sports, coding & more. Ages 4-16. Register now!" },
+  { slug: "dance-classes-for-kids", name: "Dance Classes for Kids", category: "hobby", h1Tpl: "Dance Classes for Kids in {area}", descTpl: "Creative dance classes in {area}. Classical, western, hip-hop. All ages. Book a free trial!" },
+  { slug: "music-classes-for-kids", name: "Music Classes for Kids", category: "hobby", h1Tpl: "Music Classes for Kids in {area}", descTpl: "Learn music at home in {area}. Guitar, piano, vocals & more. Expert teachers. Free trial class!" },
+  { slug: "art-and-craft-classes", name: "Art and Craft Classes", category: "hobby", h1Tpl: "Art & Craft Classes for Kids in {area}", descTpl: "Creative art & craft classes in {area}. Drawing, painting, pottery. Ages 4-16. Free trial!" },
+
+  // KG / Early Learning
+  { slug: "kg-home-tutor", name: "KG Home Tutor", category: "early", h1Tpl: "Best KG Home Tutors in {area}", descTpl: "Find caring KG home tutors in {area}. Phonics, numbers, early reading. Verified & experienced. Free demo!" },
+  { slug: "phonics-classes-for-kg", name: "Phonics Classes for KG", category: "early", h1Tpl: "Phonics Classes for KG in {area}", descTpl: "Expert phonics classes for KG students in {area}. Build reading foundations. Certified teachers. Free demo!" },
+  { slug: "montessori-classes", name: "Montessori Classes", category: "early", h1Tpl: "Montessori Classes in {area}", descTpl: "Montessori-method early learning in {area}. Hands-on, child-led education. Ages 2-6. Free demo!" },
+  { slug: "early-learning-program", name: "Early Learning Program", category: "early", h1Tpl: "Early Learning Programs in {area}", descTpl: "Structured early learning programs in {area}. Cognitive, motor & social skills for ages 2-6. Free demo!" },
+
+  // Behavioral + Developmental Support
+  { slug: "special-education-tutor", name: "Special Education Tutor", category: "behavioral", h1Tpl: "Special Education Tutors in {area}", descTpl: "Qualified special education tutors in {area}. Individualized support for learning differences. Free consultation!" },
+  { slug: "speech-therapy-kids", name: "Speech Therapy for Kids", category: "behavioral", h1Tpl: "Speech Therapy for Kids in {area}", descTpl: "Professional speech therapy in {area}. Help your child communicate better. Certified therapists. Free consultation!" },
+  { slug: "learning-disability-support", name: "Learning Disability Support", category: "behavioral", h1Tpl: "Learning Disability Support in {area}", descTpl: "Expert learning disability support in {area}. Dyslexia, ADHD, autism-friendly tutoring. Free consultation!" },
+
+  // Local Discovery
+  { slug: "verified-tutors", name: "Verified Tutors", category: "discovery", h1Tpl: "Verified Home Tutors in {area}", descTpl: "Find background-checked, verified home tutors in {area}. All subjects, all boards. Book a free demo!" },
+  { slug: "weekend-classes-for-kids", name: "Weekend Classes for Kids", category: "discovery", h1Tpl: "Weekend Classes for Kids in {area}", descTpl: "Weekend tuition & activity classes in {area}. Flexible Saturday-Sunday batches. All ages. Free demo!" },
+];
+
+export type ServiceCategory = typeof services[number];
+
+function findService(s: string) { return services.find(svc => svc.slug === s); }
+
 export const examTypes = [
   { slug: "jee", name: "JEE" },
   { slug: "neet", name: "NEET" },
@@ -115,7 +158,10 @@ export type PageType =
   | "subject-near-me-class"
   | "home-vs-online-area"
   | "tuition-fees-area"   // money page
-  | "top-tutors-area";    // money page
+  | "top-tutors-area"     // money page
+  // 3.0 service pages
+  | "service-area"
+  | "service-city";
 
 export interface SeoPageData {
   type: PageType;
