@@ -26,6 +26,10 @@ import {
   getEnrichedContent, getEnrichedFaqs, getRelatedLinks, getOptimizedMeta,
   moneyPageContent,
 } from "@/data/seoContentGenerator";
+import {
+  TrustLayer, FeesSection, TopTutorsNearYou,
+  InternalLinkingBlock, ExamConnectionBlock, StickyBottomCTA,
+} from "@/components/SeoPageSections";
 
 const TutorSeoPage = () => {
   const params = useParams();
@@ -33,7 +37,6 @@ const TutorSeoPage = () => {
 
   const pageData = useMemo(() => {
     const path = location.pathname.replace(/^\//, "");
-    // Try direct (non /tutors/ prefix) patterns first
     const v2 = parseSlug2(path);
     if (v2) return v2;
     const v1 = parseNewSlug(path);
@@ -76,12 +79,15 @@ const TutorSeoPage = () => {
   const pageUrl = `https://tutorsparliament.com/${pageData.slug}`;
   const showPincode = !!pageData.area?.pincode;
 
+  const isFeesPage = pageData.type === "tuition-fees-area" || pageData.type === "subject-area-fees";
+  const isTopTutorsPage = pageData.type === "top-tutors-area";
+
   // JSON-LD
   const educationalOrgJsonLd = {
     "@context": "https://schema.org", "@type": "EducationalOrganization",
     name: "Tutors Parliament", description: meta.description, url: pageUrl,
     areaServed: { "@type": "City", name: pageData.area?.name || "Delhi" },
-    address: { "@type": "PostalAddress", addressLocality: pageData.area?.name || "Delhi", addressRegion: "Delhi", postalCode: pageData.area?.pincode || "110001", addressCountry: "IN" },
+    address: { "@type": "PostalAddress", addressLocality: pageData.area?.name || "Delhi", addressRegion: "Delhi NCR", postalCode: pageData.area?.pincode || "110001", addressCountry: "IN" },
   };
   const faqJsonLd = {
     "@context": "https://schema.org", "@type": "FAQPage",
@@ -91,27 +97,23 @@ const TutorSeoPage = () => {
     "@context": "https://schema.org", "@type": "LocalBusiness",
     name: `Tutors Parliament — ${pageData.area?.name || "Delhi"}`, description: meta.description, url: pageUrl,
     telephone: "+91-9873101564",
-    address: { "@type": "PostalAddress", addressLocality: pageData.area?.name || "Delhi", addressRegion: "Delhi", postalCode: pageData.area?.pincode || "110001", addressCountry: "IN" },
+    address: { "@type": "PostalAddress", addressLocality: pageData.area?.name || "Delhi", addressRegion: "Delhi NCR", postalCode: pageData.area?.pincode || "110001", addressCountry: "IN" },
     aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "2500" },
   };
-
-  // Money page data
-  const isFeesPage = pageData.type === "tuition-fees-area" || pageData.type === "subject-area-fees";
-  const isTopTutorsPage = pageData.type === "top-tutors-area";
 
   return (
     <>
       <SEOHead
         title={meta.title}
         description={meta.description}
-        keywords={`${pageData.keyword}, home tutor Delhi, tuition classes Delhi, CBSE ICSE tutor${pageData.area ? `, tutor ${pageData.area.name}` : ""}${pageData.classLevel ? `, ${pageData.classLevel.label} tutor` : ""}${pageData.board ? `, ${pageData.board.name} tutor` : ""}${pageData.intent ? `, ${pageData.intent}` : ""}`}
+        keywords={`${pageData.keyword}, home tutor Delhi NCR, tuition classes Delhi, CBSE ICSE tutor${pageData.area ? `, tutor ${pageData.area.name}` : ""}${pageData.classLevel ? `, ${pageData.classLevel.label} tutor` : ""}${pageData.board ? `, ${pageData.board.name} tutor` : ""}${pageData.intent ? `, ${pageData.intent}` : ""}, Noida tutor, Gurgaon tutor`}
         canonical={pageUrl}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(educationalOrgJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }} />
       <Navbar />
-      <main>
+      <main className="pb-16 md:pb-0">
         {/* Breadcrumb */}
         <div className="container mx-auto px-4 pt-24 pb-2">
           <Breadcrumb>
@@ -130,7 +132,7 @@ const TutorSeoPage = () => {
           </Breadcrumb>
         </div>
 
-        {/* Hero */}
+        {/* === 1. HERO SECTION (Enhanced) === */}
         <section className="section-padding bg-gradient-to-br from-primary/5 to-secondary/5">
           <div className="container mx-auto max-w-4xl text-center">
             {pageData.isMoneyPage && (
@@ -148,33 +150,44 @@ const TutorSeoPage = () => {
                 👩‍🏫 Female Tutors Available
               </motion.span>
             )}
-            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-heading font-bold text-3xl md:text-5xl text-foreground mb-6">
+
+            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-heading font-bold text-3xl md:text-5xl text-foreground mb-4">
               {pageData.h1}
             </motion.h1>
+
             {showPincode && (
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }} className="text-sm text-muted-foreground mb-2">
                 Serving pincode: <strong>{pageData.area!.pincode}</strong>
               </motion.p>
             )}
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+
+            {/* Trust signals inline */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex flex-wrap gap-4 justify-center mb-6 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1.5"><Shield className="h-4 w-4 text-primary" /> Verified Tutors</span>
+              <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-primary" /> Background Checked</span>
+              <span className="flex items-center gap-1.5"><Star className="h-4 w-4 text-secondary" /> 4.8★ Avg Rating</span>
+              <span className="flex items-center gap-1.5"><Clock className="h-4 w-4 text-primary" /> Free Demo in 24h</span>
+              {pageData.board && <span className="flex items-center gap-1.5"><Award className="h-4 w-4 text-primary" /> {pageData.board.name} Experts</span>}
+            </motion.div>
+
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
               {content.intro}
             </motion.p>
+
+            {/* 2 CTAs */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex flex-wrap gap-4 justify-center">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
-                <Link to="/demo-booking">Start Free Demo</Link>
+              <Button size="lg" variant="cta" className="text-base px-8 py-6" asChild>
+                <Link to="/demo-booking">Get Free Demo Class</Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
-                <a href="tel:+919873101564">Call: +91-9873101564</a>
+              <Button size="lg" variant="outline" className="text-base px-8 py-6" asChild>
+                <Link to="/demo-booking">View Tutor Profiles <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </motion.div>
-            <div className="flex flex-wrap gap-6 justify-center mt-8 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-primary" /> Verified Tutors</span>
-              <span className="flex items-center gap-1.5"><Star className="h-4 w-4 text-yellow-500" /> 4.8★ Rating</span>
-              <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-secondary" /> Serving Delhi NCR</span>
-              {pageData.board && <span className="flex items-center gap-1.5"><Award className="h-4 w-4 text-primary" /> {pageData.board.name} Experts</span>}
-            </div>
           </div>
         </section>
+
+        {/* === 2. TRUST LAYER === */}
+        <TrustLayer pageData={pageData} />
 
         {/* === MONEY PAGE: Fee Breakdown === */}
         {isFeesPage && pageData.area && (
@@ -242,34 +255,15 @@ const TutorSeoPage = () => {
                   </div>
                 ))}
               </div>
-              {/* Sample tutor cards */}
-              <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[
-                  { name: "Priya Sharma", exp: "8 yrs", subj: "Maths & Science", rating: "4.9" },
-                  { name: "Rajesh Kumar", exp: "12 yrs", subj: "Physics & Chemistry", rating: "4.8" },
-                  { name: "Anita Verma", exp: "6 yrs", subj: "English & Hindi", rating: "4.9" },
-                  { name: "Suresh Gupta", exp: "10 yrs", subj: "Accounts & Economics", rating: "4.7" },
-                  { name: "Meena Devi", exp: "7 yrs", subj: "Biology & Chemistry", rating: "4.8" },
-                  { name: "Amit Tiwari", exp: "9 yrs", subj: "Maths (JEE)", rating: "4.9" },
-                ].map((t, i) => (
-                  <div key={i} className="p-4 rounded-xl border border-border bg-background card-shadow">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">{t.name[0]}</div>
-                      <div>
-                        <div className="font-heading font-semibold text-foreground text-sm">{t.name}</div>
-                        <div className="text-xs text-muted-foreground">{t.exp} experience</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">{t.subj}</span>
-                      <span className="flex items-center gap-1 text-yellow-500"><Star className="h-3 w-3" />{t.rating}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           </section>
         )}
+
+        {/* === 3. FEES SECTION (for non-fee-specific pages) === */}
+        {!isFeesPage && <FeesSection pageData={pageData} />}
+
+        {/* === 4. TOP TUTORS NEAR YOU === */}
+        <TopTutorsNearYou pageData={pageData} />
 
         {/* Enriched Content */}
         <section className="section-padding">
@@ -282,7 +276,6 @@ const TutorSeoPage = () => {
             <p className="text-muted-foreground leading-relaxed">{content.value}</p>
             <p className="text-muted-foreground leading-relaxed mt-4">{content.closing}</p>
 
-            {/* Board-specific content */}
             {pageData.board && (
               <div className="mt-6 p-4 rounded-xl border border-primary/20 bg-primary/5">
                 <h3 className="font-heading font-semibold text-foreground mb-2">
@@ -314,15 +307,28 @@ const TutorSeoPage = () => {
                 { icon: Star, title: "All Boards Covered", desc: `CBSE, ICSE, IGCSE, IB, and state board curricula supported.` },
                 { icon: Shield, title: "Satisfaction Guarantee", desc: "Not happy? We'll assign a new tutor at no extra cost." },
               ].map((item, i) => (
-                <div key={i} className="p-6 rounded-xl border border-border bg-background card-shadow">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="p-6 rounded-xl border border-border bg-background card-shadow"
+                >
                   <item.icon className="h-6 w-6 text-primary mb-3" />
                   <h3 className="font-heading font-semibold text-foreground mb-2">{item.title}</h3>
                   <p className="text-muted-foreground text-sm">{item.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </section>
+
+        {/* === 6. EXAM CONNECTION BLOCK === */}
+        <ExamConnectionBlock pageData={pageData} />
+
+        {/* === 5. INTERNAL LINKING BLOCK === */}
+        <InternalLinkingBlock pageData={pageData} />
 
         {/* Subjects / Boards Offered */}
         {pageData.subject && (
@@ -339,7 +345,6 @@ const TutorSeoPage = () => {
                   </Link>
                 ))}
               </div>
-              {/* Board quick links */}
               {pageData.area && pageData.classLevel && (
                 <div className="flex flex-wrap gap-2 justify-center">
                   {boards.map(b => (
@@ -364,6 +369,7 @@ const TutorSeoPage = () => {
               <p className="text-muted-foreground leading-relaxed mb-6">
                 We serve students across {pageData.area.name} and nearby areas including{" "}
                 {areas.filter(a => a.slug !== pageData.area?.slug).slice(0, 4).map(a => a.name).join(", ")}.
+                Covering Delhi, Noida, Gurgaon, Ghaziabad & Faridabad.
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
                 {[
@@ -382,7 +388,7 @@ const TutorSeoPage = () => {
           </section>
         )}
 
-        {/* FAQs */}
+        {/* === 7. FAQs (Schema Enabled) === */}
         <section className="section-padding">
           <div className="container mx-auto max-w-3xl">
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-8 text-center">
@@ -488,19 +494,30 @@ const TutorSeoPage = () => {
           </div>
         </section>
 
-        {/* CTA */}
+        {/* Final CTA */}
         <section className="section-padding bg-primary text-primary-foreground text-center">
           <div className="container mx-auto max-w-2xl">
             <h2 className="font-heading font-bold text-2xl md:text-3xl mb-4">Start Learning Today</h2>
             <p className="opacity-90 mb-6">
               Book a free demo class and experience personalized tutoring with Tutors Parliament.
+              Serving Delhi, Noida, Gurgaon, Ghaziabad & Faridabad.
             </p>
-            <Button size="lg" variant="secondary" asChild>
-              <Link to="/demo-booking">Start Free Demo</Link>
-            </Button>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Button size="lg" variant="secondary" asChild>
+                <Link to="/demo-booking">Book Free Demo</Link>
+              </Button>
+              <Button size="lg" variant="hero-outline" asChild>
+                <a href="https://wa.me/919873101564?text=Hi%2C%20I%20need%20a%20tutor" target="_blank" rel="noopener noreferrer">
+                  Talk to Tutor Now
+                </a>
+              </Button>
+            </div>
           </div>
         </section>
       </main>
+
+      {/* === 8. STICKY BOTTOM CTA (Mobile) === */}
+      <StickyBottomCTA pageData={pageData} />
       <WhatsAppButton />
       <Footer />
     </>
