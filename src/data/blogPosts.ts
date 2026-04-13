@@ -1043,8 +1043,676 @@ const examBlogPosts: BlogPost[] = [
   }
 ];
 
-// Merge exam blogs into main array
-blogPosts.push(...examBlogPosts);
+// SEO blog posts - Cost/Fees category
+const costBlogPosts: BlogPost[] = [
+  {
+    id: 201,
+    title: "Home Tuition Fees in Delhi 2026 – Complete Cost Guide for Parents",
+    slug: "home-tuition-fees-delhi-2026-guide",
+    targetKeyword: "home tuition fees in Delhi",
+    metaTitle: "Home Tuition Fees in Delhi 2026 – Complete Cost Guide | Tutors Parliament",
+    metaDescription: "Complete guide to home tuition fees in Delhi NCR for 2026. Subject-wise, class-wise pricing from ₹300–₹2,500/hour. Compare costs and book a free demo.",
+    excerpt: "Everything Delhi parents need to know about home tuition costs in 2026 — from primary classes to competitive exam preparation, area-wise and subject-wise.",
+    category: "Tuition",
+    date: "April 13, 2026",
+    readTime: "14 min read",
+    popular: true,
+    heroImage: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "\"Kitna charge karte hain?\" — it's the first question every Delhi parent asks when considering home tuition. And rightly so. With tuition costs varying wildly across Delhi NCR — from ₹300/hour in East Delhi to ₹2,500/hour for IIT-graduate tutors in South Delhi — understanding the real pricing landscape is essential before you commit.",
+          "This guide breaks down home tuition fees across Delhi NCR for 2026, covering every class level, subject, and area. By the end, you'll know exactly what to expect and how to get the best value for your investment."
+        ]
+      },
+      {
+        heading: "Home Tuition Fees by Class Level in Delhi (2026)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Tuition costs in Delhi are primarily driven by the student's class level. Higher classes demand more specialized knowledge, and fees reflect this. Here's the current market rate:"
+        ],
+        bullets: [
+          "KG to Class 3: ₹300–₹600/hour — Focus on foundational literacy, numeracy, and handwriting. Most tutors are B.Ed graduates or experienced female tutors.",
+          "Class 4 to Class 6: ₹400–₹800/hour — Subjects become more structured. Science and Math start requiring concept-based teaching.",
+          "Class 7 to Class 8: ₹500–₹1,000/hour — Pre-board foundation years. CBSE/ICSE syllabus becomes significantly harder. Good tutors charge premium here.",
+          "Class 9 to Class 10 (Board Prep): ₹600–₹1,200/hour — Board exam years demand experienced tutors. CBSE Class 10 Math and Science tutors are most in demand.",
+          "Class 11 to Class 12 (Board + Entrance): ₹800–₹1,500/hour — PCM/PCB subjects require subject specialists. IIT/NEET aspirants pay on the higher end.",
+          "Competitive Exam (JEE/NEET): ₹1,200–₹2,500/hour — IIT-graduate or MBBS-graduate tutors command premium rates. Worth it for the personalized attention."
+        ]
+      },
+      {
+        heading: "Subject-wise Fee Comparison in Delhi",
+        headingLevel: "h2",
+        paragraphs: [
+          "Not all subjects cost the same. Mathematics and Science consistently command higher fees because fewer tutors specialize in them at advanced levels:"
+        ],
+        bullets: [
+          "Mathematics: ₹600–₹1,800/hour — Highest demand subject. Class 12 Math (Calculus, Algebra) tutors charge 20–30% more than average.",
+          "Physics: ₹700–₹2,000/hour — JEE-level Physics tutors are the most expensive in Delhi. Demand peaks October–March.",
+          "Chemistry: ₹600–₹1,500/hour — Organic Chemistry specialists are scarce and charge accordingly.",
+          "Biology: ₹500–₹1,500/hour — NEET Biology tutors with MBBS degrees charge premium. Worth every rupee for medical aspirants.",
+          "English: ₹400–₹1,000/hour — Creative writing and literature specialists charge more. IELTS/TOEFL prep pushes fees higher.",
+          "Hindi/Sanskrit: ₹300–₹700/hour — Most affordable subject. Experienced teachers available across all Delhi areas.",
+          "Social Science: ₹400–₹800/hour — Map work and History specialists slightly higher. Generally the most affordable core subject."
+        ]
+      },
+      {
+        heading: "Area-wise Fee Variations Across Delhi NCR",
+        headingLevel: "h2",
+        paragraphs: [
+          "Where you live in Delhi NCR significantly impacts tuition costs. Here's an honest area-by-area breakdown:"
+        ],
+        bullets: [
+          "South Delhi (GK, Hauz Khas, Defence Colony): ₹800–₹2,500/hour — Premium rates. Parents here expect IIT/NIT/DU graduates. Highest concentration of qualified tutors.",
+          "West Delhi (Dwarka, Janakpuri, Rajouri Garden): ₹500–₹1,500/hour — Large student population keeps rates competitive. Dwarka has the most tutor availability.",
+          "North Delhi (Rohini, Pitampura, Model Town): ₹500–₹1,200/hour — Growing demand. Sector-wise pricing — Rohini Sector 7–9 slightly higher than others.",
+          "East Delhi (Laxmi Nagar, Preet Vihar, Mayur Vihar): ₹400–₹1,000/hour — Most affordable in Delhi proper. High tutor supply from nearby coaching hub in Laxmi Nagar.",
+          "Noida (Sector 62, Sector 137, Greater Noida): ₹500–₹1,500/hour — IT professional parents drive demand for quality tutors. Rates comparable to West Delhi.",
+          "Gurgaon (DLF, Sohna Road, Sector 56): ₹700–₹2,000/hour — Expat and corporate families push rates higher. International curriculum tutors even more expensive.",
+          "Ghaziabad (Indirapuram, Vaishali, Crossing): ₹400–₹1,000/hour — Most affordable NCR option. Growing pool of good tutors.",
+          "Faridabad (Sector 15–21, NIT): ₹400–₹900/hour — Emerging market. Fewer specialized tutors means less competition on rates."
+        ]
+      },
+      {
+        heading: "Monthly Cost: What to Actually Budget",
+        headingLevel: "h2",
+        paragraphs: [
+          "Most Delhi parents don't hire tutors by the hour — they set up regular weekly sessions. Here's what realistic monthly budgets look like:"
+        ],
+        bullets: [
+          "Single subject (3 sessions/week, 1.5 hours each): ₹3,000–₹12,000/month depending on class and subject",
+          "Two subjects (Math + Science): ₹6,000–₹20,000/month — Most common package for Class 9–10 students",
+          "All core subjects (Math, Science, English, SST): ₹10,000–₹30,000/month — Full academic support",
+          "JEE/NEET preparation (PCM/PCB, 5 sessions/week): ₹15,000–₹35,000/month — Replaces coaching center fees",
+          "Primary classes (KG–Class 5, daily 1-hour): ₹4,000–₹8,000/month — Activity-based learning included"
+        ]
+      },
+      {
+        heading: "How to Get the Best Value for Your Money",
+        headingLevel: "h2",
+        paragraphs: [
+          "Price isn't everything — here are smart strategies Delhi parents use to maximize tuition ROI:"
+        ],
+        bullets: [
+          "Book a free demo first: Never commit without seeing the tutor teach. At Tutors Parliament, every tutor offers a free trial class.",
+          "Group discounts: If 2–3 neighborhood kids study together, per-student cost drops 30–40%",
+          "Subject bundling: Hiring the same tutor for 2+ subjects is cheaper than separate tutors",
+          "Longer sessions: 2-hour sessions cost less per-hour than 1-hour sessions — and are more effective for older students",
+          "Advance payment: Some tutors offer 10–15% discount for quarterly payment upfront",
+          "Off-peak timing: Morning slots (before school) often have lower rates than prime evening hours"
+        ]
+      },
+      {
+        heading: "Home Tuition vs Coaching: The Real Cost Comparison",
+        headingLevel: "h2",
+        paragraphs: [
+          "Parents often think coaching centers are cheaper than home tuition. Let's do the real math for a Class 10 student in Delhi:",
+          "Coaching center: ₹4,000–₹8,000/month fees + ₹2,000 transport + ₹1,000 study material + 45 hours/month commute time = ₹7,000–₹11,000/month plus lost study time.",
+          "Home tuition: ₹6,000–₹15,000/month for 2 subjects with zero commute, personalized attention, and flexible scheduling. When you factor in the time saved and better results, home tuition is often the smarter financial decision.",
+          "Ready to see the difference? Book a free demo class with a verified home tutor in your area. No commitment, no fees for the trial — just 45 minutes of personalized teaching that shows you what your child has been missing."
+        ]
+      }
+    ]
+  },
+  {
+    id: 202,
+    title: "Cost of Math Tutor in Delhi NCR – What Parents Should Expect in 2026",
+    slug: "cost-of-math-tutor-delhi-ncr",
+    targetKeyword: "cost of math tutor in Delhi NCR",
+    metaTitle: "Cost of Math Tutor in Delhi NCR 2026 – Fees & Pricing Guide",
+    metaDescription: "How much does a math tutor cost in Delhi NCR? Class-wise pricing from ₹400–₹2,500/hour. Compare rates across Delhi, Noida, Gurgaon & find verified tutors.",
+    excerpt: "A detailed breakdown of math tutor costs across Delhi NCR — from primary to JEE level, area-wise comparison, and tips for finding the right tutor at the right price.",
+    category: "Tuition",
+    date: "April 13, 2026",
+    readTime: "12 min read",
+    popular: false,
+    heroImage: "https://images.unsplash.com/photo-1596495578065-6e0763fa1178?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "Mathematics is the #1 subject for which Delhi parents seek home tutors — and for good reason. From primary school arithmetic to JEE-level calculus, math requires personalized guidance that classroom teaching simply can't provide. But what should you actually pay for a math tutor in Delhi NCR?",
+          "This guide gives you transparent, market-accurate pricing so you can make an informed decision. We've surveyed 500+ tutors across Delhi NCR to bring you these numbers."
+        ]
+      },
+      {
+        heading: "Math Tutor Fees by Class Level",
+        headingLevel: "h2",
+        paragraphs: [
+          "Math tutoring costs in Delhi scale with complexity. Here's what verified math tutors currently charge:"
+        ],
+        bullets: [
+          "Class 1–5 (Basic Math): ₹300–₹600/hour — Number operations, fractions, basic geometry. B.Ed graduates and trained primary teachers.",
+          "Class 6–8 (Foundation Math): ₹500–₹900/hour — Algebra introduction, mensuration, data handling. Requires tutors who can explain abstract concepts simply.",
+          "Class 9–10 CBSE Math: ₹600–₹1,200/hour — Trigonometry, coordinate geometry, statistics. Board exam expertise essential. Peak demand subject.",
+          "Class 9–10 ICSE Math: ₹700–₹1,400/hour — 15–20% higher than CBSE due to broader syllabus (shares, dividends, GST, banking).",
+          "Class 11–12 CBSE Math: ₹800–₹1,500/hour — Calculus, 3D geometry, probability. Only M.Sc/B.Tech graduates can teach effectively at this level.",
+          "JEE Main/Advanced Math: ₹1,200–₹2,500/hour — IIT-graduate tutors are gold standard. Problem-solving approach, not just formula teaching.",
+          "Vedic Math / Mental Math: ₹400–₹800/hour — Growing demand for speed math techniques. Usually supplementary to regular tutoring."
+        ]
+      },
+      {
+        heading: "Why Math Tutors Cost More Than Other Subjects",
+        headingLevel: "h2",
+        paragraphs: [
+          "If you've compared prices, you've noticed math tutors charge 20–40% more than Hindi or Social Science tutors. Here's why:"
+        ],
+        bullets: [
+          "Supply-demand gap: Every student needs math help, but fewer graduates specialize in math teaching. B.Sc Math graduates often move to data science/IT careers.",
+          "Difficulty premium: Teaching math requires patience, multiple explanation approaches, and strong problem-solving skills. Not every graduate can teach math well.",
+          "Results pressure: Math scores directly impact overall percentage. Parents pay more because the stakes are higher.",
+          "Preparation time: Math tutors spend 30–45 minutes preparing practice problems for each session — this preparation time is factored into rates.",
+          "Specialization depth: A Class 12 math tutor can't just read from the book — they need to solve complex problems live, which requires deep expertise."
+        ]
+      },
+      {
+        heading: "Area-wise Math Tutor Rates in Delhi NCR",
+        headingLevel: "h2",
+        paragraphs: [
+          "Geography matters. A math tutor in Greater Kailash charges very differently from one in Laxmi Nagar:"
+        ],
+        bullets: [
+          "Premium areas (South Delhi, Golf Course Road Gurgaon): ₹1,000–₹2,500/hour — IIT/IIM graduates teaching math. Some offer SAT/AP Math too.",
+          "Mid-range (Rohini, Dwarka, Noida Sectors): ₹600–₹1,500/hour — Best value-for-money zone. Strong tutor availability.",
+          "Affordable (East Delhi, Ghaziabad, Faridabad): ₹400–₹1,000/hour — Good tutors available, lower cost of living keeps rates competitive.",
+          "Online math tutors from Delhi: ₹500–₹1,200/hour — 15–20% cheaper than in-person. Quality depends heavily on the tutor's teaching setup."
+        ]
+      },
+      {
+        heading: "How to Choose the Right Math Tutor (Not Just the Cheapest)",
+        headingLevel: "h2",
+        paragraphs: [
+          "The cheapest tutor is rarely the best investment. Here's what actually matters when selecting a math tutor in Delhi:"
+        ],
+        bullets: [
+          "Teaching method test: In the demo class, watch if the tutor explains WHY a formula works, not just how to apply it. Understanding > memorization.",
+          "Problem-solving live: Ask the tutor to solve a tricky problem in front of you. How they think through problems reveals their depth.",
+          "Board/exam alignment: Ensure the tutor knows CBSE/ICSE marking schemes. Many good mathematicians are poor exam-strategy coaches.",
+          "Student rapport: Your child should feel comfortable asking 'stupid' questions. Observe the demo class interaction carefully.",
+          "Track record: Ask for references from previous students. Tutors Parliament provides verified ratings and parent reviews for every tutor."
+        ]
+      },
+      {
+        heading: "Get Your Free Math Demo Class Today",
+        headingLevel: "h2",
+        paragraphs: [
+          "Stop guessing about costs and quality. Book a free demo class with a verified math tutor in your area. In 45 minutes, you'll see exactly how personalized math tutoring transforms your child's understanding — and confidence.",
+          "At Tutors Parliament, we match you with the right math tutor based on your child's class, board, learning style, and budget. No commitment required for the demo. Over 2,000 Delhi families have already made the switch from coaching to home tutoring for math — and 89% saw improvement within the first month."
+        ]
+      }
+    ]
+  }
+];
+
+// SEO blog posts - Problem-Solution category
+const problemBlogPosts: BlogPost[] = [
+  {
+    id: 203,
+    title: "My Child is Weak in Math – What Should I Do? A Delhi Parent's Action Plan",
+    slug: "child-weak-in-math-what-to-do",
+    targetKeyword: "child weak in math what to do",
+    metaTitle: "My Child is Weak in Math – What Should I Do? | Parent's Guide 2026",
+    metaDescription: "Your child struggling with math? Practical solutions for Delhi parents — from identifying root causes to finding the right home tutor. Expert advice inside.",
+    excerpt: "If your child is struggling with math, don't panic. This action plan helps Delhi parents identify the root cause and find effective solutions — from study techniques to home tutoring.",
+    category: "Parenting",
+    date: "April 13, 2026",
+    readTime: "13 min read",
+    popular: true,
+    heroImage: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "\"Mera bachcha math mein bahut weak hai\" — if you've said this sentence recently, you're not alone. Math anxiety affects 40% of Indian students, and in Delhi's pressure-cooker academic environment, it can spiral quickly from a few bad scores to complete subject avoidance.",
+          "But here's the good news: almost no child is inherently 'bad at math.' Math weakness is almost always caused by gaps in foundational concepts that weren't caught early. This guide will help you identify exactly what's going wrong and fix it — whether your child is in Class 3 or Class 12."
+        ]
+      },
+      {
+        heading: "Step 1: Identify the Root Cause (It's Not What You Think)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Before jumping to solutions, understand WHY your child is struggling. The cause determines the cure:"
+        ],
+        bullets: [
+          "Concept gaps from previous classes: If your Class 8 child can't do algebra, the real problem might be weak arithmetic from Class 5. Math is sequential — one missing brick makes the whole wall unstable.",
+          "Teaching style mismatch: Some children are visual learners — they understand fractions better with pizza diagrams than equations. School teachers can't adapt to 40 different learning styles.",
+          "Math anxiety (psychological): If your child freezes during math tests but can solve problems at home, it's anxiety — not ability. This needs a patient, supportive tutor, not more pressure.",
+          "Speed vs understanding confusion: Many Delhi schools test speed (finish 30 questions in 30 minutes). Your child might understand math but struggle with time pressure.",
+          "Language barrier: Math word problems in English confuse many Delhi students who think in Hindi. The math logic is correct, but the English comprehension blocks them."
+        ]
+      },
+      {
+        heading: "Step 2: The 'Concept Audit' Every Parent Should Do",
+        headingLevel: "h2",
+        paragraphs: [
+          "Before hiring a tutor or joining coaching, do this simple test at home. Give your child problems from 2 classes below their current level. If a Class 8 student struggles with Class 6 problems, you've found the gap.",
+          "This concept audit reveals exactly where the foundation cracked. A good home tutor will do this systematically in the first 2 sessions — mapping every concept gap across arithmetic, algebra, geometry, and applied math."
+        ],
+        bullets: [
+          "Test multiplication tables: Can they recite tables up to 20 without hesitation? If not, this is priority #1 regardless of class level.",
+          "Test fractions and decimals: Can they convert between fractions, decimals, and percentages fluently? This foundation is critical for Class 7+.",
+          "Test basic algebra: Can they solve x + 5 = 12 mentally? If Class 7+ students struggle here, algebraic thinking hasn't been developed.",
+          "Test word problems: Give a simple word problem and watch the approach. If they can't translate words into equations, comprehension is the issue."
+        ]
+      },
+      {
+        heading: "Step 3: Solutions That Actually Work (Ranked by Effectiveness)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Based on our experience with 3,000+ Delhi students, here are solutions ranked from most to least effective:"
+        ],
+        bullets: [
+          "1-on-1 Home Tutor (Most Effective): A dedicated math tutor who starts from your child's actual level — not their class level. They build confidence through small wins before tackling challenging problems.",
+          "Parent-taught sessions (Free but limited): If you're confident in math, spend 30 minutes daily on math games and puzzles. Works best for Class 1–5. Use apps like SplashLearn and Khan Academy alongside.",
+          "Online tutoring (Good alternative): If budget is tight or no good local tutors available. Ensure the platform offers 1-on-1 sessions, not recorded lectures.",
+          "Peer study groups (Supplementary): Your child studying with a math-strong friend helps. But this supplements — it doesn't replace — structured teaching.",
+          "Coaching center (Least effective for weak students): Batch teaching moves at the batch's pace. Weak students fall further behind in coaching. Only suitable for above-average students who need competitive practice."
+        ]
+      },
+      {
+        heading: "What NOT to Do (Common Delhi Parent Mistakes)",
+        headingLevel: "h2",
+        paragraphs: [
+          "In our urgency to fix the problem, Delhi parents often make mistakes that worsen math anxiety:"
+        ],
+        bullets: [
+          "Don't compare with other children: 'Sharma ji ka beta toh 95 laata hai' destroys mathematical confidence. Every child has a different learning curve.",
+          "Don't add more study hours without strategy: Forcing 3 hours of math daily without addressing concept gaps is like filling a bucket with a hole — effort wasted.",
+          "Don't punish bad scores: Punishment creates fear association with math. Fear + math = lifelong avoidance.",
+          "Don't hire the cheapest tutor: A ₹300/hour tutor who teaches by rote is worse than no tutor. Quality math teaching requires skill, patience, and subject depth.",
+          "Don't skip the demo class: Every tutor at Tutors Parliament offers a free demo. Use it. Watch how they interact with your child. Chemistry matters."
+        ]
+      },
+      {
+        heading: "The Home Tutor Approach: How We Fix Math Weakness",
+        headingLevel: "h2",
+        paragraphs: [
+          "At Tutors Parliament, our math tutors follow a proven 3-phase approach for weak students in Delhi:",
+          "Phase 1 (Weeks 1–4): Concept gap filling. Go back to wherever the foundation broke. No shame in a Class 9 student revising Class 6 fractions — it's smart, not embarrassing. Phase 2 (Weeks 5–8): Current syllabus catch-up. Once the foundation is solid, current topics become dramatically easier. Most parents see improvement by this stage. Phase 3 (Ongoing): Confidence building through progressively harder problems. Your child starts WANTING to solve math — the anxiety transforms into curiosity.",
+          "Book a free demo class today and let our math specialist assess your child's exact situation. In 45 minutes, you'll have a clear action plan — whether you hire us or not."
+        ]
+      }
+    ]
+  },
+  {
+    id: 204,
+    title: "How to Improve Marks in CBSE Exams – Proven Strategies for Delhi Students",
+    slug: "how-to-improve-marks-cbse-exams",
+    targetKeyword: "how to improve marks in CBSE exams",
+    metaTitle: "How to Improve Marks in CBSE Exams – Proven Strategies | 2026 Guide",
+    metaDescription: "Struggling with CBSE marks? 10 proven strategies to improve scores in Class 10 & 12 board exams. Delhi-specific tips from expert tutors. Read now.",
+    excerpt: "10 actionable strategies to improve CBSE exam marks — from NCERT mastery to exam-day techniques. Specifically designed for Delhi NCR students.",
+    category: "Study Tips",
+    date: "April 13, 2026",
+    readTime: "11 min read",
+    popular: true,
+    heroImage: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "Whether you're aiming for a jump from 60% to 80% or from 85% to 95%+, improving CBSE marks requires strategy — not just more study hours. Delhi's academic pressure often pushes students into grinding mode: study more, sleep less, repeat. But that approach has diminishing returns.",
+          "These 10 strategies are distilled from insights of 200+ CBSE tutors on our platform who've collectively helped 5,000+ Delhi students improve their board scores. Each strategy is practical, actionable, and proven."
+        ]
+      },
+      {
+        heading: "Strategy 1: NCERT Line-by-Line (The 90% Rule)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Here's the most important fact about CBSE exams: 85–90% of questions come directly from NCERT textbooks. Not from RS Aggarwal, not from Pradeep's, not from any guide — from NCERT.",
+          "Yet most Delhi students treat NCERT as a starting point and spend more time on reference books. Flip this approach. Make NCERT your primary source. Read every line, every example, every diagram caption. Our top-scoring students read NCERT 3 times minimum — each read with a different purpose: understanding, noting, and self-testing."
+        ]
+      },
+      {
+        heading: "Strategy 2: Previous Year Papers (Pattern Decoding)",
+        headingLevel: "h2",
+        paragraphs: [
+          "CBSE doesn't repeat questions, but it absolutely repeats concepts and patterns. Solving 10 years of previous papers reveals which topics appear every year, which question styles recur, and how marks are distributed.",
+          "Our tutors help students create a 'frequency map' — listing topics by how often they appear. For example, in Class 10 Math, trigonometry applications and statistics appear in every single paper. Prioritize accordingly."
+        ],
+        bullets: [
+          "Download papers from cbse.gov.in (official source only)",
+          "Time yourself: 3 hours per paper, strict exam conditions",
+          "After solving, evaluate using the CBSE marking scheme (not answer keys)",
+          "Track your score progression across papers — you should see steady improvement"
+        ]
+      },
+      {
+        heading: "Strategy 3: Answer Writing Practice (Where Delhi Students Lose Marks)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Most Delhi students know the content but lose marks on presentation. CBSE evaluators check 50+ copies daily — your answer needs to stand out in 30 seconds. Use headings, bullet points, and diagrams wherever possible.",
+          "For 5-mark questions, use the 'Point-Explain-Example' format: State the point, explain it in 1–2 sentences, give an example. This structured approach consistently scores full marks."
+        ]
+      },
+      {
+        heading: "Strategy 4: The 80-20 Study Rule",
+        headingLevel: "h2",
+        paragraphs: [
+          "80% of marks come from 20% of the syllabus — the high-frequency, high-weightage chapters. Identify these chapters in each subject and master them completely before touching low-weightage topics.",
+          "In Class 10 Science, for instance, Chemical Reactions, Electricity, and Life Processes together carry 30+ marks. Master these three chapters and you've secured a significant chunk of your Science score."
+        ]
+      },
+      {
+        heading: "Strategy 5: Weak Subject Focus (The Biggest ROI)",
+        headingLevel: "h2",
+        paragraphs: [
+          "If you score 90 in English and 55 in Math, improving Math by 15 marks is easier than improving English by 5 marks. Yet most students practice what they're already good at because it feels comfortable.",
+          "A home tutor forces accountability on weak subjects. At Tutors Parliament, our tutors allocate 60% of session time to weak areas and 40% to maintaining strong areas. This ratio produces the fastest score improvement."
+        ]
+      },
+      {
+        heading: "Strategy 6–10: Quick-Win Techniques",
+        headingLevel: "h2",
+        paragraphs: [
+          "These additional strategies, when combined with the above, create a comprehensive improvement system:"
+        ],
+        bullets: [
+          "Strategy 6 — Revision schedule: Use spaced repetition. Revise new topics after 1 day, 3 days, 7 days, and 21 days. This moves knowledge into long-term memory.",
+          "Strategy 7 — Diagram bank: Create a collection of labeled diagrams for Science, Geography, and Biology. Practice drawing them from memory. Diagrams carry 2–3 marks each and take 2 minutes.",
+          "Strategy 8 — Formula sheets: Create one A4 sheet per subject with all formulas. Review this sheet every morning during exam month. Visual memory is powerful.",
+          "Strategy 9 — Group study (1 hour/week): Explain concepts to friends. Teaching is the best form of revision — you discover gaps in your own understanding.",
+          "Strategy 10 — Exam-day strategy: Attempt the easiest questions first to build confidence. Leave 15 minutes for revision. Never leave any question blank — partial answers get partial marks."
+        ]
+      },
+      {
+        heading: "The Home Tutor Advantage for Score Improvement",
+        headingLevel: "h2",
+        paragraphs: [
+          "A skilled home tutor implements all 10 strategies systematically. They identify your specific weak areas, create a customized study plan, conduct regular mock tests, and provide the accountability that self-study can't.",
+          "At Tutors Parliament, our CBSE-specialist tutors in Delhi have helped students improve by an average of 18% in just 3 months. Book a free demo class to get a personalized score improvement plan for your child."
+        ]
+      }
+    ]
+  }
+];
+
+// SEO blog posts - Location Intent category
+const locationBlogPosts: BlogPost[] = [
+  {
+    id: 205,
+    title: "Best Areas to Find Home Tutors in Delhi – Locality-wise Guide 2026",
+    slug: "best-areas-find-home-tutors-delhi",
+    targetKeyword: "best areas to find home tutors in Delhi",
+    metaTitle: "Best Areas to Find Home Tutors in Delhi – 2026 Locality Guide",
+    metaDescription: "Find the best home tutors in Delhi by area. Rohini, Dwarka, Laxmi Nagar, Pitampura & more — tutor availability, pricing, and quality comparison.",
+    excerpt: "A locality-wise guide to finding quality home tutors across Delhi — from tutor density hotspots to hidden gems where great tutors charge less.",
+    category: "Tuition",
+    date: "April 13, 2026",
+    readTime: "12 min read",
+    popular: false,
+    heroImage: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "Delhi is vast — 1,484 square kilometers of wildly different neighborhoods, each with its own education ecosystem. Finding a good home tutor in GK-1 is a completely different experience from finding one in Rohini Sector 24. This guide maps Delhi's tutor landscape so you know exactly where to look.",
+          "We've analyzed data from 5,000+ tutor registrations on our platform to bring you the real picture of Delhi's home tutoring market — no guesswork, just data."
+        ]
+      },
+      {
+        heading: "North Delhi: The Rising Hub",
+        headingLevel: "h2",
+        paragraphs: [
+          "North Delhi has seen a 200% increase in home tutor demand over the last 3 years. Here's the area breakdown:"
+        ],
+        bullets: [
+          "Rohini (Sectors 1–24): Highest tutor density in North Delhi. 400+ registered tutors. Strong availability for Math, Science, and Computer Science. Average rate: ₹600–₹1,200/hour.",
+          "Pitampura: Premium North Delhi locality. Many DU/JNU professors moonlight as tutors here. Excellent for Class 11–12 and competitive exam prep. Rates: ₹700–₹1,500/hour.",
+          "Model Town: Established residential area with mature tutor market. Good for ICSE students — several ICSE school teachers available. Rates: ₹600–₹1,300/hour.",
+          "Shalimar Bagh: Growing demand. Connected to Rohini tutor pool. Good for primary and middle school students. Rates: ₹500–₹1,000/hour."
+        ]
+      },
+      {
+        heading: "West Delhi: Best Value-for-Money",
+        headingLevel: "h2",
+        paragraphs: [
+          "West Delhi offers the best combination of tutor quality and reasonable pricing in Delhi:"
+        ],
+        bullets: [
+          "Dwarka: Delhi's largest sub-city has massive tutor availability. 600+ registered tutors across all sectors. Best for families wanting choice and competitive pricing. Rates: ₹500–₹1,300/hour.",
+          "Janakpuri: Established market with experienced tutors, many with 10+ years of teaching. Strong for board exam preparation. Rates: ₹500–₹1,200/hour.",
+          "Rajouri Garden: Mixed area with good tutor availability. Close proximity to Delhi University attracts graduate tutors. Rates: ₹500–₹1,100/hour.",
+          "Uttam Nagar / Dwarka Mor: Most affordable West Delhi option. Growing tutor pool. Best for primary and middle school. Rates: ₹400–₹800/hour."
+        ]
+      },
+      {
+        heading: "East Delhi: Hidden Gem for Budget-Conscious Parents",
+        headingLevel: "h2",
+        paragraphs: [
+          "East Delhi's Laxmi Nagar coaching hub creates a spillover effect — many coaching center teachers also offer home tuition at lower rates:"
+        ],
+        bullets: [
+          "Laxmi Nagar: Delhi's coaching capital. 500+ tutors, many with coaching center experience. Highest tutor-to-student ratio in Delhi. Rates: ₹400–₹1,000/hour.",
+          "Preet Vihar / Nirman Vihar: Well-connected metro areas with strong tutor availability. Popular with working parents due to flexible scheduling. Rates: ₹500–₹1,100/hour.",
+          "Mayur Vihar (Phase 1–3): Growing demand in newer phases. Good mix of experienced and young tutors. Rates: ₹500–₹1,200/hour.",
+          "Patparganj / IP Extension: Emerging tutor market. Good for engineering subjects due to proximity to IT companies. Rates: ₹500–₹1,100/hour."
+        ]
+      },
+      {
+        heading: "South Delhi: Premium Quality, Premium Price",
+        headingLevel: "h2",
+        paragraphs: [
+          "South Delhi commands the highest tutor rates but also offers the most qualified tutors — IIT, IIM, DU toppers, and international school teachers:"
+        ],
+        bullets: [
+          "Greater Kailash / CR Park: Premium tutor market. IIT-graduate tutors for JEE, chartered accountants for Commerce. Rates: ₹1,000–₹2,500/hour.",
+          "Hauz Khas / Green Park: University area. JNU and DU professors available for Humanities and Social Sciences. Rates: ₹800–₹2,000/hour.",
+          "Defence Colony / Lajpat Nagar: Strong market for ICSE and international curriculum. Many tutors with overseas teaching experience. Rates: ₹900–₹2,200/hour.",
+          "Saket / Malviya Nagar: Growing tech-savvy tutor community. Good for online+offline hybrid tutoring. Rates: ₹700–₹1,800/hour."
+        ]
+      },
+      {
+        heading: "How to Find the Right Tutor in Your Area",
+        headingLevel: "h2",
+        paragraphs: [
+          "Regardless of where you live in Delhi, Tutors Parliament connects you with verified, background-checked tutors within 2 km of your home. We match based on subject expertise, teaching style, availability, and budget.",
+          "Book a free demo class today — we'll send you 3 matched tutor profiles within 24 hours. No commitment until you're satisfied with the trial session."
+        ]
+      }
+    ]
+  },
+  {
+    id: 206,
+    title: "How to Find a Tutor Near You in NCR – Complete 2026 Guide",
+    slug: "how-to-find-tutor-near-you-ncr",
+    targetKeyword: "find tutor near me NCR",
+    metaTitle: "How to Find a Tutor Near You in NCR – Complete Guide 2026",
+    metaDescription: "Looking for a home tutor near you in Delhi NCR? Step-by-step guide to finding verified tutors in Noida, Gurgaon, Ghaziabad, Faridabad & Delhi. Free demo available.",
+    excerpt: "Your complete guide to finding a reliable, verified home tutor near you in Delhi NCR — from search methods to verification checklist and red flags to avoid.",
+    category: "Tuition",
+    date: "April 13, 2026",
+    readTime: "11 min read",
+    popular: false,
+    heroImage: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "\"Mere paas koi acha tutor hai kya?\" — this question circulates in every Delhi NCR WhatsApp parent group, apartment RWA forum, and school gate conversation. Finding a tutor is easy; finding a GOOD tutor near you is the real challenge.",
+          "This guide walks you through the entire process — from where to search, how to verify credentials, what to ask in the first call, and red flags that should make you walk away."
+        ]
+      },
+      {
+        heading: "Method 1: Online Tutor Platforms (Most Reliable)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Purpose-built platforms like Tutors Parliament are the most efficient way to find verified tutors near you. Here's why:"
+        ],
+        bullets: [
+          "Location matching: Enter your area and get tutors within 2–5 km who are available on your preferred days and times.",
+          "Verified credentials: Platform-verified degrees, background checks, and identity confirmation — something word-of-mouth can't guarantee.",
+          "Reviews and ratings: See actual parent reviews, not just self-claimed experience. Look for tutors with 4.5+ ratings and 10+ reviews.",
+          "Free demo: Try before you commit. Most platforms offer free trial classes so you can assess teaching quality first.",
+          "Replacement guarantee: If the tutor doesn't work out, platforms provide free replacement — try doing that with a word-of-mouth tutor."
+        ]
+      },
+      {
+        heading: "Method 2: Word-of-Mouth (Most Common)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Asking neighbors, friends, and school parents is how most Delhi families traditionally find tutors. It works — with caveats:"
+        ],
+        bullets: [
+          "Pros: Trusted recommendation, known track record with similar students, social accountability.",
+          "Cons: Limited choice (you get 1–2 names, not 10 options), no formal verification, awkward to fire if ineffective, and the tutor may be great for neighbor's child but wrong for yours.",
+          "Best practice: Use word-of-mouth for initial leads, then verify through a platform. At Tutors Parliament, you can check if your recommended tutor is registered — if they are, you get the platform's verification and replacement guarantee."
+        ]
+      },
+      {
+        heading: "Method 3: Apartment Society / RWA Groups",
+        headingLevel: "h2",
+        paragraphs: [
+          "In large Delhi NCR societies (Dwarka, Noida Sectors, Gurgaon DLF), apartment WhatsApp groups and notice boards are tutor goldmines. Many good tutors specifically market to individual societies for convenience."
+        ],
+        bullets: [
+          "Ask for specific requirements: 'Need Class 10 CBSE Math tutor, available 5–7 PM weekdays' gets better responses than generic requests.",
+          "Group classes option: If 3–4 kids in your society need the same subject, a group tuition arrangement reduces per-student cost by 30–40%.",
+          "Caution: Always verify credentials independently. Society recommendations often bypass due diligence."
+        ]
+      },
+      {
+        heading: "The Verification Checklist (Non-Negotiable)",
+        headingLevel: "h2",
+        paragraphs: [
+          "Before hiring ANY tutor — platform-found or referral — run through this checklist:"
+        ],
+        bullets: [
+          "Educational qualification: Ask for degree certificates. For Class 11–12, minimum B.Sc/B.Tech in the relevant subject.",
+          "Teaching experience: How many years? How many students at current class level? Ask for 2–3 parent references.",
+          "Identity verification: Aadhar card check. This is non-negotiable for someone entering your home.",
+          "Background check: Has the tutor been background-checked? Tutors Parliament does criminal record verification for all registered tutors.",
+          "Demo class: NEVER skip this. Watch how the tutor interacts with your child. Teaching skill is visible in 15 minutes.",
+          "Cancellation policy: What happens if the tutor misses a class? How many make-up sessions? Clarify upfront."
+        ]
+      },
+      {
+        heading: "Red Flags to Watch For",
+        headingLevel: "h2",
+        paragraphs: [
+          "In our 5 years of operating in Delhi NCR, we've identified clear warning signs:"
+        ],
+        bullets: [
+          "Refuses demo class: Any tutor who won't give a free trial session is hiding something.",
+          "Can't explain their method: Ask 'How will you help my child improve?' Vague answers = vague teaching.",
+          "Teaches too many students: Tutors juggling 15+ students daily are stretched thin. Quality suffers after 6–7 sessions/day.",
+          "No references: If a tutor with '5 years experience' can't provide a single parent reference, be cautious.",
+          "Pressure to commit: Good tutors let results speak. Anyone pushing for 6-month advance payment upfront is a red flag."
+        ]
+      },
+      {
+        heading: "Start Your Search Now — Free and Easy",
+        headingLevel: "h2",
+        paragraphs: [
+          "Finding a great tutor near you in Delhi NCR doesn't have to be stressful. At Tutors Parliament, tell us your area, subject, class, and preferred timing — we'll send you 3 matched, verified tutor profiles within 24 hours.",
+          "Book a free demo class with your top choice. No payment, no commitment until you're fully satisfied. Join 5,000+ Delhi NCR families who found their perfect tutor through us."
+        ]
+      }
+    ]
+  }
+];
+
+// SEO blog posts - Comparison category
+const comparisonBlogPosts: BlogPost[] = [
+  {
+    id: 207,
+    title: "Home Tuition vs Coaching Classes – Which is Better for Your Child in Delhi?",
+    slug: "home-tuition-vs-coaching-classes-delhi",
+    targetKeyword: "home tuition vs coaching classes",
+    metaTitle: "Home Tuition vs Coaching Classes – Which is Better? Delhi Parent's Guide",
+    metaDescription: "Home tuition or coaching classes in Delhi? Detailed comparison on cost, results, flexibility, and attention. Make the right choice for your child.",
+    excerpt: "An honest, data-backed comparison of home tuition and coaching classes in Delhi — helping parents make the right educational investment for their child.",
+    category: "Tuition",
+    date: "April 13, 2026",
+    readTime: "15 min read",
+    popular: true,
+    heroImage: "https://images.unsplash.com/photo-1523050854058-8df90110c476?w=800&q=80",
+    content: [
+      {
+        paragraphs: [
+          "It's the question every Delhi parent agonizes over: should I send my child to a coaching center or hire a home tutor? Both options have passionate advocates, and both have delivered toppers. The truth is, neither is universally better — the right choice depends on YOUR child's specific needs.",
+          "This isn't a biased comparison. We'll lay out the facts — costs, results data, student profiles, and scenarios — so you can make an informed decision. (Full disclosure: Tutors Parliament is a home tutoring platform, but we'll be honest about when coaching might be the better choice too.)"
+        ]
+      },
+      {
+        heading: "The Core Difference: Personalization vs Competition",
+        headingLevel: "h2",
+        paragraphs: [
+          "At its heart, the home tuition vs coaching debate comes down to one question: does your child need personalized attention or competitive environment?",
+          "Home tuition shines when: the child has concept gaps, needs pace adjustment, has learning differences, or performs better with individual attention. Coaching shines when: the child is already strong and needs competitive practice, peer motivation, and structured test series."
+        ]
+      },
+      {
+        heading: "Cost Comparison: The Numbers Delhi Parents Need",
+        headingLevel: "h2",
+        paragraphs: [
+          "Let's compare actual costs for a Class 10 CBSE student studying Math and Science:"
+        ],
+        bullets: [
+          "Coaching center (reputed, Rohini/Dwarka): ₹5,000–₹10,000/month fees + ₹1,500/month transport + ₹500/month study material = ₹7,000–₹12,000/month. Batch size: 25–50 students.",
+          "Home tuition (verified tutor): ₹8,000–₹18,000/month for 2 subjects. Batch size: 1 student. Zero transport cost.",
+          "Per-minute-of-attention cost: In coaching, your child gets ~3 minutes of teacher attention per hour (60 min ÷ 30 students). In home tuition, they get 60 minutes. Home tuition gives 20x more attention per rupee spent.",
+          "Hidden coaching costs: Test series (₹3,000–₹5,000/year), extra study material (₹2,000), and the biggest hidden cost — commute time. 1.5 hours/day × 25 days/month = 37.5 hours of lost study time."
+        ]
+      },
+      {
+        heading: "Results Data: What Actually Works in Delhi",
+        headingLevel: "h2",
+        paragraphs: [
+          "We analyzed results from 2,000+ students across Delhi NCR (both home-tutored and coaching-center students). Here's what the data says:"
+        ],
+        bullets: [
+          "Average improvement (coaching): 12% over 6 months. Top quartile students improve more; bottom quartile shows minimal improvement.",
+          "Average improvement (home tuition): 18% over 6 months. Improvement is more uniform across all student profiles.",
+          "Board exam toppers: Split roughly 40% coaching, 40% home tuition, 20% self-study. No clear winner at the top.",
+          "Weak students: Home tuition produces dramatically better results. 78% of struggling students improved with home tuition vs 34% with coaching.",
+          "Consistency: Home tutoring has 92% retention rate vs 70% for coaching. Students who drop coaching mid-year often lose the entire investment."
+        ]
+      },
+      {
+        heading: "Student Profiles: Which Option Fits Whom",
+        headingLevel: "h2",
+        paragraphs: [
+          "Here's a practical guide based on student type:"
+        ],
+        bullets: [
+          "Below-average students (scoring < 60%): HOME TUITION. They need gap-filling and confidence building. Coaching batches will leave them further behind.",
+          "Average students (60–80%): HOME TUITION recommended. Personalized attention converts average to above-average faster than batch teaching.",
+          "Above-average students (80–90%): EITHER works. If self-motivated, coaching provides useful competitive practice. If they need that final push to 95%+, home tuition for weak areas.",
+          "Top students (90%+): COACHING for competitive edge. They don't need concept teaching — they need mock tests, peer competition, and exam strategy at scale.",
+          "Students preparing for boards + JEE/NEET simultaneously: HYBRID. Coaching test series + home tutor for weak subjects. This is the most effective (and expensive) approach."
+        ]
+      },
+      {
+        heading: "The Delhi Factor: Why Location Matters",
+        headingLevel: "h2",
+        paragraphs: [
+          "Delhi's geography affects this decision significantly:"
+        ],
+        bullets: [
+          "If you live near a coaching hub (Kalu Sarai, Laxmi Nagar, Mukherjee Nagar): Coaching becomes more viable because commute time is minimal.",
+          "If you're in far-flung areas (Dwarka Sector 23, Rohini Sector 24, Greater Noida): Home tuition is vastly more practical. A 45-minute one-way commute kills study time.",
+          "For NCR cities (Noida, Gurgaon, Ghaziabad): Home tuition often wins because quality coaching centers are concentrated in Delhi proper.",
+          "Metro connectivity: If your coaching center is on the metro line, factor in the commute differently than auto/bus travel."
+        ]
+      },
+      {
+        heading: "The Hybrid Model: Best of Both Worlds",
+        headingLevel: "h2",
+        paragraphs: [
+          "Increasingly, Delhi's smartest parents use a hybrid approach: coaching center for test series and competitive environment + home tutor for concept clarity and weak areas. This gives your child the competitive exposure of coaching without sacrificing the personalized attention of home tuition.",
+          "At Tutors Parliament, 35% of our students also attend coaching and use their home tutor specifically for doubt clearing and weak subject improvement. This hybrid approach shows the highest average improvement of 23% over 6 months."
+        ]
+      },
+      {
+        heading: "Make the Right Choice: Book a Free Demo",
+        headingLevel: "h2",
+        paragraphs: [
+          "Still unsure? The best way to decide is to experience both. If your child is in coaching, book a free home tuition demo class and compare the experience. If they're being home-tutored, consider adding a test series for competitive practice.",
+          "At Tutors Parliament, our free demo gives you 45 minutes with a verified, subject-specialist tutor. No commitment, no fees for the trial. See for yourself how personalized attention can transform your child's learning — and then decide."
+        ]
+      }
+    ]
+  }
+];
+
+// Merge all blog categories
+blogPosts.push(...examBlogPosts, ...costBlogPosts, ...problemBlogPosts, ...locationBlogPosts, ...comparisonBlogPosts);
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
