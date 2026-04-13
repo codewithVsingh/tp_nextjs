@@ -2,7 +2,7 @@
 // Generates unique, varied content for all SEO page types including money pages,
 // board-specific pages, and intent-based pages.
 
-import { areas, subjects, classes, boards, type SeoPageData } from "./seoData";
+import { areas, subjects, classes, boards, services, type SeoPageData } from "./seoData";
 
 // ===== HASH FUNCTION =====
 function hashStr(s: string): number {
@@ -114,12 +114,107 @@ const moneyPageContent = {
 
 export { moneyPageContent };
 
+// ===== SERVICE PAGE CONTENT =====
+
+const serviceIntros: Record<string, (area: string) => string> = {
+  academic: (area) => `Parents in ${area} looking for reliable academic support trust Tutors Parliament to connect them with experienced, verified home tutors. Whether your child needs daily homework help, exam preparation, or foundational learning support, our educators deliver personalized one-on-one sessions right at your doorstep — or online.`,
+  skill: (area) => `Give your child a competitive edge with skill-based classes in ${area}. From coding and robotics to chess and public speaking, Tutors Parliament offers curated programs taught by certified instructors who make learning fun, interactive, and result-oriented.`,
+  hobby: (area) => `Nurture your child's creativity and passion with hobby and activity classes in ${area}. Our verified instructors bring professional-grade teaching in dance, music, art, and more — available at home or in small group settings with flexible scheduling.`,
+  early: (area) => `The early years are the most critical for your child's development. In ${area}, Tutors Parliament provides specialized early learning programs — from phonics and Montessori methods to KG-level tutoring — designed by child education experts to build strong foundations.`,
+  behavioral: (area) => `Every child deserves the right support. In ${area}, our network of certified special education tutors, speech therapists, and learning disability specialists provide compassionate, individualized support tailored to your child's unique needs.`,
+  discovery: (area) => `Finding the right tutor in ${area} just got easier. Tutors Parliament's verified educator network covers every subject, board, and schedule preference — giving parents complete peace of mind with background-checked, rated professionals.`,
+};
+
+const serviceValues: Record<string, (area: string) => string> = {
+  academic: (area) => `Our academic tutors in ${area} don't just help with syllabus completion — they build conceptual clarity, develop problem-solving skills, and create customized study plans. With regular assessments, parent progress reports, and flexible scheduling (morning, afternoon, or evening), families get a complete learning partner.`,
+  skill: (area) => `Skill-based programs at Tutors Parliament go beyond theory. In ${area}, our instructors use project-based learning, hands-on activities, and age-appropriate curriculum to ensure your child develops real-world skills. Small batch sizes ensure personalized attention.`,
+  hobby: (area) => `Our hobby instructors in ${area} are professionally trained artists, musicians, and performers who bring passion to every session. Whether your child is a beginner or looking to advance, we match them with the right mentor for their skill level and interest.`,
+  early: (area) => `Early learning at Tutors Parliament in ${area} follows internationally recognized methodologies. Our KG tutors and early childhood educators are trained in Montessori, Jolly Phonics, and play-based learning approaches — ensuring your child develops cognitive, motor, and social skills naturally.`,
+  behavioral: (area) => `Our special education professionals in ${area} hold certifications in remedial education, speech-language pathology, and behavioral therapy. They create individualized education plans (IEPs) and work closely with parents to track measurable progress.`,
+  discovery: (area) => `Every tutor on our platform serving ${area} undergoes a rigorous 4-step verification: identity check, qualification verification, criminal background screening, and a demo teaching evaluation. Parents can browse profiles, read ratings, and book a free trial session before committing.`,
+};
+
+const serviceClosings: Record<string, (area: string) => string> = {
+  academic: (area) => `Don't let your child fall behind. Book a free demo class in ${area} today and see how personalized home tutoring can transform their academic performance. 4.8★ average rating, 10K+ students served.`,
+  skill: (area) => `Ready to unlock your child's potential? Try a free demo session in ${area} and discover the difference expert skill-based coaching makes. No registration fee, no commitment.`,
+  hobby: (area) => `Let your child explore their creative side. Book a free trial class in ${area} today — no registration fee, flexible scheduling, and experienced instructors who make learning joyful.`,
+  early: (area) => `Give your little one the best start. Schedule a free demo session in ${area} with one of our certified early childhood educators. Age-appropriate, engaging, and designed to build confidence.`,
+  behavioral: (area) => `Take the first step toward better support. Book a free consultation in ${area} with a qualified specialist. Compassionate, professional, and tailored to your child's needs.`,
+  discovery: (area) => `Find your perfect tutor match in ${area} within 24 hours. Free demo class, no registration fee, and a satisfaction guarantee. Join 10,000+ happy families across Delhi NCR.`,
+};
+
+function getServiceIntro(svc: typeof services[number], area: string, seed: number): string {
+  return (serviceIntros[svc.category] || serviceIntros.academic)(area);
+}
+function getServiceValue(svc: typeof services[number], area: string, seed: number): string {
+  return (serviceValues[svc.category] || serviceValues.academic)(area);
+}
+function getServiceClosing(svc: typeof services[number], area: string, seed: number): string {
+  return (serviceClosings[svc.category] || serviceClosings.academic)(area);
+}
+
+// ===== SERVICE-SPECIFIC FAQs =====
+const serviceFaqPool: Record<string, (svcName: string, area: string) => { q: string; a: string }[]> = {
+  academic: (name, area) => [
+    { q: `How much does a ${name.toLowerCase()} cost in ${area}?`, a: `Fees typically range from ₹300–₹800/hr depending on grade and subject. First demo is free.` },
+    { q: `Are tutors for ${name.toLowerCase()} verified?`, a: `Yes, all our tutors undergo ID verification, background checks, and a demo teaching evaluation.` },
+    { q: `Can I get a female tutor for ${name.toLowerCase()}?`, a: `Absolutely. Specify your preference when booking and we'll match accordingly.` },
+    { q: `Do you offer online ${name.toLowerCase()} sessions?`, a: `Yes, both home tuition and online classes are available with flexible scheduling.` },
+    { q: `How quickly can I start ${name.toLowerCase()} in ${area}?`, a: `We typically match you with a tutor within 24–48 hours. Book a free demo to get started.` },
+  ],
+  skill: (name, area) => [
+    { q: `What age group is ${name.toLowerCase()} suitable for?`, a: `Our programs are designed for ages 6–16, with age-appropriate curriculum for each level.` },
+    { q: `Are ${name.toLowerCase()} available at home in ${area}?`, a: `Yes, we offer both home-based and online sessions in ${area}.` },
+    { q: `What will my child learn in ${name.toLowerCase()}?`, a: `Curriculum includes foundational concepts, hands-on projects, and progressive skill building. Ask for a detailed syllabus during your free demo.` },
+    { q: `How much do ${name.toLowerCase()} cost in ${area}?`, a: `Fees range from ₹400–₹1,000/hr depending on the program and instructor experience.` },
+    { q: `Is there a free trial for ${name.toLowerCase()}?`, a: `Yes! Your first session is a free demo — no commitment required.` },
+  ],
+  hobby: (name, area) => [
+    { q: `Do you offer ${name.toLowerCase()} at home in ${area}?`, a: `Yes, our instructors come to your home or conduct online sessions as per your preference.` },
+    { q: `What ages are ${name.toLowerCase()} suitable for?`, a: `We have programs for ages 4–16, with instructors experienced in teaching different age groups.` },
+    { q: `How much do ${name.toLowerCase()} cost?`, a: `Fees typically range from ₹300–₹800 per session depending on the activity and instructor.` },
+    { q: `Can my child try a free class?`, a: `Yes, the first session is a free trial so you can assess the instructor and program fit.` },
+    { q: `Are instructors for ${name.toLowerCase()} qualified?`, a: `All our instructors are verified professionals with relevant training and teaching experience.` },
+  ],
+  early: (name, area) => [
+    { q: `What is the right age to start ${name.toLowerCase()}?`, a: `Our early learning programs start from age 2, with age-appropriate activities for each developmental stage.` },
+    { q: `Are ${name.toLowerCase()} tutors trained in early childhood education?`, a: `Yes, our early learning educators hold certifications in Montessori, Jolly Phonics, or equivalent methodologies.` },
+    { q: `How long are ${name.toLowerCase()} sessions?`, a: `Sessions are typically 45–60 minutes for young learners, keeping attention spans and engagement in mind.` },
+    { q: `Do you offer ${name.toLowerCase()} at home in ${area}?`, a: `Yes, home-based and online sessions are both available across ${area}.` },
+    { q: `What will my child learn?`, a: `Programs cover phonics, numeracy, motor skills, social interaction, and school readiness — all through play-based learning.` },
+  ],
+  behavioral: (name, area) => [
+    { q: `How do I know if my child needs ${name.toLowerCase()}?`, a: `If your child struggles with communication, reading, focus, or social interactions, a professional assessment can help determine the right support.` },
+    { q: `Are your ${name.toLowerCase()} specialists certified?`, a: `Yes, all our specialists hold relevant certifications and have clinical or educational experience.` },
+    { q: `Is ${name.toLowerCase()} available at home in ${area}?`, a: `Yes, home-based sessions are available across ${area} for your child's comfort.` },
+    { q: `How long does ${name.toLowerCase()} typically take?`, a: `Progress varies by child. Most families see improvement within 3–6 months of consistent sessions.` },
+    { q: `Is there a free consultation?`, a: `Yes, we offer a free initial consultation to assess your child's needs and recommend the right approach.` },
+  ],
+  discovery: (name, area) => [
+    { q: `How do I find ${name.toLowerCase()} in ${area}?`, a: `Simply book a free demo on Tutors Parliament. We'll match you with verified tutors in ${area} within 24 hours.` },
+    { q: `Are all tutors on your platform verified?`, a: `Yes — every tutor undergoes ID verification, background checks, and demo evaluation before listing.` },
+    { q: `Can I choose between home and online classes?`, a: `Absolutely. Both modes are available with flexible scheduling.` },
+    { q: `What subjects and boards do you cover?`, a: `We cover all subjects for CBSE, ICSE, IGCSE, IB, and state boards.` },
+    { q: `Is there a registration fee?`, a: `No registration fee. You only pay for sessions. First demo is always free.` },
+  ],
+};
+
 export function getEnrichedContent(pageData: SeoPageData): { intro: string; value: string; closing: string } {
   const seed = hashStr(pageData.slug);
   const subj = pageData.subject?.name || "Home Tuition";
   const area = pageData.area?.name || "Delhi";
   const cls = pageData.classLevel?.label || "";
   const pin = pageData.area?.pincode || "";
+
+  // Service page content
+  if (pageData.service) {
+    const svc = pageData.service;
+    return {
+      intro: getServiceIntro(svc, area, seed),
+      value: getServiceValue(svc, area, seed),
+      closing: getServiceClosing(svc, area, seed),
+    };
+  }
 
   // Intent-specific overrides
   if (pageData.intent === "fees") {
@@ -200,6 +295,13 @@ export function getEnrichedFaqs(pageData: SeoPageData): { q: string; a: string }
   const kw = pageData.keyword;
   const area = pageData.area?.name || "";
   const cls = pageData.classLevel?.label || "";
+
+  // Service-specific FAQs
+  if (pageData.service) {
+    const cat = pageData.service.category;
+    const faqFn = serviceFaqPool[cat] || serviceFaqPool.academic;
+    return faqFn(pageData.service.name, area);
+  }
 
   // Intent-specific FAQs
   if (pageData.intent === "fees" || pageData.isMoneyPage && pageData.type === "tuition-fees-area") {
@@ -321,7 +423,7 @@ export function getRelevantBlogs(pageData: SeoPageData): BlogLink[] {
 interface InternalLink {
   href: string;
   anchor: string;
-  category: "subject" | "area" | "intent" | "decision" | "exam" | "blog";
+  category: "subject" | "area" | "intent" | "decision" | "exam" | "blog" | "service";
 }
 
 export function getSmartInternalLinks(pageData: SeoPageData): InternalLink[] {
@@ -417,6 +519,21 @@ export function getSmartInternalLinks(pageData: SeoPageData): InternalLink[] {
   const blogs = getRelevantBlogs(pageData);
   for (const b of blogs) {
     add(b.href, b.title, "blog");
+  }
+
+  // === 7. SERVICE CROSS-LINKS (3-4 related services) ===
+  const areaSlug = area?.slug || "delhi";
+  const currentServiceSlug = pageData.service?.slug;
+  const currentCategory = pageData.service?.category;
+
+  // Pick services from same category + different categories
+  const relatedServices = services.filter(s => s.slug !== currentServiceSlug);
+  const sameCat = relatedServices.filter(s => s.category === currentCategory).slice(0, 2);
+  const diffCat = relatedServices.filter(s => s.category !== currentCategory)
+    .sort((a, b) => hashStr(a.slug + pageData.slug) - hashStr(b.slug + pageData.slug))
+    .slice(0, 2);
+  for (const svc of [...sameCat, ...diffCat].slice(0, 4)) {
+    add(`/${svc.slug}-${areaSlug}`, `${svc.name} in ${area?.name || "Delhi"}`, "service");
   }
 
   return links;

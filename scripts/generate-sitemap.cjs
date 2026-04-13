@@ -78,6 +78,24 @@ topSubjects.forEach(s => {
   });
 });
 
+// SEO 3.0: Service pages
+const servicesSlugs = [
+  "home-tutor-for-kids", "1-on-1-home-tutor", "affordable-tuition-classes",
+  "after-school-homework-help", "exam-crash-course",
+  "coding-classes-for-kids", "robotics-classes", "vedic-maths-classes",
+  "public-speaking-for-kids", "chess-classes-for-kids", "abacus-classes-for-kids",
+  "summer-camp-for-kids", "dance-classes-for-kids", "music-classes-for-kids",
+  "art-and-craft-classes",
+  "kg-home-tutor", "phonics-classes-for-kg", "montessori-classes", "early-learning-program",
+  "special-education-tutor", "speech-therapy-kids", "learning-disability-support",
+  "verified-tutors", "weekend-classes-for-kids",
+];
+const ncrCities = ["delhi", "noida", "gurgaon", "ghaziabad", "faridabad"];
+servicesSlugs.forEach(svc => {
+  ncrCities.forEach(city => urls.push(`/${svc}-${city}`));
+  topAreas.forEach(a => urls.push(`/${svc}-${a.slug}`));
+});
+
 const today = new Date().toISOString().split("T")[0];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
