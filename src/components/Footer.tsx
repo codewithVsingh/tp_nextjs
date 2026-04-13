@@ -173,11 +173,7 @@ const Footer = () => {
                   <ul className="space-y-1 text-sm">
                     {section.items.map((item) => (
                       <li key={item.label}>
-                        {item.external ? (
-                          <a href={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</a>
-                        ) : (
-                          <Link to={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</Link>
-                        )}
+                        <Link to={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</Link>
                       </li>
                     ))}
                   </ul>
