@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   CheckCircle, Star, Shield, Users, Clock, MapPin, ArrowRight,
   IndianRupee, GraduationCap, BookOpen, MessageCircle, FileText,
-  Scale, Newspaper,
+  Scale, Newspaper, Sparkles,
 } from "lucide-react";
 import { areas, subjects, examTypes, type SeoPageData } from "@/data/seoData";
 import { getSmartInternalLinks } from "@/data/seoContentGenerator";
@@ -209,6 +209,7 @@ export const InternalLinkingBlock = ({ pageData }: { pageData: SeoPageData }) =>
   const decisionLinks = allLinks.filter(l => l.category === "decision");
   const examLinks = allLinks.filter(l => l.category === "exam");
   const blogLinks = allLinks.filter(l => l.category === "blog");
+  const serviceLinks = allLinks.filter(l => l.category === "service");
 
   const categoryIcon = {
     subject: BookOpen,
@@ -217,6 +218,7 @@ export const InternalLinkingBlock = ({ pageData }: { pageData: SeoPageData }) =>
     decision: Scale,
     exam: GraduationCap,
     blog: Newspaper,
+    service: Sparkles,
   };
 
   const sections = [
@@ -226,6 +228,7 @@ export const InternalLinkingBlock = ({ pageData }: { pageData: SeoPageData }) =>
     { title: "Compare & Decide", links: decisionLinks, icon: categoryIcon.decision },
     { title: "Exam Preparation", links: examLinks, icon: categoryIcon.exam },
     { title: "Helpful Reads", links: blogLinks, icon: categoryIcon.blog },
+    { title: "Explore More Classes", links: serviceLinks, icon: categoryIcon.service },
   ].filter(s => s.links.length > 0);
 
   if (sections.length === 0) return null;
