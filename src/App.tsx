@@ -59,6 +59,7 @@ const App = () => (
               <Route path="/home-tuition-vs-online-classes-delhi" element={<DecisionPage />} />
               <Route path="/is-home-tuition-worth-it-delhi" element={<DecisionPage />} />
               <Route path="/best-home-tuition-or-coaching-for-class-10-delhi" element={<DecisionPage />} />
+              <Route path="/exams/:slug" element={<ExamPage />} />
               <Route path="/:slug" element={<TutorSeoPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
