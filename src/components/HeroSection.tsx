@@ -68,12 +68,12 @@ const HeroSection = () => {
               meets personalized learning to help you succeed.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
               <Button variant="hero" size="lg" className="text-base px-8 py-6" onClick={handleCTAClick}>
                 Start Free Demo
               </Button>
-              <Button variant="hero-outline" size="lg" className="text-base px-8 py-6" asChild>
-                <a href="/courses">Explore Courses</a>
+              <Button variant="ghost" size="lg" className="text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10 text-base font-medium" asChild>
+                <a href="/courses">Explore Courses →</a>
               </Button>
             </div>
 

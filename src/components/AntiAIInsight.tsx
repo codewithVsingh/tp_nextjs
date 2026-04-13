@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -31,15 +31,18 @@ const AntiAIInsight = () => (
           Discover how a dedicated tutor builds critical thinking your child will carry for life.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-          <Button asChild size="lg" className="w-full sm:w-auto font-semibold" style={{ background: "var(--cta-gradient)" }}>
-            <Link to="/ai-in-education-for-kids-guide">
-              Learn More <ArrowRight className="w-4 h-4 ml-1.5" />
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          <Button asChild size="lg" className="w-full sm:w-auto font-semibold text-base" style={{ background: "var(--cta-gradient)" }}>
+            <Link to="/tutor-registry">
+              Start Free Demo
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto font-semibold">
-            <Link to="/tutor-registry">Find a Tutor</Link>
-          </Button>
+          <Link 
+            to="/ai-in-education-for-kids-guide" 
+            className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium underline underline-offset-4"
+          >
+            Learn more about AI risks
+          </Link>
         </div>
       </motion.div>
     </div>
