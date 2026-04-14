@@ -25,6 +25,7 @@ const DecisionPage = lazy(() => import("./pages/DecisionPage.tsx"));
 const ExamPage = lazy(() => import("./pages/ExamPage.tsx"));
 const AIEducationGuide = lazy(() => import("./pages/AIEducationGuide.tsx"));
 const Contact = lazy(() => import("./pages/Contact.tsx"));
+const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,7 @@ const App = () => (
               <Route path="/exams/:slug" element={<ExamPage />} />
               <Route path="/ai-in-education-for-kids-guide" element={<AIEducationGuide />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/:slug" element={<TutorSeoPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

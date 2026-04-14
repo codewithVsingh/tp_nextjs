@@ -35,7 +35,7 @@ const footerSections = [
       { label: "FAQs", href: "/faq" },
       { label: "Contact Us", href: "/contact" },
       { label: "Privacy Policy", href: "#" },
-      
+      { label: "Terms & Conditions", href: "/terms-and-conditions" },
     ],
   },
 ];
