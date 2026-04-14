@@ -208,7 +208,7 @@ const Navbar = () => {
 
         <div className="hidden md:flex items-center gap-4">
           {navLinks.map((link) => renderLink(link))}
-          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary" onClick={() => navigate("/contact")}>Talk to Expert</Button>
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary" onClick={() => navigate("/become-a-tutor")}>Become a Tutor</Button>
           <Button variant="cta" size="lg" onClick={() => navigate("/demo-booking")}>Start Free Demo</Button>
         </div>
 
@@ -226,7 +226,7 @@ const Navbar = () => {
             className="md:hidden bg-background border-b border-border px-4 pb-4 overflow-hidden"
           >
             {navLinks.map((link) => renderLink(link, true))}
-            <Button variant="outline" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/contact"); }}>Talk to Expert</Button>
+            <Button variant="outline" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/become-a-tutor"); }}>Become a Tutor</Button>
             <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/demo-booking"); }}>Start Free Demo</Button>
           </motion.div>
         )}
