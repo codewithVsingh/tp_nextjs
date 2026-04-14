@@ -1,5 +1,5 @@
 // Run: node scripts/generate-sitemap.cjs
-// Generates public/sitemap.xml from SEO dataset
+// Generates public/sitemap.xml — mirrors getAllSlugs() from seoData.ts
 
 const areas = [
   { slug: "rohini", pincode: "110085" },
@@ -32,6 +32,16 @@ const areas = [
   { slug: "connaught-place", pincode: "110001" },
   { slug: "lajpat-nagar", pincode: "110024" },
   { slug: "kalkaji", pincode: "110019" },
+  { slug: "noida", pincode: "201301" },
+  { slug: "greater-noida", pincode: "201310" },
+  { slug: "gurgaon", pincode: "122001" },
+  { slug: "ghaziabad", pincode: "201001" },
+  { slug: "faridabad", pincode: "121001" },
+  { slug: "indirapuram", pincode: "201014" },
+  { slug: "vaishali", pincode: "201010" },
+  { slug: "sector-62-noida", pincode: "201309" },
+  { slug: "dlf-phase-3", pincode: "122002" },
+  { slug: "sohna-road", pincode: "122018" },
 ];
 
 const subjects = [
@@ -39,15 +49,35 @@ const subjects = [
   "economics","hindi","biology","computer-science","french","german","spanish",
 ];
 
-const highRoiClasses = ["8","9","10","11","12"];
 const topSubjects = subjects.slice(0, 6);
 const topAreas = areas.slice(0, 10);
+const highRoiClasses = ["8","9","10","11","12"];
+const boardClasses = ["10","11","12"];
+const boardSubjects = topSubjects.slice(0, 4);
+const boards = ["cbse","icse","ib"];
+const examTypes = ["jee","neet","cuet","ntse","olympiad","navodaya","sainik-school"];
+const ncrCities = ["noida","gurgaon","ghaziabad","faridabad"];
+
+const servicesSlugs = [
+  "home-tutor-for-kids", "1-on-1-home-tutor", "affordable-tuition-classes",
+  "after-school-homework-help", "exam-crash-course",
+  "coding-classes-for-kids", "robotics-classes", "vedic-maths-classes",
+  "public-speaking-for-kids", "chess-classes-for-kids", "abacus-classes-for-kids",
+  "summer-camp-for-kids", "dance-classes-for-kids", "music-classes-for-kids",
+  "art-and-craft-classes",
+  "kg-home-tutor", "phonics-classes-for-kg", "montessori-classes", "early-learning-program",
+  "special-education-tutor",
+];
 
 const BASE = "https://tutorsparliament.com";
 
 const staticPages = [
-  "/", "/about", "/courses", "/blog", "/faq",
+  "/", "/about", "/courses", "/blog", "/faq", "/contact",
   "/counselling/student", "/counselling/parent", "/counselling/personal",
+  "/demo-booking", "/become-a-tutor", "/tutor-registry",
+  "/ai-in-education-for-kids-guide",
+  "/home-tuition-vs-coaching-delhi", "/home-tuition-vs-online-classes-delhi",
+  "/is-home-tuition-worth-it-delhi", "/best-home-tuition-or-coaching-for-class-10-delhi",
 ];
 
 const urls = [...staticPages];
@@ -58,42 +88,68 @@ subjects.forEach(s => urls.push(`/tutors/${s}-delhi`));
 areas.forEach(a => urls.push(`/tutors/${a.slug}-delhi`));
 // Legacy: subject-area-delhi (top combos)
 topSubjects.forEach(s => {
-  areas.slice(0, 6).forEach(a => {
-    urls.push(`/tutors/${s}-${a.slug}-delhi`);
+  areas.slice(0, 6).forEach(a => urls.push(`/tutors/${s}-${a.slug}-delhi`));
+});
+
+// v1.0: home-tuition-in-{area}
+areas.forEach(a => urls.push(`/home-tuition-in-${a.slug}`));
+// v1.0: home-tuition-in-{area}-{pincode} (top 15)
+areas.slice(0, 15).forEach(a => urls.push(`/home-tuition-in-${a.slug}-${a.pincode}`));
+// v1.0: best-home-tutors-in-{area} (top 15)
+areas.slice(0, 15).forEach(a => urls.push(`/best-home-tutors-in-${a.slug}`));
+// v1.0: {subject}-tuition-in-{area}-class-{class}
+topSubjects.forEach(s => {
+  topAreas.forEach(a => {
+    highRoiClasses.forEach(c => urls.push(`/${s}-tuition-in-${a.slug}-class-${c}`));
   });
 });
 
-// New: home-tuition-in-{area}
-areas.forEach(a => urls.push(`/home-tuition-in-${a.slug}`));
-// New: home-tuition-in-{area}-{pincode} (top 15)
-areas.slice(0, 15).forEach(a => urls.push(`/home-tuition-in-${a.slug}-${a.pincode}`));
-// New: best-home-tutors-in-{area} (top 15)
-areas.slice(0, 15).forEach(a => urls.push(`/best-home-tutors-in-${a.slug}`));
-// New: {subject}-tuition-in-{area}-class-{class}
-topSubjects.forEach(s => {
+// v2.0: Money pages — fees & top-10 for all areas
+areas.forEach(a => {
+  urls.push(`/home-tuition-fees-in-${a.slug}`);
+  urls.push(`/top-10-home-tutors-${a.slug}`);
+});
+
+// v2.0: Board-specific pages
+boardSubjects.forEach(s => {
   topAreas.forEach(a => {
-    highRoiClasses.forEach(c => {
-      urls.push(`/${s}-tuition-in-${a.slug}-class-${c}`);
+    boardClasses.forEach(c => {
+      boards.forEach(b => urls.push(`/${s}-home-tutor-${a.slug}-class-${c}-${b}`));
     });
   });
 });
 
-// SEO 3.0: Service pages
-const servicesSlugs = [
-  "home-tutor-for-kids", "1-on-1-home-tutor", "affordable-tuition-classes",
-  "after-school-homework-help", "exam-crash-course",
-  "coding-classes-for-kids", "robotics-classes", "vedic-maths-classes",
-  "public-speaking-for-kids", "chess-classes-for-kids", "abacus-classes-for-kids",
-  "summer-camp-for-kids", "dance-classes-for-kids", "music-classes-for-kids",
-  "art-and-craft-classes",
-  "kg-home-tutor", "phonics-classes-for-kg", "montessori-classes", "early-learning-program",
-  "special-education-tutor", "speech-therapy-kids", "learning-disability-support",
-  "verified-tutors", "weekend-classes-for-kids",
-];
-const ncrCities = ["delhi", "noida", "gurgaon", "ghaziabad", "faridabad"];
-servicesSlugs.forEach(svc => {
+// v2.0: Female tutor pages
+topSubjects.forEach(s => {
+  areas.slice(0, 15).forEach(a => urls.push(`/female-${s}-home-tutor-${a.slug}`));
+});
+
+// v2.0: Near-me pages
+topSubjects.forEach(s => {
+  highRoiClasses.forEach(c => urls.push(`/${s}-home-tutor-near-me-class-${c}`));
+});
+
+// v2.0: Home vs online
+areas.slice(0, 15).forEach(a => urls.push(`/home-vs-online-tuition-${a.slug}`));
+
+// v2.0: Subject fees
+topSubjects.forEach(s => {
+  topAreas.forEach(a => urls.push(`/${s}-home-tutor-${a.slug}-fees`));
+});
+
+// v2.0: Exam coaching
+examTypes.forEach(e => {
+  urls.push(`/${e}-coaching-near-me`);
+  areas.slice(0, 15).forEach(a => urls.push(`/${e}-coaching-${a.slug}`));
+});
+
+// v3.0: Service pages
+const priorityServices = servicesSlugs.slice(0, 20);
+const serviceAreas = areas.slice(0, 10);
+priorityServices.forEach(svc => {
+  urls.push(`/${svc}-delhi`);
   ncrCities.forEach(city => urls.push(`/${svc}-${city}`));
-  topAreas.forEach(a => urls.push(`/${svc}-${a.slug}`));
+  serviceAreas.forEach(a => urls.push(`/${svc}-${a.slug}`));
 });
 
 const today = new Date().toISOString().split("T")[0];
