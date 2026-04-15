@@ -224,8 +224,7 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
         <p className="text-muted-foreground mb-6">We'll connect you with students near you within 24 hours.</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button variant="cta" size="lg" onClick={() => {
-            const msg = encodeURIComponent(`Hi, I just registered as a tutor. Name: ${form.name}, Subjects: ${form.subjects.join(", ")}`);
-            window.open(`https://wa.me/919873101564?text=${msg}`, "_blank");
+            openWhatsApp(`Hi, I just registered as a tutor. Name: ${form.name}, Subjects: ${form.subjects.join(", ")}`);
           }}>
             Continue on WhatsApp
           </Button>

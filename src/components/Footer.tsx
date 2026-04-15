@@ -150,14 +150,12 @@ const Footer = () => {
                 <span>New Delhi, India</span>
               </li>
             </ul>
-            <a
-              href="https://wa.me/919873101564?text=Hi%2C%20I%27m%20interested%20in%20learning%20more%20about%20Tutors%20Parliament"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => openWhatsApp("Hi, I'm interested in learning more about Tutors Parliament")}
               className="inline-flex items-center gap-2 mt-4 text-xs font-medium text-primary-foreground bg-[#25D366]/20 hover:bg-[#25D366]/30 px-3 py-1.5 rounded-full transition-colors"
             >
               💬 Chat on WhatsApp
-            </a>
+            </button>
           </div>
         </div>
 
@@ -199,14 +197,12 @@ const Footer = () => {
                     <span>New Delhi, India</span>
                   </li>
                 </ul>
-                <a
-                  href="https://wa.me/919873101564?text=Hi%2C%20I%27m%20interested%20in%20learning%20more%20about%20Tutors%20Parliament"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => openWhatsApp("Hi, I'm interested in learning more about Tutors Parliament")}
                   className="inline-flex items-center gap-2 mt-3 text-xs font-medium text-primary-foreground bg-[#25D366]/20 hover:bg-[#25D366]/30 px-3 py-2 rounded-full transition-colors min-h-[44px]"
                 >
                   💬 Chat on WhatsApp
-                </a>
+                </button>
               </AccordionContent>
             </AccordionItem>
           </Accordion>

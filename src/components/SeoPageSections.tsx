@@ -332,10 +332,8 @@ export const StickyBottomCTA = ({ pageData }: { pageData: SeoPageData }) => (
         Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
       </Link>
     </Button>
-    <Button variant="outline" className="py-5 text-sm font-semibold" asChild>
-      <a href="https://wa.me/919873101564?text=Hi%2C%20I%20need%20a%20tutor" target="_blank" rel="noopener noreferrer">
-        <MessageCircle className="w-4 h-4 mr-1" /> Talk Now
-      </a>
+    <Button variant="outline" className="py-5 text-sm font-semibold" onClick={() => openWhatsApp("Hi, I need a tutor")}>
+      <MessageCircle className="w-4 h-4 mr-1" /> Talk Now
     </Button>
   </div>
 );

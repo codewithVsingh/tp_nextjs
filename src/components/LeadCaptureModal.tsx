@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { ArrowRight, CheckCircle, Shield, Users, Star, Clock } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 interface LeadCaptureModalProps {
   open: boolean;
@@ -90,9 +91,7 @@ const LeadCaptureModal = ({ open, onOpenChange, source = "unknown", prefill }: L
     toast.success("We'll connect you with the best tutor shortly!");
   };
 
-  const whatsappMsg = encodeURIComponent(
-    `Hi, I need a home tutor in ${form.area || "Delhi"} for ${form.classLevel || "my child"}${form.subject ? ` - ${form.subject}` : ""}`
-  );
+  const whatsappMsg = `Hi, I need a home tutor in ${form.area || "Delhi"} for ${form.classLevel || "my child"}${form.subject ? ` - ${form.subject}` : ""}`;
 
   if (submitted) {
     return (
@@ -109,10 +108,8 @@ const LeadCaptureModal = ({ open, onOpenChange, source = "unknown", prefill }: L
             </div>
             <div className="flex flex-col gap-2">
               <Button className="w-full" onClick={() => onOpenChange(false)}>Done</Button>
-              <Button variant="outline" className="w-full" asChild>
-                <a href={`https://wa.me/919873101564?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" className="w-full" onClick={() => openWhatsApp(whatsappMsg)}>
                   Or Chat on WhatsApp for Faster Response
-                </a>
               </Button>
             </div>
           </div>
