@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Upload, Video, ArrowRight, ArrowLeft, X, Loader2, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 const STORAGE_KEY = "tutor_registration_draft";
 

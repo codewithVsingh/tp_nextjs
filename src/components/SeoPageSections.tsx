@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
