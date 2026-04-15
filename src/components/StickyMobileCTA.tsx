@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { trackCTAClick } from "@/lib/analytics";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
 
 interface StickyMobileCTAProps {
@@ -10,9 +11,7 @@ interface StickyMobileCTAProps {
 }
 
 const StickyMobileCTA = ({ onCtaClick, area, classLevel }: StickyMobileCTAProps) => {
-  const whatsappMsg = encodeURIComponent(
-    `Hi, I need a home tutor${area ? ` in ${area}` : ""}${classLevel ? ` for ${classLevel}` : ""}`
-  );
+  const whatsappMsg = `Hi, I need a home tutor${area ? ` in ${area}` : ""}${classLevel ? ` for ${classLevel}` : ""}`;
 
   return (
     <motion.div
@@ -36,12 +35,12 @@ const StickyMobileCTA = ({ onCtaClick, area, classLevel }: StickyMobileCTAProps)
         <Button
           variant="outline"
           className="h-12 text-sm font-semibold min-w-[120px] active:scale-[0.96] transition-transform"
-          asChild
-          onClick={() => trackCTAClick("sticky_whatsapp", window.location.pathname)}
+          onClick={() => {
+            trackCTAClick("sticky_whatsapp", window.location.pathname);
+            openWhatsApp(whatsappMsg);
+          }}
         >
-          <a href={`https://wa.me/919873101564?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer">
-            <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp
-          </a>
+          <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp
         </Button>
       </div>
     </motion.div>
