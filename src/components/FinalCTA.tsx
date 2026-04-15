@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 const FinalCTA = () => {
   const navigate = useNavigate();
@@ -30,11 +31,9 @@ const FinalCTA = () => {
               variant="ghost" 
               size="lg" 
               className="text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10 text-base font-medium"
-              asChild
+              onClick={() => openWhatsApp("Hi, I want to book a free demo class")}
             >
-              <a href="https://wa.me/919999999999?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class" target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="w-5 h-5 mr-2" /> Chat on WhatsApp
-              </a>
+              <MessageCircle className="w-5 h-5 mr-2" /> Chat on WhatsApp
             </Button>
           </div>
         </motion.div>

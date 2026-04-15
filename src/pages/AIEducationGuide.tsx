@@ -6,6 +6,7 @@ import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MessageCircle, Phone, CheckCircle2, ShieldCheck, Users, BarChart3, Brain, AlertTriangle, Lightbulb } from "lucide-react";
 import { useState } from "react";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -15,7 +16,7 @@ const fadeUp = {
   transition: { duration: 0.45 },
 };
 
-const whatsappMsg = encodeURIComponent("Hi, I need a home tutor for my child. I'm concerned about AI dependency.");
+const whatsappMsg = "Hi, I need a home tutor for my child. I'm concerned about AI dependency.";
 
 const BulletList = ({ items, icon: Icon }: { items: string[]; icon: React.ElementType }) => (
   <ul className="space-y-3">
@@ -145,10 +146,8 @@ const AIEducationGuide = () => {
                 ))}
               </div>
               <div className="pt-4 flex justify-center">
-                <Button variant="outline" size="lg" className="font-semibold border-primary text-primary hover:bg-primary/5" asChild>
-                  <a href={`https://wa.me/919873101564?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="lg" className="font-semibold border-primary text-primary hover:bg-primary/5" onClick={() => openWhatsApp(whatsappMsg)}>
                     <MessageCircle className="w-4 h-4 mr-1.5" /> Chat on WhatsApp
-                  </a>
                 </Button>
               </div>
             </motion.div>
@@ -188,10 +187,8 @@ const AIEducationGuide = () => {
                 <Button size="lg" variant="cta" className="w-full sm:w-auto font-bold" onClick={() => setShowModal(true)}>
                   Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto font-semibold border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" asChild>
-                  <a href={`https://wa.me/919873101564?text=${whatsappMsg}`} target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto font-semibold border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" onClick={() => openWhatsApp(whatsappMsg)}>
                     <MessageCircle className="w-4 h-4 mr-1" /> Chat on WhatsApp
-                  </a>
                 </Button>
                 <Button size="lg" variant="ghost" className="w-full sm:w-auto font-semibold text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10" asChild>
                   <a href="tel:+919873101564">

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { openWhatsApp, getWhatsAppUrl } from "@/lib/whatsapp";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -116,7 +117,7 @@ const DemoBooking = () => {
       `Preferred Time: ${formData.timeSlot}`,
       `Mode: ${formData.mode}`,
     ].filter(Boolean).join("\n");
-    return encodeURIComponent(lines);
+    return lines;
   };
 
   const stepIcons = [Users, GraduationCap, BookOpen, Calendar];
@@ -362,21 +363,15 @@ const DemoBooking = () => {
                 Continue <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             ) : (
-              <a
-                href={`https://wa.me/919873101564?text=${buildWhatsAppMessage()}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1"
+              <Button
+                variant="cta"
+                size="lg"
+                className="flex-1 bg-[#25D366] hover:bg-[#20bd5a]"
+                disabled={!canProceed()}
+                onClick={() => openWhatsApp(buildWhatsAppMessage())}
               >
-                <Button
-                  variant="cta"
-                  size="lg"
-                  className="w-full bg-[#25D366] hover:bg-[#20bd5a]"
-                  disabled={!canProceed()}
-                >
-                  <MessageCircle className="w-5 h-5 mr-2" /> Continue on WhatsApp
-                </Button>
-              </a>
+                <MessageCircle className="w-5 h-5 mr-2" /> Continue on WhatsApp
+              </Button>
             )}
           </div>
 

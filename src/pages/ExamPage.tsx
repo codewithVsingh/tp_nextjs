@@ -1,4 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -489,10 +490,8 @@ const ExamPage = () => {
       <Button onClick={() => setShowModal(true)} className="font-semibold" style={{ background: "var(--cta-gradient)" }}>
         {text || data.ctaText} <ArrowRight className="w-4 h-4 ml-1" />
       </Button>
-      <Button variant="outline" asChild>
-        <a href="https://wa.me/919873101564?text=Hi%2C%20I%20need%20a%20tutor%20for%20exam%20prep" target="_blank" rel="noopener noreferrer">
+      <Button variant="outline" onClick={() => openWhatsApp("Hi, I need a tutor for exam prep")}>
           Chat on WhatsApp
-        </a>
       </Button>
     </div>
   );
@@ -555,10 +554,8 @@ const ExamPage = () => {
             <Button size="lg" variant="hero" onClick={() => setShowModal(true)}>
               {data.ctaText} <ArrowRight className="w-5 h-5 ml-1" />
             </Button>
-            <Button size="lg" variant="hero-outline" asChild>
-              <a href="https://wa.me/919873101564?text=Hi%2C%20I%20need%20a%20tutor%20for%20exam%20prep" target="_blank" rel="noopener noreferrer">
+            <Button size="lg" variant="hero-outline" onClick={() => openWhatsApp("Hi, I need a tutor for exam prep")}>
                 Talk to Expert Now
-              </a>
             </Button>
           </div>
         </div>

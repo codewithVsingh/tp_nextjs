@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -327,10 +328,8 @@ const Courses = () => {
               <Button size="lg" className="text-base px-8 py-6 shadow-lg hover:scale-105 transition-transform" style={{ background: "var(--cta-gradient)" }} onClick={() => openLead({})}>
                 Get Free Demo <ArrowRight className="w-5 h-5 ml-1" />
               </Button>
-              <Button size="lg" variant="outline" className="text-base px-8 py-6 bg-primary-foreground/10 text-primary-foreground border-primary-foreground/20 hover:bg-primary-foreground/20" asChild>
-                <a href="https://wa.me/919873101564?text=Hi%2C%20I%20need%20help%20choosing%20a%20course" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" variant="outline" className="text-base px-8 py-6 bg-primary-foreground/10 text-primary-foreground border-primary-foreground/20 hover:bg-primary-foreground/20" onClick={() => openWhatsApp("Hi, I need help choosing a course")}>
                   <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp Us
-                </a>
               </Button>
             </div>
           </div>

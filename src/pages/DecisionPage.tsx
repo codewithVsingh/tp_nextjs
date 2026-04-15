@@ -1,4 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -339,10 +340,8 @@ const DecisionPage = () => {
       <Button variant="cta" size="lg" asChild>
         <Link to="/demo-booking">{text || "Get Free Demo Class in Delhi"}</Link>
       </Button>
-      <Button variant="outline" size="lg" asChild>
-        <a href="https://wa.me/919873101564?text=Hi%2C%20I%20need%20help%20choosing%20tuition" target="_blank" rel="noopener noreferrer">
+      <Button variant="outline" size="lg" onClick={() => openWhatsApp("Hi, I need help choosing tuition")}>
           <MessageCircle className="w-4 h-4 mr-2" /> Ask on WhatsApp
-        </a>
       </Button>
     </div>
   );
@@ -572,10 +571,8 @@ const DecisionPage = () => {
                 <Button size="lg" variant="secondary" asChild>
                   <Link to="/demo-booking">Book Free Demo Class</Link>
                 </Button>
-                <Button size="lg" variant="hero-outline" asChild>
-                  <a href="https://wa.me/919873101564?text=Hi%2C%20I%20need%20help%20deciding" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="hero-outline" onClick={() => openWhatsApp("Hi, I need help deciding")}>
                     Talk to an Expert
-                  </a>
                 </Button>
               </div>
             </motion.div>
@@ -667,10 +664,8 @@ const DecisionPage = () => {
             Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
           </Link>
         </Button>
-        <Button variant="outline" className="py-5 text-sm font-semibold" asChild>
-          <a href="https://wa.me/919873101564?text=Hi%2C%20I%20need%20a%20tutor" target="_blank" rel="noopener noreferrer">
+        <Button variant="outline" className="py-5 text-sm font-semibold" onClick={() => openWhatsApp("Hi, I need a tutor")}>
             <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp
-          </a>
         </Button>
       </div>
       <WhatsAppButton />
