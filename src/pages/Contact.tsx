@@ -70,9 +70,7 @@ const Contact = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
-  const whatsappMsg = encodeURIComponent(
-    "Hi, I need a home tutor in Delhi NCR"
-  );
+  const whatsappMsg = "Hi, I need a home tutor in Delhi NCR";
 
   const fade = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.5 } };
 
@@ -107,7 +105,7 @@ const Contact = () => {
                   <Button variant="ghost" size="lg" className="text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10" asChild>
                     <a href="tel:+919873101564"><Phone className="w-4 h-4 mr-2" /> Call Now</a>
                   </Button>
-                  <Button variant="ghost" size="lg" className="text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10" onClick={() => openWhatsApp(whatsappMsgRaw)}>
+                  <Button variant="ghost" size="lg" className="text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10" onClick={() => openWhatsApp(whatsappMsg)}>
                       <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
                   </Button>
                 </div>
