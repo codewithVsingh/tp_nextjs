@@ -1,4 +1,5 @@
 import { useParams, useLocation, Link } from "react-router-dom";
+import { openWhatsApp } from "@/lib/whatsapp";
 import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -506,10 +507,8 @@ const TutorSeoPage = () => {
               <Button size="lg" variant="secondary" asChild>
                 <Link to="/demo-booking">Book Free Demo</Link>
               </Button>
-              <Button size="lg" variant="hero-outline" asChild>
-                <a href="https://wa.me/919873101564?text=Hi%2C%20I%20need%20a%20tutor" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" variant="hero-outline" onClick={() => openWhatsApp("Hi, I need a tutor")}>
                   Talk to Tutor Now
-                </a>
               </Button>
             </div>
           </div>
