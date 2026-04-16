@@ -17,6 +17,9 @@ import SchedulePrefs from "./steps/SchedulePrefs";
 import ReviewSubmit from "./steps/ReviewSubmit";
 import SuccessRedirect from "./steps/SuccessRedirect";
 
+// TODO: Set to true when OTP verification is ready for production
+const ENABLE_OTP = false;
+
 const STEP_LABELS = [
   "Phone", "OTP", "Who", "Location", "Details", "Subjects", "Schedule", "Review", "Done"
 ];
@@ -60,7 +63,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill }: LeadCaptureFl
       }
       case 5: return data.goals.length > 0;
       case 6: return !!data.preferred_time && !!data.frequency && !!data.start_time;
-      case 7: return true; // review step — always can submit
+      case 7: return true;
       default: return false;
     }
   };
@@ -96,12 +99,45 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill }: LeadCaptureFl
     }
   };
 
+  /** Create lead in DB immediately after phone entry (when OTP is skipped) */
+  const createLeadWithoutOtp = async () => {
+    try {
+      const { data: lead, error } = await supabase
+        .from("leads")
+        .insert({
+          phone: data.phone,
+          name: data.name || null,
+          otp_verified: false,
+          step_reached: 2,
+        })
+        .select("id")
+        .single();
+
+      if (error) {
+        console.error("Failed to create lead:", error);
+        return null;
+      }
+      return lead.id;
+    } catch (err) {
+      console.error("Failed to create lead:", err);
+      return null;
+    }
+  };
+
   const handleNext = async () => {
     if (step === 7) {
-      // Final submit
       await saveLead(8);
       trackEvent("lead_submitted", { source, user_type: data.user_type });
       setStep(8);
+      return;
+    }
+
+    // Handle phone step → skip OTP if disabled
+    if (step === 0 && !ENABLE_OTP) {
+      const id = await createLeadWithoutOtp();
+      if (id) setLeadId(id);
+      trackEvent("lead_step_completed", { step: 0, source, otp_status: "skipped" });
+      setStep(2); // Jump directly to User Type step
       return;
     }
 
@@ -114,7 +150,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill }: LeadCaptureFl
   };
 
   const handleBack = () => {
-    if (step > 2) setStep(step - 1); // Can't go back before OTP
+    if (step > 2) setStep(step - 1);
   };
 
   const handleOtpVerified = (id: string) => {
@@ -127,14 +163,15 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill }: LeadCaptureFl
     setStep(targetStep);
   };
 
-  // Total visible steps (excluding OTP and success)
-  const totalVisibleSteps = 7; // steps 2-8 mapped to 1-7
+  const totalVisibleSteps = 7;
   const visibleProgress = step <= 1 ? 0 : step >= 8 ? 100 : ((step - 1) / totalVisibleSteps) * 100;
 
   const renderStep = () => {
     switch (step) {
       case 0: return <PhoneEntry data={data} onChange={onChange} />;
-      case 1: return <OtpVerification phone={data.phone} onVerified={handleOtpVerified} />;
+      case 1: return ENABLE_OTP
+        ? <OtpVerification phone={data.phone} onVerified={handleOtpVerified} />
+        : null; // Should never reach here when OTP is disabled
       case 2: return <UserTypeSelect data={data} onChange={onChange} />;
       case 3: return <LocationMode data={data} onChange={onChange} />;
       case 4: return <DynamicRequirement data={data} onChange={onChange} />;
@@ -146,11 +183,10 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill }: LeadCaptureFl
     }
   };
 
-  const showNav = step !== 1 && step !== 8; // Hide nav on OTP and success steps
+  const showNav = step !== 1 && step !== 8;
 
   return (
     <div className="w-full max-w-lg mx-auto">
-      {/* Progress bar */}
       {step >= 2 && step < 8 && (
         <div className="mb-6">
           <div className="flex justify-between mb-2">
@@ -169,7 +205,6 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill }: LeadCaptureFl
         </div>
       )}
 
-      {/* Step content */}
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -182,7 +217,6 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill }: LeadCaptureFl
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigation buttons */}
       {showNav && (
         <div className="flex gap-3 mt-6">
           {step > 2 && (

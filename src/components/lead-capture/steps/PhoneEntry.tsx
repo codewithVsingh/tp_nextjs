@@ -58,7 +58,7 @@ const PhoneEntry = ({ data, onChange }: StepProps) => (
     </div>
 
     <p className="text-xs text-muted-foreground text-center">
-      🔒 Your number is secure. We'll send an OTP to verify.
+      🔒 Your number is secure & will not be shared.
     </p>
   </div>
 );
