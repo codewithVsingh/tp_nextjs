@@ -5,6 +5,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const respond = (success: boolean, payload: Record<string, unknown> = {}) =>
+  new Response(JSON.stringify({ success, ...payload }), {
+    status: 200,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -14,10 +20,7 @@ Deno.serve(async (req) => {
     const { phone } = await req.json();
 
     if (!phone || !/^[6-9]\d{9}$/.test(phone)) {
-      return new Response(
-        JSON.stringify({ error: "Valid 10-digit Indian phone number required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return respond(false, { error: "Valid 10-digit Indian phone number required" });
     }
 
     const supabase = createClient(
@@ -46,20 +49,14 @@ Deno.serve(async (req) => {
 
     if (insertError) {
       console.error("OTP insert error:", insertError);
-      return new Response(
-        JSON.stringify({ error: "Failed to generate OTP" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return respond(false, { error: "Failed to generate OTP" });
     }
 
     // Send SMS via Ping4SMS
     const apiKey = Deno.env.get("PING4SMS_API_KEY");
     if (!apiKey) {
       console.error("PING4SMS_API_KEY not configured");
-      return new Response(
-        JSON.stringify({ error: "SMS service not configured" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return respond(false, { error: "SMS service not configured" });
     }
 
     const smsMessage = `Your Tutors Parliament verification code is ${otp}. Valid for 5 minutes. Do not share this code.`;
@@ -69,15 +66,9 @@ Deno.serve(async (req) => {
     const smsResult = await smsResponse.text();
     console.log("SMS API response:", smsResult);
 
-    return new Response(
-      JSON.stringify({ success: true, message: "OTP sent successfully" }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return respond(true, { message: "OTP sent successfully" });
   } catch (err) {
     console.error("send-otp error:", err);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return respond(false, { error: "Internal server error" });
   }
 });
