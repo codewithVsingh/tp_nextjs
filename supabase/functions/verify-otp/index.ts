@@ -5,6 +5,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const respond = (success: boolean, payload: Record<string, unknown> = {}) =>
+  new Response(JSON.stringify({ success, ...payload }), {
+    status: 200,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -14,10 +20,7 @@ Deno.serve(async (req) => {
     const { phone, code } = await req.json();
 
     if (!phone || !code) {
-      return new Response(
-        JSON.stringify({ error: "Phone and code are required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return respond(false, { error: "Phone and code are required" });
     }
 
     const supabase = createClient(
@@ -37,10 +40,7 @@ Deno.serve(async (req) => {
       .limit(1);
 
     if (fetchError || !otpRecords || otpRecords.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "Invalid or expired OTP" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return respond(false, { error: "Invalid or expired OTP" });
     }
 
     // Mark OTP as verified
@@ -74,15 +74,9 @@ Deno.serve(async (req) => {
       leadId = newLead?.id || "";
     }
 
-    return new Response(
-      JSON.stringify({ success: true, lead_id: leadId }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return respond(true, { lead_id: leadId });
   } catch (err) {
     console.error("verify-otp error:", err);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return respond(false, { error: "Internal server error" });
   }
 });
