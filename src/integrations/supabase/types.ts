@@ -14,7 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      leads: {
+        Row: {
+          area: string | null
+          board: string | null
+          city: string | null
+          class_level: string | null
+          created_at: string
+          exam: string | null
+          exam_category: string | null
+          frequency: string | null
+          goals: string[] | null
+          hobby_type: string | null
+          id: string
+          mode: string | null
+          name: string | null
+          otp_verified: boolean
+          phone: string
+          preferred_time: string | null
+          prep_level: string | null
+          skill_type: string | null
+          start_time: string | null
+          step_reached: number
+          subjects: string[] | null
+          updated_at: string
+          user_type: string | null
+        }
+        Insert: {
+          area?: string | null
+          board?: string | null
+          city?: string | null
+          class_level?: string | null
+          created_at?: string
+          exam?: string | null
+          exam_category?: string | null
+          frequency?: string | null
+          goals?: string[] | null
+          hobby_type?: string | null
+          id?: string
+          mode?: string | null
+          name?: string | null
+          otp_verified?: boolean
+          phone: string
+          preferred_time?: string | null
+          prep_level?: string | null
+          skill_type?: string | null
+          start_time?: string | null
+          step_reached?: number
+          subjects?: string[] | null
+          updated_at?: string
+          user_type?: string | null
+        }
+        Update: {
+          area?: string | null
+          board?: string | null
+          city?: string | null
+          class_level?: string | null
+          created_at?: string
+          exam?: string | null
+          exam_category?: string | null
+          frequency?: string | null
+          goals?: string[] | null
+          hobby_type?: string | null
+          id?: string
+          mode?: string | null
+          name?: string | null
+          otp_verified?: boolean
+          phone?: string
+          preferred_time?: string | null
+          prep_level?: string | null
+          skill_type?: string | null
+          start_time?: string | null
+          step_reached?: number
+          subjects?: string[] | null
+          updated_at?: string
+          user_type?: string | null
+        }
+        Relationships: []
+      }
+      otp_codes: {
+        Row: {
+          code: string
+          created_at: string
+          expires_at: string
+          id: string
+          phone: string
+          verified: boolean
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          expires_at: string
+          id?: string
+          phone: string
+          verified?: boolean
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          phone?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
