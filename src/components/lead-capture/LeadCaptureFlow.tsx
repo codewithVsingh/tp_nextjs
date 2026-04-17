@@ -316,7 +316,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
 
           <blockquote className="border-l-4 border-primary pl-4 py-2 italic text-sm text-muted-foreground">
             "Found the perfect Math tutor for my daughter in just 2 days. Her grades jumped from C to A in one term."
-            <footer className="not-italic font-semibold text-foreground text-xs mt-2">— Priya M., Bangalore</footer>
+            <footer className="not-italic font-semibold text-foreground text-xs mt-2">— Priya M., New Delhi</footer>
           </blockquote>
         </div>
       </aside>
