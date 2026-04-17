@@ -97,8 +97,8 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
   const [stepIndex, setStepIndex] = useState(0);
   const currentStep: StepId = steps[stepIndex];
 
-  // Visible step counter (skip "phone"/"otp" + final "done" from numbering)
-  const visibleSteps = steps.filter((s) => s !== "done");
+  // Visible step counter (exclude final "done" from numbering)
+  const visibleSteps = steps.filter((s): s is Exclude<StepId, "done"> => s !== "done");
   const currentVisibleIdx = visibleSteps.indexOf(currentStep);
   const totalVisible = visibleSteps.length;
   const progressPct = currentStep === "done" ? 100 : ((currentVisibleIdx + 1) / totalVisible) * 100;
@@ -221,7 +221,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
       case "details": return <DynamicRequirement data={data} onChange={onChange} />;
       case "subjects_goals": return <SubjectsGoals data={data} onChange={onChange} />;
       case "schedule": return <SchedulePrefs data={data} onChange={onChange} />;
-      case "review": return <ReviewSubmit data={data} onEditStep={(s) => handleEditStep(s as StepId)} />;
+      case "review": return <ReviewSubmit data={data} onEditStep={(s) => handleEditStep(s)} />;
       case "done": return <SuccessRedirect data={data} onClose={onClose} />;
     }
   };
