@@ -99,7 +99,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
 
   // Visible step counter (exclude final "done" from numbering)
   const visibleSteps = steps.filter((s): s is Exclude<StepId, "done"> => s !== "done");
-  const currentVisibleIdx = visibleSteps.indexOf(currentStep);
+  const currentVisibleIdx = currentStep === "done" ? -1 : visibleSteps.indexOf(currentStep);
   const totalVisible = visibleSteps.length;
   const progressPct = currentStep === "done" ? 100 : ((currentVisibleIdx + 1) / totalVisible) * 100;
 
