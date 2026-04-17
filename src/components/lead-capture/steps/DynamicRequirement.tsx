@@ -3,35 +3,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import OptionChip from "../OptionChip";
 import {
-  CLASS_OPTIONS, BOARD_OPTIONS, EXAM_CATEGORIES, PREP_LEVELS,
-  SKILL_OPTIONS, HOBBY_OPTIONS, type StepProps,
+  CLASS_OPTIONS_FULL, CLASS_OPTIONS_SELF_SCHOOL, BOARD_OPTIONS,
+  EXAM_CATEGORIES, PREP_LEVELS,
+  SKILL_OPTIONS, SKILL_GOALS,
+  HOBBY_OPTIONS, HOBBY_GOALS,
+  type StepProps,
 } from "../types";
 
 const DynamicRequirement = ({ data, onChange }: StepProps) => {
   const [otherExam, setOtherExam] = useState("");
-  const [otherSkill, setOtherSkill] = useState("");
-  const [otherHobby, setOtherHobby] = useState("");
 
-  // School student flow (child or self)
-  if (data.user_type === "child" || data.user_type === "self") {
+  // === School student flow (My Child OR Myself+School) ===
+  const isSchool =
+    data.user_type === "child" ||
+    (data.user_type === "self" && data.self_subtype === "school");
+
+  if (isSchool) {
+    const classes = data.user_type === "child" ? CLASS_OPTIONS_FULL : CLASS_OPTIONS_SELF_SCHOOL;
     return (
       <div className="space-y-5">
-        <div>
-          <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-1">
-            Academic Details
-          </h2>
-          <p className="text-muted-foreground text-sm">Select class and board</p>
-        </div>
+        <p className="text-muted-foreground text-sm">Select class and board</p>
 
         <div>
           <Label className="mb-2 block">Class *</Label>
           <div className="flex flex-wrap gap-2">
-            {CLASS_OPTIONS.map((c) => (
-              <OptionChip
-                key={c}
-                selected={data.class_level === c}
-                onClick={() => onChange({ class_level: c })}
-              >
+            {classes.map((c) => (
+              <OptionChip key={c} selected={data.class_level === c} onClick={() => onChange({ class_level: c })}>
                 {c}
               </OptionChip>
             ))}
@@ -42,30 +39,116 @@ const DynamicRequirement = ({ data, onChange }: StepProps) => {
           <Label className="mb-2 block">Board *</Label>
           <div className="flex flex-wrap gap-2">
             {BOARD_OPTIONS.map((b) => (
-              <OptionChip
-                key={b}
-                selected={data.board === b}
-                onClick={() => onChange({ board: b })}
-              >
+              <OptionChip key={b} selected={data.board === b} onClick={() => onChange({ board: b })}>
                 {b}
               </OptionChip>
             ))}
           </div>
+          {data.board === "Other" && (
+            <Input
+              placeholder="Specify your board"
+              value={data.board_other}
+              onChange={(e) => onChange({ board_other: e.target.value })}
+              maxLength={50}
+              className="mt-2"
+            />
+          )}
         </div>
       </div>
     );
   }
 
-  // Competitive exams
+  // === College student (Myself + College) ===
+  if (data.user_type === "self" && data.self_subtype === "college") {
+    return (
+      <div className="space-y-5">
+        <p className="text-muted-foreground text-sm">Tell us about your course</p>
+
+        <div>
+          <Label htmlFor="course">Course / Degree *</Label>
+          <Input
+            id="course"
+            placeholder="e.g. B.Tech, B.Com, BA, MBA"
+            value={data.course}
+            onChange={(e) => onChange({ course: e.target.value })}
+            maxLength={80}
+            className="mt-1"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="spec">Subject / Specialization</Label>
+          <Input
+            id="spec"
+            placeholder="e.g. Computer Science, Economics"
+            value={data.specialization}
+            onChange={(e) => onChange({ specialization: e.target.value })}
+            maxLength={80}
+            className="mt-1"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // === Adult learner (Myself + Adult) — treat like skill flow ===
+  const isAdultOrSkill =
+    data.user_type === "skill" ||
+    (data.user_type === "self" && data.self_subtype === "adult");
+
+  if (isAdultOrSkill) {
+    return (
+      <div className="space-y-5">
+        <p className="text-muted-foreground text-sm">Learn practical skills with expert tutors</p>
+
+        <div>
+          <Label className="mb-2 block">What do you want to learn? *</Label>
+          <div className="flex flex-wrap gap-2">
+            {SKILL_OPTIONS.map((s) => (
+              <OptionChip key={s} selected={data.skill_type === s} onClick={() => onChange({ skill_type: s })}>
+                {s}
+              </OptionChip>
+            ))}
+          </div>
+          {data.skill_type === "Other" && (
+            <Input
+              placeholder="Specify the skill / language"
+              value={data.specialization}
+              onChange={(e) => onChange({ specialization: e.target.value })}
+              maxLength={80}
+              className="mt-2"
+            />
+          )}
+        </div>
+
+        <div>
+          <Label className="mb-2 block">What's your goal? *</Label>
+          <div className="flex flex-wrap gap-2">
+            {SKILL_GOALS.map((g) => (
+              <OptionChip key={g} selected={data.skill_goal === g} onClick={() => onChange({ skill_goal: g })}>
+                {g}
+              </OptionChip>
+            ))}
+          </div>
+          {data.skill_goal === "Other" && (
+            <Input
+              placeholder="Tell us your goal"
+              value={data.goal_other}
+              onChange={(e) => onChange({ goal_other: e.target.value })}
+              maxLength={120}
+              className="mt-2"
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // === Competitive exams ===
   if (data.user_type === "exam") {
     return (
       <div className="space-y-5">
-        <div>
-          <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-1">
-            Exam Details
-          </h2>
-          <p className="text-muted-foreground text-sm">Select your target exam</p>
-        </div>
+        <p className="text-muted-foreground text-sm">Select your target exam</p>
 
         <div>
           <Label className="mb-2 block">Exam Category *</Label>
@@ -102,11 +185,7 @@ const DynamicRequirement = ({ data, onChange }: StepProps) => {
           <Label className="mb-2 block">Preparation Level *</Label>
           <div className="flex flex-wrap gap-2">
             {PREP_LEVELS.map((lvl) => (
-              <OptionChip
-                key={lvl}
-                selected={data.prep_level === lvl}
-                onClick={() => onChange({ prep_level: lvl })}
-              >
+              <OptionChip key={lvl} selected={data.prep_level === lvl} onClick={() => onChange({ prep_level: lvl })}>
                 {lvl}
               </OptionChip>
             ))}
@@ -116,72 +195,51 @@ const DynamicRequirement = ({ data, onChange }: StepProps) => {
     );
   }
 
-  // Skill / Language
-  if (data.user_type === "skill") {
-    return (
-      <div className="space-y-5">
-        <div>
-          <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-1">
-            What would you like to learn?
-          </h2>
-          <p className="text-muted-foreground text-sm">Select a skill or language</p>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {SKILL_OPTIONS.map((s) => (
-            <OptionChip
-              key={s}
-              selected={data.skill_type === s}
-              onClick={() => onChange({ skill_type: s })}
-            >
-              {s}
-            </OptionChip>
-          ))}
-        </div>
-        <Input
-          placeholder="Other skill..."
-          value={otherSkill}
-          onChange={(e) => {
-            setOtherSkill(e.target.value);
-            onChange({ skill_type: e.target.value });
-          }}
-          maxLength={100}
-        />
-      </div>
-    );
-  }
-
-  // Hobby
+  // === Hobby ===
   if (data.user_type === "hobby") {
     return (
       <div className="space-y-5">
+        <p className="text-muted-foreground text-sm">Explore your passion with guided learning</p>
+
         <div>
-          <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-1">
-            Pick Your Interest
-          </h2>
-          <p className="text-muted-foreground text-sm">Select a hobby or activity</p>
+          <Label className="mb-2 block">Pick your interest *</Label>
+          <div className="flex flex-wrap gap-2">
+            {HOBBY_OPTIONS.map((h) => (
+              <OptionChip key={h} selected={data.hobby_type === h} onClick={() => onChange({ hobby_type: h })}>
+                {h}
+              </OptionChip>
+            ))}
+          </div>
+          {data.hobby_type === "Other" && (
+            <Input
+              placeholder="Specify the hobby"
+              value={data.specialization}
+              onChange={(e) => onChange({ specialization: e.target.value })}
+              maxLength={80}
+              className="mt-2"
+            />
+          )}
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {HOBBY_OPTIONS.map((h) => (
-            <OptionChip
-              key={h}
-              selected={data.hobby_type === h}
-              onClick={() => onChange({ hobby_type: h })}
-            >
-              {h}
-            </OptionChip>
-          ))}
+        <div>
+          <Label className="mb-2 block">What do you want? *</Label>
+          <div className="flex flex-wrap gap-2">
+            {HOBBY_GOALS.map((g) => (
+              <OptionChip key={g} selected={data.hobby_goal === g} onClick={() => onChange({ hobby_goal: g })}>
+                {g}
+              </OptionChip>
+            ))}
+          </div>
+          {data.hobby_goal === "Other" && (
+            <Input
+              placeholder="Tell us your goal"
+              value={data.goal_other}
+              onChange={(e) => onChange({ goal_other: e.target.value })}
+              maxLength={120}
+              className="mt-2"
+            />
+          )}
         </div>
-        <Input
-          placeholder="Other hobby..."
-          value={otherHobby}
-          onChange={(e) => {
-            setOtherHobby(e.target.value);
-            onChange({ hobby_type: e.target.value });
-          }}
-          maxLength={100}
-        />
       </div>
     );
   }
