@@ -6,6 +6,7 @@ import { SUBJECT_OPTIONS, GOAL_OPTIONS, type StepProps } from "../types";
 
 const SubjectsGoals = ({ data, onChange }: StepProps) => {
   const [otherSubject, setOtherSubject] = useState("");
+  const [otherGoal, setOtherGoal] = useState("");
 
   const toggleSubject = (subject: string) => {
     const updated = data.subjects.includes(subject)
@@ -22,11 +23,19 @@ const SubjectsGoals = ({ data, onChange }: StepProps) => {
   };
 
   const addOtherSubject = () => {
-    const v = otherSubject.trim();
-    if (v && !data.subjects.includes(v)) {
+    const v = otherSubject.trim().replace(/,$/, "").trim();
+    if (v && !data.subjects.some((s) => s.toLowerCase() === v.toLowerCase())) {
       onChange({ subjects: [...data.subjects, v] });
-      setOtherSubject("");
     }
+    setOtherSubject("");
+  };
+
+  const addOtherGoal = () => {
+    const v = otherGoal.trim().replace(/,$/, "").trim();
+    if (v && !data.goals.some((g) => g.toLowerCase() === v.toLowerCase())) {
+      onChange({ goals: [...data.goals, v] });
+    }
+    setOtherGoal("");
   };
 
   // Show subjects only for school students (child OR self+school)
@@ -52,10 +61,24 @@ const SubjectsGoals = ({ data, onChange }: StepProps) => {
           </div>
           <div className="flex gap-2 mt-2">
             <Input
-              placeholder="Other subject (press Enter to add)"
+              placeholder="Other subject (press Enter or , to add)"
               value={otherSubject}
-              onChange={(e) => setOtherSubject(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addOtherSubject())}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v.endsWith(",")) {
+                  setOtherSubject(v);
+                  setTimeout(addOtherSubject, 0);
+                } else {
+                  setOtherSubject(v);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addOtherSubject();
+                }
+              }}
+              onBlur={addOtherSubject}
               maxLength={50}
               className="flex-1"
             />
@@ -74,9 +97,25 @@ const SubjectsGoals = ({ data, onChange }: StepProps) => {
         </div>
         {data.goals.includes("Other") && (
           <Input
-            placeholder="Tell us your goal"
-            value={data.goal_other}
-            onChange={(e) => onChange({ goal_other: e.target.value })}
+            placeholder="Other goal (press Enter or , to add)"
+            value={otherGoal}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v.endsWith(",")) {
+                setOtherGoal(v);
+                setTimeout(addOtherGoal, 0);
+              } else {
+                setOtherGoal(v);
+              }
+              onChange({ goal_other: v.replace(/,$/, "") });
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addOtherGoal();
+              }
+            }}
+            onBlur={addOtherGoal}
             maxLength={120}
             className="mt-2"
           />

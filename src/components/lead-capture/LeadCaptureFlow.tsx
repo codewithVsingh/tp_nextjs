@@ -65,7 +65,7 @@ const STEP_TITLES: Record<StepId, string> = {
 
 const TRUST_HIGHLIGHTS = [
   { icon: Star, title: "4.8/5 Parent Rating", subtitle: "Trusted by 10,000+ families" },
-  { icon: Shield, title: "Verified Tutors Only", subtitle: "Background-checked & vetted" },
+  { icon: Shield, title: "Verified Profiles", subtitle: "Documents reviewed during onboarding" },
   { icon: CheckCircle, title: "Free Demo Class", subtitle: "Try before you commit" },
   { icon: Clock, title: "Match in 24 Hours", subtitle: "Fast, no waiting around" },
 ];
@@ -316,7 +316,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
 
           <blockquote className="border-l-4 border-primary pl-4 py-2 italic text-sm text-muted-foreground">
             "Found the perfect Math tutor for my daughter in just 2 days. Her grades jumped from C to A in one term."
-            <footer className="not-italic font-semibold text-foreground text-xs mt-2">— Priya M., Bangalore</footer>
+            <footer className="not-italic font-semibold text-foreground text-xs mt-2">— Priya M., New Delhi</footer>
           </blockquote>
         </div>
       </aside>
