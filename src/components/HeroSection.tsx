@@ -6,20 +6,31 @@ import { Input } from "@/components/ui/input";
 import { Star, CheckCircle, Users, Clock } from "lucide-react";
 import heroImage from "@/assets/hero-students.jpg";
 
+const formatPhone = (raw: string) => {
+  const d = raw.replace(/\D/g, "").slice(0, 10);
+  if (d.length <= 5) return d;
+  return `${d.slice(0, 5)} ${d.slice(5)}`;
+};
+
 const HeroSection = () => {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const handlePhoneChange = (raw: string) => {
+    setPhone(raw.replace(/\D/g, "").slice(0, 10));
+    setError("");
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone.trim() || phone.replace(/\D/g, "").length < 10) {
-      setError("Please enter a valid phone number");
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      setError("Enter a valid 10-digit mobile number");
       return;
     }
     const params = new URLSearchParams();
-    params.set("phone", phone.trim());
+    params.set("phone", phone);
     if (name.trim()) params.set("name", name.trim());
     navigate(`/demo-booking?${params.toString()}`);
   };
@@ -118,9 +129,12 @@ const HeroSection = () => {
                   <Input
                     placeholder="Phone Number *"
                     type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={11}
                     className={`h-12 rounded-lg ${error ? "border-destructive" : ""}`}
-                    value={phone}
-                    onChange={(e) => { setPhone(e.target.value); setError(""); }}
+                    value={formatPhone(phone)}
+                    onChange={(e) => handlePhoneChange(e.target.value)}
                   />
                   {error && <p className="text-destructive text-xs mt-1">{error}</p>}
                 </div>
