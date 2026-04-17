@@ -56,7 +56,6 @@ const PhoneEntry = ({ data, onChange }: StepProps) => {
             id="lead-phone"
             type="tel"
             inputMode="numeric"
-            pattern="[0-9]*"
             placeholder="98765 43210"
             maxLength={11}
             value={formatPhone(data.phone)}

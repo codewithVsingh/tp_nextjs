@@ -130,7 +130,6 @@ const HeroSection = () => {
                     placeholder="Phone Number *"
                     type="tel"
                     inputMode="numeric"
-                    pattern="[0-9]*"
                     maxLength={11}
                     className={`h-12 rounded-lg ${error ? "border-destructive" : ""}`}
                     value={formatPhone(phone)}

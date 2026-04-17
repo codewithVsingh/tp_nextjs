@@ -69,7 +69,7 @@ const LocationMode = ({ data, onChange }: StepProps) => {
           <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
           <Input
             id="lead-city"
-            placeholder="e.g. Bangalore or 560001"
+            placeholder="e.g. New Delhi or 110001"
             value={query}
             onChange={(e) => handleInputChange(e.target.value)}
             onFocus={() => setShowSuggestions(true)}

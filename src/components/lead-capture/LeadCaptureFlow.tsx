@@ -65,7 +65,7 @@ const STEP_TITLES: Record<StepId, string> = {
 
 const TRUST_HIGHLIGHTS = [
   { icon: Star, title: "4.8/5 Parent Rating", subtitle: "Trusted by 10,000+ families" },
-  { icon: Shield, title: "Verified Tutors Only", subtitle: "Background-checked & vetted" },
+  { icon: Shield, title: "Verified Profiles", subtitle: "Documents reviewed during onboarding" },
   { icon: CheckCircle, title: "Free Demo Class", subtitle: "Try before you commit" },
   { icon: Clock, title: "Match in 24 Hours", subtitle: "Fast, no waiting around" },
 ];
