@@ -22,43 +22,37 @@ const SubjectsGoals = ({ data, onChange }: StepProps) => {
   };
 
   const addOtherSubject = () => {
-    if (otherSubject.trim() && !data.subjects.includes(otherSubject.trim())) {
-      onChange({ subjects: [...data.subjects, otherSubject.trim()] });
+    const v = otherSubject.trim();
+    if (v && !data.subjects.includes(v)) {
+      onChange({ subjects: [...data.subjects, v] });
       setOtherSubject("");
     }
   };
 
-  // Show subjects only for school/self students (exams/skills/hobby may not need this)
-  const showSubjects = data.user_type === "child" || data.user_type === "self";
+  // Show subjects only for school students (child OR self+school)
+  const showSubjects =
+    data.user_type === "child" ||
+    (data.user_type === "self" && data.self_subtype === "school");
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-1">
-          {showSubjects ? "Subjects & Goals" : "What are your goals?"}
-        </h2>
-        <p className="text-muted-foreground text-sm">
-          {showSubjects ? "Select all that apply" : "Select your learning goals"}
-        </p>
-      </div>
+      <p className="text-muted-foreground text-sm">
+        {showSubjects ? "Select all that apply" : "Select your learning goals"}
+      </p>
 
       {showSubjects && (
         <div>
           <Label className="mb-2 block">Subjects *</Label>
           <div className="flex flex-wrap gap-2">
             {SUBJECT_OPTIONS.map((s) => (
-              <OptionChip
-                key={s}
-                selected={data.subjects.includes(s)}
-                onClick={() => toggleSubject(s)}
-              >
+              <OptionChip key={s} selected={data.subjects.includes(s)} onClick={() => toggleSubject(s)}>
                 {s}
               </OptionChip>
             ))}
           </div>
           <div className="flex gap-2 mt-2">
             <Input
-              placeholder="Other subject..."
+              placeholder="Other subject (press Enter to add)"
               value={otherSubject}
               onChange={(e) => setOtherSubject(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addOtherSubject())}
@@ -73,15 +67,20 @@ const SubjectsGoals = ({ data, onChange }: StepProps) => {
         <Label className="mb-2 block">Goals *</Label>
         <div className="flex flex-wrap gap-2">
           {GOAL_OPTIONS.map((g) => (
-            <OptionChip
-              key={g}
-              selected={data.goals.includes(g)}
-              onClick={() => toggleGoal(g)}
-            >
+            <OptionChip key={g} selected={data.goals.includes(g)} onClick={() => toggleGoal(g)}>
               {g}
             </OptionChip>
           ))}
         </div>
+        {data.goals.includes("Other") && (
+          <Input
+            placeholder="Tell us your goal"
+            value={data.goal_other}
+            onChange={(e) => onChange({ goal_other: e.target.value })}
+            maxLength={120}
+            className="mt-2"
+          />
+        )}
       </div>
     </div>
   );

@@ -17,8 +17,8 @@ const navLinks = [
       { label: "Personal Counselling", href: "/counselling/personal" },
     ],
   },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "About Us", href: "/about" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 const Navbar = () => {
