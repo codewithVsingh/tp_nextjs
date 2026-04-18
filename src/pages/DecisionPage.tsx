@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
+import PageBreadcrumbs from "@/components/PageBreadcrumbs";
 import { Button } from "@/components/ui/button";
 import {
   CheckCircle, XCircle, ArrowRight, Star, Shield, Clock, Users,
@@ -15,6 +16,7 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
 import { areas, subjects } from "@/data/seoData";
+import { buildBreadcrumbSchema } from "@/lib/seoSchema";
 
 // ===== PAGE DATA =====
 
@@ -338,7 +340,7 @@ const DecisionPage = () => {
   const SectionCTA = ({ text }: { text?: string }) => (
     <div className="flex flex-wrap gap-3 justify-center my-8">
       <Button variant="cta" size="lg" asChild>
-        <Link to="/demo-booking">{text || "Get Free Demo Class in Delhi"}</Link>
+        <Link to="/demo-booking">{text || "Get a Free Demo Class"}</Link>
       </Button>
       <Button variant="outline" size="lg" onClick={() => openWhatsApp("Hi, I need help choosing tuition")}>
           <MessageCircle className="w-4 h-4 mr-2" /> Ask on WhatsApp
@@ -351,39 +353,54 @@ const DecisionPage = () => {
       <SEOHead
         title={data.metaTitle}
         description={data.metaDescription}
-        keywords={`${data.title}, home tuition Delhi, coaching vs tuition, best tuition Delhi, CBSE tuition Delhi, home tutor near me`}
+        keywords={`${data.title}, home tuition India, coaching vs tuition, best tuition, CBSE tuition, home tutor near me`}
         canonical={pageUrl}
+        structuredData={[
+          faqJsonLd,
+          buildBreadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: data.title, path: `/${data.slug}` },
+          ]),
+        ]}
       />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <Navbar />
       <main className="pb-16 md:pb-0">
         {/* === HERO === */}
         <section className="section-padding bg-gradient-to-br from-primary/5 to-secondary/5">
-          <div className="container mx-auto max-w-4xl text-center">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4"
-            >
-              📊 Decision Guide 2025
-            </motion.span>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="font-heading font-bold text-3xl md:text-5xl text-foreground mb-6"
-            >
-              {data.h1}
-            </motion.h1>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="flex flex-wrap gap-4 justify-center mb-6 text-sm text-muted-foreground"
-            >
-              <span className="flex items-center gap-1.5"><Shield className="h-4 w-4 text-primary" /> Data-Backed Analysis</span>
-              <span className="flex items-center gap-1.5"><Users className="h-4 w-4 text-primary" /> 500+ Parents Surveyed</span>
-              <span className="flex items-center gap-1.5"><Star className="h-4 w-4 text-secondary" /> Delhi-Specific Insights</span>
-            </motion.div>
+          <div className="container mx-auto max-w-4xl">
+            <PageBreadcrumbs
+              className="mb-6"
+              items={[
+                { label: "Home", href: "/" },
+                { label: data.title },
+              ]}
+            />
+            <div className="text-center">
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4"
+              >
+                📊 Decision Guide 2025
+              </motion.span>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="font-heading font-bold text-3xl md:text-5xl text-foreground mb-6"
+              >
+                {data.h1}
+              </motion.h1>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="flex flex-wrap gap-4 justify-center mb-6 text-sm text-muted-foreground"
+              >
+                <span className="flex items-center gap-1.5"><Shield className="h-4 w-4 text-primary" /> Data-Backed Analysis</span>
+                <span className="flex items-center gap-1.5"><Users className="h-4 w-4 text-primary" /> 500+ Parents Surveyed</span>
+                <span className="flex items-center gap-1.5"><Star className="h-4 w-4 text-secondary" /> Expert Insights</span>
+              </motion.div>
+            </div>
           </div>
         </section>
 
