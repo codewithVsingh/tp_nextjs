@@ -46,6 +46,13 @@ const BlogPost = () => {
   const canonicalUrl = `https://tutorsparliament.com/blog/${post.slug}`;
   const currentUrl = typeof window !== "undefined" ? window.location.href : canonicalUrl;
 
+  const handleEmailCapture = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    toast({ title: "Thank you!", description: "Your free study plan will be sent to your email shortly." });
+    setEmail("");
+  };
+
   const breadcrumbItems = [
     { label: "Home", href: "/" },
     { label: "Blog", href: "/blog" },
