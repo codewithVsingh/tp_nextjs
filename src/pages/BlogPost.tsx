@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Calendar, Clock, ArrowLeft, ArrowRight, Download, Mail } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, ArrowRight, Download, Mail, RefreshCw, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,9 @@ import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BlogReadingProgress from "@/components/BlogReadingProgress";
 import BlogCTA from "@/components/BlogCTA";
+import BlogCounsellingCTA from "@/components/BlogCounsellingCTA";
 import BlogSocialShare from "@/components/BlogSocialShare";
+import BlogImage from "@/components/BlogImage";
 import SEOHead from "@/components/SEOHead";
 import PageBreadcrumbs from "@/components/PageBreadcrumbs";
 import { getPostBySlug, getRelatedPosts } from "@/data/blogPosts";
@@ -17,6 +19,7 @@ import { toast } from "@/hooks/use-toast";
 import {
   buildArticleSchema,
   buildBreadcrumbSchema,
+  buildFaqSchema,
   organizationSchema,
 } from "@/lib/seoSchema";
 
