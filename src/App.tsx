@@ -12,6 +12,7 @@ const AboutUs = lazy(() => import("./pages/AboutUs.tsx"));
 const Blog = lazy(() => import("./pages/Blog.tsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.tsx"));
 const BlogCity = lazy(() => import("./pages/BlogCity.tsx"));
+const BlogArchive = lazy(() => import("./pages/BlogArchive.tsx"));
 const Courses = lazy(() => import("./pages/Courses.tsx"));
 const StudentCounselling = lazy(() => import("./pages/StudentCounselling.tsx"));
 const ParentCounselling = lazy(() => import("./pages/ParentCounselling.tsx"));
@@ -55,6 +56,8 @@ const App = () => (
               <Route path="/counselling/personal" element={<PersonalCounselling />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/city/:city" element={<BlogCity />} />
+              <Route path="/blog/archive/:year" element={<BlogArchive />} />
+              <Route path="/blog/archive/:year/:month" element={<BlogArchive />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/tutors/:slug" element={<TutorSeoPage />} />

@@ -403,8 +403,69 @@ export function parseSlug2(slug: string): SeoPageData | null {
   return null;
 }
 
+// ---- Phase 1 keyword aliases (Delhi-wide high-intent) ----
+// Maps short, high-CTR Delhi slugs to existing structured pageData so we don't
+// duplicate templates. New slug → reuse existing subject/area/board paths.
+const ALIAS_MAP: Record<string, () => SeoPageData | null> = {
+  "home-tutor-in-delhi": () => ({
+    type: "area", slug: "home-tutor-in-delhi",
+    area: { slug: "delhi", name: "Delhi", pincode: "110001" },
+    keyword: "Home Tutor in Delhi", isPillar: true,
+    title: "Home Tutor in Delhi — Verified 1-on-1 Tutors | Tutors Parliament",
+    metaDescription: "Hire a verified home tutor in Delhi for CBSE, ICSE & state boards. All subjects, all classes. Free demo class — book in 24 hours.",
+    h1: "Home Tutors in Delhi",
+  }),
+  "tuition-in-delhi": () => ({
+    type: "area-tuition", slug: "tuition-in-delhi",
+    area: { slug: "delhi", name: "Delhi", pincode: "110001" },
+    keyword: "Tuition in Delhi", isPillar: true,
+    title: "Tuition Classes in Delhi — Home & Online | Tutors Parliament",
+    metaDescription: "Personalised tuition in Delhi for Class 1–12. CBSE, ICSE, IB. Verified tutors, transparent fees, free demo class.",
+    h1: "Tuition Classes in Delhi",
+  }),
+  "maths-tutor-delhi": () => {
+    const subj = findSubject("math");
+    if (!subj) return null;
+    return {
+      type: "subject", slug: "maths-tutor-delhi", subject: subj,
+      keyword: "Maths Tutor in Delhi", isPillar: true,
+      title: "Maths Tutor in Delhi — Class 6 to 12 Home Tuition | Tutors Parliament",
+      metaDescription: "Top-rated Maths home tutors in Delhi for Class 6–12. CBSE/ICSE specialists, board & competitive prep. Free demo!",
+      h1: "Best Maths Tutors in Delhi",
+    };
+  },
+  "science-tutor-delhi": () => {
+    const subj = findSubject("science");
+    if (!subj) return null;
+    return {
+      type: "subject", slug: "science-tutor-delhi", subject: subj,
+      keyword: "Science Tutor in Delhi", isPillar: true,
+      title: "Science Tutor in Delhi — Physics, Chemistry, Biology | Tutors Parliament",
+      metaDescription: "Expert Science home tutors in Delhi covering Physics, Chemistry & Biology. Class 6–12, CBSE/ICSE. Book a free demo class.",
+      h1: "Best Science Tutors in Delhi",
+    };
+  },
+  "cbse-tuition-delhi": () => {
+    const board = boards.find(b => b.slug === "cbse");
+    if (!board) return null;
+    return {
+      type: "subject", slug: "cbse-tuition-delhi", board,
+      keyword: "CBSE Tuition in Delhi", isPillar: true,
+      title: "CBSE Tuition in Delhi — Class 1 to 12 Home Tutors | Tutors Parliament",
+      metaDescription: "CBSE-specialist home tutors in Delhi for Class 1–12. NCERT-aligned, board exam prep, sample papers. Free demo class.",
+      h1: "CBSE Home Tuition in Delhi",
+    };
+  },
+};
+
 // ---- Existing 1.0 patterns ----
 export function parseNewSlug(slug: string): SeoPageData | null {
+  // Phase 1 short aliases
+  if (ALIAS_MAP[slug]) {
+    const r = ALIAS_MAP[slug]();
+    if (r) return r;
+  }
+
   // best-home-tutors-in-{area}
   let m = slug.match(/^best-home-tutors-in-(.+)$/);
   if (m) {
