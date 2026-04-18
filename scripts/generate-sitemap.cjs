@@ -179,6 +179,21 @@ priorityServices.forEach(svc => {
   serviceAreas.forEach(a => urls.push(`/${svc}-${a.slug}`));
 });
 
+// Auto-extract every blog post slug from the TS data files (no transpile needed).
+const fsForSlugs = require("fs");
+const pathForSlugs = require("path");
+const blogFiles = ["blogPosts.ts", "blogPostsExtended.ts", "blogPostsGap.ts"];
+const slugRegex = /slug:\s*"([a-z0-9-]+)"/g;
+const blogSlugs = new Set();
+for (const f of blogFiles) {
+  const fp = pathForSlugs.join(__dirname, "..", "src", "data", f);
+  if (!fsForSlugs.existsSync(fp)) continue;
+  const src = fsForSlugs.readFileSync(fp, "utf8");
+  let match;
+  while ((match = slugRegex.exec(src)) !== null) blogSlugs.add(match[1]);
+}
+blogSlugs.forEach(s => urls.push(`/blog/${s}`));
+
 const today = new Date().toISOString().split("T")[0];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
