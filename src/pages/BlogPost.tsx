@@ -261,8 +261,11 @@ const BlogPost = () => {
             </form>
           </motion.div>
 
-          {/* Blog CTA */}
+          {/* Blog CTA — demo-focused */}
           <BlogCTA />
+
+          {/* Counselling CTA — end of article */}
+          <BlogCounsellingCTA />
 
           {/* Related Blogs */}
           <section className="mt-16">
@@ -275,13 +278,12 @@ const BlogPost = () => {
                   className="group rounded-2xl overflow-hidden card-shadow hover:card-shadow-hover transition-all duration-300 hover:-translate-y-1"
                 >
                   <div className="h-40 overflow-hidden">
-                    <img
+                    <BlogImage
                       src={rp.heroImage}
                       alt={rp.title}
                       width={400}
                       height={160}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
                     />
                   </div>
                   <div className="p-4">
