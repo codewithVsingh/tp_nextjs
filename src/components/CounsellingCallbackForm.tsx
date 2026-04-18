@@ -29,7 +29,13 @@ const CounsellingCallbackForm = ({
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    name: string;
+    phone: string;
+    classAge: string;
+    concern: string;
+    type: string;
+  }>({
     name: "",
     phone: "",
     classAge: "",
