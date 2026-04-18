@@ -15,6 +15,7 @@ const Courses = lazy(() => import("./pages/Courses.tsx"));
 const StudentCounselling = lazy(() => import("./pages/StudentCounselling.tsx"));
 const ParentCounselling = lazy(() => import("./pages/ParentCounselling.tsx"));
 const PersonalCounselling = lazy(() => import("./pages/PersonalCounselling.tsx"));
+const Counselling = lazy(() => import("./pages/Counselling.tsx"));
 const FAQ = lazy(() => import("./pages/FAQ.tsx"));
 const TutorSeoPage = lazy(() => import("./pages/TutorSeoPage.tsx"));
 const DemoBooking = lazy(() => import("./pages/DemoBooking.tsx"));
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/courses" element={<Courses />} />
+              <Route path="/counselling" element={<Counselling />} />
               <Route path="/counselling/student" element={<StudentCounselling />} />
               <Route path="/counselling/parent" element={<ParentCounselling />} />
               <Route path="/counselling/personal" element={<PersonalCounselling />} />

@@ -175,6 +175,37 @@ const AIEducationGuide = () => {
           </div>
         </section>
 
+        {/* Bridge to Counselling */}
+        <section className="py-12 md:py-16 bg-muted/50">
+          <div className="container max-w-3xl mx-auto px-4">
+            <motion.div {...fadeUp} className="rounded-2xl border border-border bg-card p-6 md:p-10 text-center space-y-5">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                Not sure what your child actually needs?
+              </h2>
+              <ul className="grid gap-3 sm:grid-cols-3 text-left max-w-2xl mx-auto">
+                {[
+                  "Lack of focus",
+                  "Confused learning approach",
+                  "Overdependence on AI",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm md:text-base text-foreground">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-muted-foreground text-base max-w-xl mx-auto">
+                Talk to an expert counsellor to identify the real problem before it impacts performance.
+              </p>
+              <Button asChild size="lg" className="font-bold" style={{ background: "var(--cta-gradient)" }}>
+                <Link to="/counselling">
+                  Explore Counselling <ArrowRight className="w-4 h-4 ml-1" />
+                </Link>
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
         {/* Final CTA — ALL THREE buttons */}
         <section className="py-16 md:py-20" style={{ background: "var(--hero-gradient)" }}>
           <div className="container max-w-3xl mx-auto px-4 text-center text-primary-foreground">
