@@ -1758,6 +1758,7 @@ const comparisonBlogPosts: BlogPost[] = [
 
 // Merge all blog categories
 import { extendedBlogPosts } from "./blogPostsExtended";
+import { gapBlogPosts } from "./blogPostsGap";
 blogPosts.push(
   ...examBlogPosts,
   ...costBlogPosts,
@@ -1765,6 +1766,7 @@ blogPosts.push(
   ...locationBlogPosts,
   ...comparisonBlogPosts,
   ...extendedBlogPosts,
+  ...gapBlogPosts,
 );
 
 export function getPostBySlug(slug: string): BlogPost | undefined {

@@ -80,7 +80,34 @@ const staticPages = [
   "/is-home-tuition-worth-it-delhi", "/best-home-tuition-or-coaching-for-class-10-delhi",
 ];
 
-const urls = [...staticPages];
+// Phase 1 keyword aliases
+const aliasPages = [
+  "/home-tutor-in-delhi",
+  "/tuition-in-delhi",
+  "/maths-tutor-delhi",
+  "/science-tutor-delhi",
+  "/cbse-tuition-delhi",
+];
+
+// Blog index, paginated index, city archives, year/month archive
+const blogCities = [
+  "delhi", "mumbai", "bangalore", "hyderabad", "pune",
+  "chennai", "kolkata", "ahmedabad", "noida", "gurgaon",
+];
+const blogYears = ["2025", "2026"];
+const blogMonths = [
+  "january", "february", "march", "april", "may", "june",
+  "july", "august", "september", "october", "november", "december",
+];
+
+const blogStaticPages = [
+  ...Array.from({ length: 6 }, (_, i) => `/blog?page=${i + 1}`),
+  ...blogCities.map(c => `/blog/city/${c}`),
+  ...blogYears.map(y => `/blog/archive/${y}`),
+  ...blogYears.flatMap(y => blogMonths.map(m => `/blog/archive/${y}/${m}`)),
+];
+
+const urls = [...staticPages, ...aliasPages, ...blogStaticPages];
 
 // Legacy: subject-delhi
 subjects.forEach(s => urls.push(`/tutors/${s}-delhi`));
@@ -151,6 +178,21 @@ priorityServices.forEach(svc => {
   ncrCities.forEach(city => urls.push(`/${svc}-${city}`));
   serviceAreas.forEach(a => urls.push(`/${svc}-${a.slug}`));
 });
+
+// Auto-extract every blog post slug from the TS data files (no transpile needed).
+const fsForSlugs = require("fs");
+const pathForSlugs = require("path");
+const blogFiles = ["blogPosts.ts", "blogPostsExtended.ts", "blogPostsGap.ts"];
+const slugRegex = /slug:\s*"([a-z0-9-]+)"/g;
+const blogSlugs = new Set();
+for (const f of blogFiles) {
+  const fp = pathForSlugs.join(__dirname, "..", "src", "data", f);
+  if (!fsForSlugs.existsSync(fp)) continue;
+  const src = fsForSlugs.readFileSync(fp, "utf8");
+  let match;
+  while ((match = slugRegex.exec(src)) !== null) blogSlugs.add(match[1]);
+}
+blogSlugs.forEach(s => urls.push(`/blog/${s}`));
 
 const today = new Date().toISOString().split("T")[0];
 
