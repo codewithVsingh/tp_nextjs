@@ -83,12 +83,20 @@ const TutorSeoPage = () => {
   const isFeesPage = pageData.type === "tuition-fees-area" || pageData.type === "subject-area-fees";
   const isTopTutorsPage = pageData.type === "top-tutors-area";
 
-  // JSON-LD
+  // JSON-LD — only emit address fields when we actually know a city; otherwise stay India-wide.
+  const knownCity = pageData.area?.name;
   const educationalOrgJsonLd = {
     "@context": "https://schema.org", "@type": "EducationalOrganization",
     name: "Tutors Parliament", description: meta.description, url: pageUrl,
-    areaServed: { "@type": "City", name: pageData.area?.name || "Delhi" },
-    address: { "@type": "PostalAddress", addressLocality: pageData.area?.name || "Delhi", addressRegion: "Delhi NCR", postalCode: pageData.area?.pincode || "110001", addressCountry: "IN" },
+    areaServed: knownCity
+      ? { "@type": "City", name: knownCity }
+      : { "@type": "Country", name: "India" },
+    address: {
+      "@type": "PostalAddress",
+      ...(knownCity ? { addressLocality: knownCity } : {}),
+      ...(pageData.area?.pincode ? { postalCode: pageData.area.pincode } : {}),
+      addressCountry: "IN",
+    },
   };
   const faqJsonLd = {
     "@context": "https://schema.org", "@type": "FAQPage",
@@ -96,9 +104,14 @@ const TutorSeoPage = () => {
   };
   const localBusinessJsonLd = {
     "@context": "https://schema.org", "@type": "LocalBusiness",
-    name: `Tutors Parliament — ${pageData.area?.name || "Delhi"}`, description: meta.description, url: pageUrl,
+    name: `Tutors Parliament${knownCity ? ` — ${knownCity}` : ""}`, description: meta.description, url: pageUrl,
     telephone: "+91-9873101564",
-    address: { "@type": "PostalAddress", addressLocality: pageData.area?.name || "Delhi", addressRegion: "Delhi NCR", postalCode: pageData.area?.pincode || "110001", addressCountry: "IN" },
+    address: {
+      "@type": "PostalAddress",
+      ...(knownCity ? { addressLocality: knownCity } : {}),
+      ...(pageData.area?.pincode ? { postalCode: pageData.area.pincode } : {}),
+      addressCountry: "IN",
+    },
     aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "2500" },
   };
 

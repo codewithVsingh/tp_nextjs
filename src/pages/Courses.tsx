@@ -104,9 +104,10 @@ const Courses = () => {
   return (
     <>
       <SEOHead
-        title="Tuition Classes in Delhi | CBSE, ICSE, JEE, NEET & More"
-        description="Find expert home tutors and online tuition for CBSE, ICSE, JEE, NEET, and 50+ subjects. Book a free demo class in Delhi NCR today."
-        keywords="tuition classes Delhi, home tutor Delhi, CBSE tuition, ICSE tuition, JEE coaching Delhi, NEET coaching Delhi, online tuition"
+        title="Tuition Classes in India | CBSE, ICSE, JEE, NEET & More"
+        description="Find expert home tutors and online tuition for CBSE, ICSE, JEE, NEET, and 50+ subjects across India. Book a free demo class today."
+        keywords="tuition classes India, home tutor, CBSE tuition, ICSE tuition, JEE coaching, NEET coaching, online tuition"
+        canonical="https://tutorsparliament.com/courses"
       />
       <Navbar />
       <main className="pb-16 md:pb-0">
