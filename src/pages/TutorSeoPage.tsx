@@ -31,6 +31,7 @@ import {
   TrustLayer, FeesSection, TopTutorsNearYou,
   InternalLinkingBlock, ExamConnectionBlock, StickyBottomCTA,
 } from "@/components/SeoPageSections";
+import BlogCounsellingCTA from "@/components/BlogCounsellingCTA";
 
 const TutorSeoPage = () => {
   const params = useParams();
@@ -343,6 +344,13 @@ const TutorSeoPage = () => {
 
         {/* === 5. INTERNAL LINKING BLOCK === */}
         <InternalLinkingBlock pageData={pageData} />
+
+        {/* Counselling CTA — pairs naturally with academic decisions */}
+        <section className="section-padding pt-0">
+          <div className="container mx-auto max-w-3xl">
+            <BlogCounsellingCTA variant="block" />
+          </div>
+        </section>
 
         {/* Subjects / Boards Offered */}
         {pageData.subject && (
