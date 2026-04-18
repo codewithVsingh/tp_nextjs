@@ -23,6 +23,7 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
+import PageBreadcrumbs from "@/components/PageBreadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -221,8 +222,16 @@ const Counselling = () => {
       <main className="pb-16 md:pb-0">
         {/* HERO */}
         <section className="pt-24 pb-16 md:pt-32 md:pb-24" style={{ background: "var(--hero-gradient)" }}>
-          <div className="container max-w-4xl mx-auto px-4 text-center text-primary-foreground">
-            <motion.div {...fadeUp} className="space-y-5">
+          <div className="container max-w-4xl mx-auto px-4 text-primary-foreground">
+            <PageBreadcrumbs
+              variant="onDark"
+              className="mb-6 justify-center"
+              items={[
+                { label: "Home", href: "/" },
+                { label: "Counselling" },
+              ]}
+            />
+            <motion.div {...fadeUp} className="space-y-5 text-center">
               <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider bg-primary-foreground/15 px-3 py-1.5 rounded-full">
                 Expert Counselling
               </span>

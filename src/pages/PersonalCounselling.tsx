@@ -23,6 +23,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
 import CounsellingCallbackForm from "@/components/CounsellingCallbackForm";
+import PageBreadcrumbs from "@/components/PageBreadcrumbs";
 import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/lib/seoSchema";
 
 const fadeUp = {
@@ -110,6 +111,15 @@ const PersonalCounselling = () => {
         {/* HERO */}
         <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden" style={{ background: "var(--hero-gradient)" }}>
           <div className="container mx-auto px-4 lg:px-8 relative z-10">
+            <PageBreadcrumbs
+              variant="onDark"
+              className="mb-6"
+              items={[
+                { label: "Home", href: "/" },
+                { label: "Counselling", href: "/counselling" },
+                { label: "Personal Counselling" },
+              ]}
+            />
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-2xl">
               <span className="text-secondary font-semibold text-sm uppercase tracking-wider">Personal Counselling</span>
               <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-primary-foreground mt-3 mb-6 leading-tight">
