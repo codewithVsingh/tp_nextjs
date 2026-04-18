@@ -8,9 +8,10 @@ interface StickyMobileCTAProps {
   onCtaClick: () => void;
   area?: string;
   classLevel?: string;
+  ctaLabel?: string;
 }
 
-const StickyMobileCTA = ({ onCtaClick, area, classLevel }: StickyMobileCTAProps) => {
+const StickyMobileCTA = ({ onCtaClick, area, classLevel, ctaLabel = "Start Free Demo" }: StickyMobileCTAProps) => {
   const whatsappMsg = `Hi, I need a home tutor${area ? ` in ${area}` : ""}${classLevel ? ` for ${classLevel}` : ""}`;
 
   return (
@@ -30,7 +31,7 @@ const StickyMobileCTA = ({ onCtaClick, area, classLevel }: StickyMobileCTAProps)
           className="flex-1 h-12 text-sm font-bold active:scale-[0.96] transition-transform"
           style={{ background: "var(--cta-gradient)" }}
         >
-          Start Free Demo <ArrowRight className="w-4 h-4 ml-1" />
+          {ctaLabel} <ArrowRight className="w-4 h-4 ml-1" />
         </Button>
         <Button
           variant="outline"

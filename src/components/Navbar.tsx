@@ -210,7 +210,11 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-4">
           {navLinks.map((link) => renderLink(link))}
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary" onClick={() => navigate("/become-a-tutor")}>Become a Tutor</Button>
-          <Button variant="cta" size="lg" onClick={() => navigate("/demo-booking")}>Start Free Demo</Button>
+          {location.pathname.startsWith("/counselling") ? (
+            <Button variant="cta" size="lg" onClick={() => navigate("/counselling#counselling-form")}>Request Callback</Button>
+          ) : (
+            <Button variant="cta" size="lg" onClick={() => navigate("/demo-booking")}>Start Free Demo</Button>
+          )}
         </div>
 
         <button className="md:hidden text-foreground p-2 min-w-[44px] min-h-[44px] flex items-center justify-center" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
@@ -228,7 +232,11 @@ const Navbar = () => {
           >
             {navLinks.map((link) => renderLink(link, true))}
             <Button variant="outline" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/become-a-tutor"); }}>Become a Tutor</Button>
-            <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/demo-booking"); }}>Start Free Demo</Button>
+            {location.pathname.startsWith("/counselling") ? (
+              <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/counselling#counselling-form"); }}>Request Callback</Button>
+            ) : (
+              <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/demo-booking"); }}>Start Free Demo</Button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
