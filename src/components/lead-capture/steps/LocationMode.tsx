@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MapPin, CheckCircle, AlertCircle } from "lucide-react";
 import OptionChip from "../OptionChip";
-import { CITY_OPTIONS, type StepProps } from "../types";
+import { CITY_OPTIONS, isValidCityOrPincode, type StepProps } from "../types";
 
 const MODES = [
   { value: "online", label: "Online", emoji: "💻" },
@@ -18,9 +18,8 @@ const classifyLocation = (city: string): LocationKind => {
   if (!trimmed) return "none";
   // Pure digits → must be exactly 6
   if (/^\d+$/.test(trimmed)) return /^\d{6}$/.test(trimmed) ? "pincode" : "invalid";
-  // Otherwise must match one of the known cities exactly (case-insensitive)
-  const matched = CITY_OPTIONS.find((c) => c.toLowerCase() === trimmed.toLowerCase());
-  return matched ? "city" : "invalid";
+  // Otherwise: accept any plausible city/locality name (≥ 3 letters).
+  return isValidCityOrPincode(trimmed) ? "city" : "invalid";
 };
 
 const LocationMode = ({ data, onChange }: StepProps) => {
@@ -96,7 +95,7 @@ const LocationMode = ({ data, onChange }: StepProps) => {
 
         {kind === "city" && (
           <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
-            <CheckCircle className="w-3 h-3" /> Tutors available in {data.city.trim()}
+            <CheckCircle className="w-3 h-3" /> {data.city.trim()} — we'll match a tutor for you
           </p>
         )}
         {kind === "pincode" && (
@@ -106,7 +105,7 @@ const LocationMode = ({ data, onChange }: StepProps) => {
         )}
         {kind === "invalid" && (
           <p className="text-xs text-destructive mt-1.5 flex items-center gap-1">
-            <AlertCircle className="w-3 h-3" /> Pick a city from the list or enter a valid 6-digit pincode
+            <AlertCircle className="w-3 h-3" /> Enter a city name (3+ letters) or a valid 6-digit pincode
           </p>
         )}
       </div>
