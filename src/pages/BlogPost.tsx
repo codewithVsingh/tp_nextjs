@@ -74,9 +74,22 @@ const BlogPost = () => {
       description: post.metaDescription,
       image: post.heroImage,
       datePublished: post.date,
+      dateModified: post.updatedDate ?? post.date,
       url: canonicalUrl,
     }),
+    ...(post.faqs && post.faqs.length > 0 ? [buildFaqSchema(post.faqs)] : []),
   ];
+
+  // Drop the counselling CTA roughly halfway through the article body.
+  const midContentIndex = Math.max(1, Math.floor(post.content.length / 2));
+
+  // Internal-link suggestions: 2 same-category posts (excluding related ones already shown).
+  const relatedSlugs = new Set(related.map((r) => r.slug));
+  const internalLinks = getRelatedPosts(post.slug, 6)
+    .filter((p) => !relatedSlugs.has(p.slug))
+    .slice(0, 2);
+
+  const keywords = `${post.targetKeyword}, ${post.category}${post.city ? `, ${post.city}` : ""}, Tutors Parliament`;
 
   return (
     <>
@@ -84,6 +97,7 @@ const BlogPost = () => {
         title={post.metaTitle}
         description={post.metaDescription}
         canonical={canonicalUrl}
+        keywords={keywords}
         structuredData={structuredData}
       />
       <BlogReadingProgress />
@@ -103,7 +117,10 @@ const BlogPost = () => {
               </h1>
               <p className="text-primary-foreground/70 text-lg mb-6">{post.metaDescription}</p>
               <div className="flex items-center gap-4 text-sm text-primary-foreground/60 flex-wrap">
-                <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> {post.date}</span>
+                <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> Published {post.date}</span>
+                {post.updatedDate && post.updatedDate !== post.date && (
+                  <span className="flex items-center gap-1"><RefreshCw className="w-4 h-4" /> Updated {post.updatedDate}</span>
+                )}
                 <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {post.readTime}</span>
               </div>
             </motion.div>
@@ -118,12 +135,12 @@ const BlogPost = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="rounded-2xl overflow-hidden card-shadow"
           >
-            <img
+            <BlogImage
               src={post.heroImage}
               alt={post.title}
               width={1200}
               height={630}
-              loading="eager"
+              eager
               fetchPriority="high"
               className="w-full h-64 md:h-96 object-cover"
             />
@@ -139,36 +156,81 @@ const BlogPost = () => {
           {/* Blog Sections */}
           <div className="prose prose-lg max-w-none">
             {post.content.map((section, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-                className="mb-8"
-              >
-                {section.heading && section.headingLevel === "h2" && (
-                  <h2 className="font-heading font-bold text-2xl text-foreground mt-10 mb-4">{section.heading}</h2>
-                )}
-                {section.heading && section.headingLevel === "h3" && (
-                  <h3 className="font-heading font-semibold text-xl text-foreground mt-8 mb-3">{section.heading}</h3>
-                )}
-                {section.paragraphs.map((p, pi) => (
-                  <p key={pi} className="text-muted-foreground leading-relaxed mb-4">{p}</p>
-                ))}
-                {section.bullets && (
-                  <ul className="space-y-2 mb-4">
-                    {section.bullets.map((b, bi) => (
-                      <li key={bi} className="flex items-start gap-2 text-muted-foreground">
-                        <span className="w-1.5 h-1.5 rounded-full bg-secondary mt-2.5 shrink-0" />
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </motion.div>
+              <div key={i}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                  className="mb-8"
+                >
+                  {section.heading && section.headingLevel === "h2" && (
+                    <h2 className="font-heading font-bold text-2xl text-foreground mt-10 mb-4">{section.heading}</h2>
+                  )}
+                  {section.heading && section.headingLevel === "h3" && (
+                    <h3 className="font-heading font-semibold text-xl text-foreground mt-8 mb-3">{section.heading}</h3>
+                  )}
+                  {section.paragraphs.map((p, pi) => (
+                    <p key={pi} className="text-muted-foreground leading-relaxed mb-4">{p}</p>
+                  ))}
+                  {section.bullets && (
+                    <ul className="space-y-2 mb-4">
+                      {section.bullets.map((b, bi) => (
+                        <li key={bi} className="flex items-start gap-2 text-muted-foreground">
+                          <span className="w-1.5 h-1.5 rounded-full bg-secondary mt-2.5 shrink-0" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </motion.div>
+
+                {/* Mid-content counselling CTA */}
+                {i === midContentIndex && <BlogCounsellingCTA variant="inline" />}
+              </div>
             ))}
           </div>
+
+          {/* FAQ Section (also emitted as JSON-LD via FAQPage schema) */}
+          {post.faqs && post.faqs.length > 0 && (
+            <section className="mt-12">
+              <div className="flex items-center gap-2 mb-6">
+                <HelpCircle className="w-5 h-5 text-primary" />
+                <h2 className="font-heading font-bold text-2xl text-foreground">
+                  Frequently Asked Questions
+                </h2>
+              </div>
+              <div className="space-y-4">
+                {post.faqs.map((f, i) => (
+                  <div key={i} className="rounded-xl border border-border bg-card p-5">
+                    <h3 className="font-heading font-semibold text-foreground mb-2">{f.question}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">{f.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Internal links */}
+          {internalLinks.length > 0 && (
+            <aside className="mt-10 rounded-xl border border-border bg-muted/40 p-5">
+              <p className="text-sm font-heading font-semibold text-foreground mb-2">
+                Continue reading
+              </p>
+              <ul className="space-y-1.5">
+                {internalLinks.map((il) => (
+                  <li key={il.id}>
+                    <Link
+                      to={`/blog/${il.slug}`}
+                      className="text-sm text-primary hover:underline flex items-center gap-1.5"
+                    >
+                      <ArrowRight className="w-3.5 h-3.5" /> {il.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          )}
 
           {/* Lead Magnet */}
           <motion.div
