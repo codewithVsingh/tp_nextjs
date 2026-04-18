@@ -8,6 +8,7 @@ import { ArrowRight, MessageCircle, Phone, CheckCircle2, ShieldCheck, Users, Bar
 import { useState } from "react";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
