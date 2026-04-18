@@ -57,3 +57,38 @@ export const buildBreadcrumbSchema = (
     item: `${SITE_URL}${it.path}`,
   })),
 });
+
+export interface ArticleSchemaInput {
+  headline: string;
+  description: string;
+  image?: string;
+  datePublished?: string;
+  dateModified?: string;
+  authorName?: string;
+  url: string;
+}
+
+export const buildArticleSchema = ({
+  headline,
+  description,
+  image,
+  datePublished,
+  dateModified,
+  authorName = "Tutors Parliament",
+  url,
+}: ArticleSchemaInput) => ({
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline,
+  description,
+  image: image ? [image] : undefined,
+  datePublished,
+  dateModified: dateModified || datePublished,
+  author: { "@type": "Organization", name: authorName },
+  publisher: {
+    "@type": "Organization",
+    name: "Tutors Parliament",
+    logo: { "@type": "ImageObject", url: `${SITE_URL}/placeholder.svg` },
+  },
+  mainEntityOfPage: { "@type": "WebPage", "@id": url },
+});
