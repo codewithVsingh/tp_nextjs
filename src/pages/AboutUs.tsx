@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SEOHead from "@/components/SEOHead";
+import { organizationSchema, buildBreadcrumbSchema } from "@/lib/seoSchema";
 
 const values = [
   {
@@ -48,6 +50,19 @@ const team = [
 const AboutUs = () => {
   return (
     <>
+      <SEOHead
+        title="About Tutors Parliament — India's Trusted Tutoring Platform"
+        description="Tutors Parliament connects students across India with expert tutors and counsellors. Learn about our mission, story, and the team building India's leading learning platform."
+        canonical="https://tutorsparliament.com/about"
+        keywords="about Tutors Parliament, India tutoring platform, online tuition company, expert tutors India"
+        structuredData={[
+          organizationSchema,
+          buildBreadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "About Us", path: "/about" },
+          ]),
+        ]}
+      />
       <Navbar />
       <main>
         {/* Hero */}

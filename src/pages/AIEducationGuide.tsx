@@ -9,6 +9,12 @@ import { useState } from "react";
 import { openWhatsApp } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import {
+  buildArticleSchema,
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+  organizationSchema,
+} from "@/lib/seoSchema";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -18,6 +24,29 @@ const fadeUp = {
 };
 
 const whatsappMsg = "Hi, I need a home tutor for my child. I'm concerned about AI dependency.";
+
+const aiGuideFaqs = [
+  {
+    question: "Is AI like ChatGPT good or bad for my child's learning?",
+    answer:
+      "AI tools are useful when used as a supplement, but harmful when they replace genuine thinking. The risk is that students start copying answers without understanding concepts, leading to false confidence and poor exam performance.",
+  },
+  {
+    question: "How do I know if my child is over-relying on AI?",
+    answer:
+      "Common signs include high homework grades but low test scores, inability to explain concepts verbally, reduced focus, and giving up quickly when answers aren't instant. Open conversations with your child about their study process help identify the issue early.",
+  },
+  {
+    question: "Should I ban AI tools at home?",
+    answer:
+      "A complete ban often backfires. Instead, set clear boundaries — AI can be used to clarify a doubt or check work, but not to generate the entire answer. Pair it with a human tutor who teaches the thinking process.",
+  },
+  {
+    question: "Can a home tutor help reverse AI dependency?",
+    answer:
+      "Yes. A good tutor identifies exactly where your child is stuck, teaches the underlying concept, and trains them to think independently. Most students show measurable improvement within 30 days.",
+  },
+];
 
 const BulletList = ({ items, icon: Icon }: { items: string[]; icon: React.ElementType }) => (
   <ul className="space-y-3">
@@ -32,6 +61,7 @@ const BulletList = ({ items, icon: Icon }: { items: string[]; icon: React.Elemen
 
 const AIEducationGuide = () => {
   const [showModal, setShowModal] = useState(false);
+  const canonicalUrl = "https://tutorsparliament.com/ai-in-education-for-kids-guide";
 
   return (
     <>
@@ -39,7 +69,22 @@ const AIEducationGuide = () => {
         title="AI in Education for Kids: Benefits, Risks & What Parents Should Know"
         description="Learn how AI tools impact your child's learning, risks of overuse, and how guided tutoring helps build real understanding."
         keywords="AI in education, AI for kids, ChatGPT for students, AI risks children, home tutor vs AI, guided learning India"
-        canonical="https://tutorsparliament.com/ai-in-education-for-kids-guide"
+        canonical={canonicalUrl}
+        structuredData={[
+          organizationSchema,
+          buildBreadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "AI in Education Guide", path: "/ai-in-education-for-kids-guide" },
+          ]),
+          buildArticleSchema({
+            headline: "AI in Education for Kids: Benefits, Risks & What Parents Should Know",
+            description:
+              "How AI tools impact your child's learning, the risks of overuse, and how guided tutoring helps build real understanding.",
+            url: canonicalUrl,
+            datePublished: "2025-01-15",
+          }),
+          buildFaqSchema(aiGuideFaqs),
+        ]}
       />
       <Navbar />
 
