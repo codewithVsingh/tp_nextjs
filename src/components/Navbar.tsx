@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import TutorRegistrationModal from "./TutorRegistrationModal";
+
+// Lazy-load the tutor registration modal — it's only needed when the user clicks the CTA.
+const TutorRegistrationModal = lazy(() => import("./TutorRegistrationModal"));
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -266,7 +268,11 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      <TutorRegistrationModal open={tutorModalOpen} onOpenChange={setTutorModalOpen} />
+      {tutorModalOpen && (
+        <Suspense fallback={null}>
+          <TutorRegistrationModal open={tutorModalOpen} onOpenChange={setTutorModalOpen} />
+        </Suspense>
+      )}
     </nav>
   );
 };

@@ -65,7 +65,7 @@ const CounsellingCallbackForm = ({
         : form.concern.trim();
       const { error } = await supabase.from("contact_messages").insert({
         name: form.name.trim(),
-        email: "not-provided@counselling.lead",
+        email: null,
         phone: cleanedPhone,
         inquiry_type: `Counselling - ${form.type}`,
         subject: `Counselling Request: ${form.type}`,

@@ -152,7 +152,7 @@ export const CLASS_OPTIONS_SELF_SCHOOL = [
 
 export const BOARD_OPTIONS = ["CBSE", "ICSE", "IB", "State Board", "Other"];
 
-// Curated city list (used for autocomplete; pincode also supported)
+// Suggestions for autocomplete (any other Indian city is also accepted via free-text validation).
 export const CITY_OPTIONS = [
   "Bangalore", "Mumbai", "Delhi", "New Delhi", "Gurgaon", "Noida", "Ghaziabad", "Faridabad",
   "Hyderabad", "Chennai", "Kolkata", "Pune", "Ahmedabad", "Jaipur", "Lucknow",
@@ -160,3 +160,17 @@ export const CITY_OPTIONS = [
   "Patna", "Kochi", "Thiruvananthapuram", "Coimbatore", "Visakhapatnam",
   "Bhubaneswar", "Guwahati", "Dehradun", "Mysore", "Mangalore",
 ];
+
+/**
+ * Permissive location validator used by the lead-capture flow.
+ * Accepts:
+ *  - Any 6-digit Indian pincode
+ *  - Any city/locality name with at least 3 letters
+ */
+export const isValidCityOrPincode = (value: string): boolean => {
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  if (/^\d+$/.test(trimmed)) return /^\d{6}$/.test(trimmed);
+  // At least 3 letters; allows letters, spaces, hyphens, apostrophes, dots
+  return /^[A-Za-z][A-Za-z\s'.-]{2,}$/.test(trimmed);
+};

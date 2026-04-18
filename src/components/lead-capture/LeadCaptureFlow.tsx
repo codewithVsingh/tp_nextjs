@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Star, Shield, CheckCircle, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { trackEvent } from "@/lib/analytics";
-import { CITY_OPTIONS, INITIAL_LEAD_DATA, type LeadData } from "./types";
+import { INITIAL_LEAD_DATA, isValidCityOrPincode, type LeadData } from "./types";
 
 import PhoneEntry from "./steps/PhoneEntry";
 import OtpVerification from "./steps/OtpVerification";
@@ -43,12 +43,7 @@ type StepId =
 
 const isValidPhone = (p: string) => /^[6-9]\d{9}$/.test(p);
 
-const isValidLocation = (city: string) => {
-  const t = city.trim();
-  if (!t) return false;
-  if (/^\d+$/.test(t)) return /^\d{6}$/.test(t);
-  return CITY_OPTIONS.some((c) => c.toLowerCase() === t.toLowerCase());
-};
+const isValidLocation = isValidCityOrPincode;
 
 const STEP_TITLES: Record<StepId, string> = {
   phone: "Enter your number",
@@ -316,7 +311,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
 
           <blockquote className="border-l-4 border-primary pl-4 py-2 italic text-sm text-muted-foreground">
             "Found the perfect Math tutor for my daughter in just 2 days. Her grades jumped from C to A in one term."
-            <footer className="not-italic font-semibold text-foreground text-xs mt-2">— Priya M., New Delhi</footer>
+            <footer className="not-italic font-semibold text-foreground text-xs mt-2">— Priya M., Verified Parent</footer>
           </blockquote>
         </div>
       </aside>

@@ -4,22 +4,21 @@ import { Calendar, Clock, ArrowLeft, ArrowRight, Download, Mail } from "lucide-r
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BlogReadingProgress from "@/components/BlogReadingProgress";
 import BlogCTA from "@/components/BlogCTA";
 import BlogSocialShare from "@/components/BlogSocialShare";
+import SEOHead from "@/components/SEOHead";
+import PageBreadcrumbs from "@/components/PageBreadcrumbs";
 import { getPostBySlug, getRelatedPosts } from "@/data/blogPosts";
 import { toast } from "@/hooks/use-toast";
+import {
+  buildArticleSchema,
+  buildBreadcrumbSchema,
+  organizationSchema,
+} from "@/lib/seoSchema";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -44,7 +43,8 @@ const BlogPost = () => {
     );
   }
 
-  const currentUrl = typeof window !== "undefined" ? window.location.href : "";
+  const canonicalUrl = `https://tutorsparliament.com/blog/${post.slug}`;
+  const currentUrl = typeof window !== "undefined" ? window.location.href : canonicalUrl;
 
   const handleEmailCapture = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,33 +53,43 @@ const BlogPost = () => {
     setEmail("");
   };
 
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Blog", href: "/blog" },
+    { label: post.title },
+  ];
+
+  const structuredData = [
+    organizationSchema,
+    buildBreadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Blog", path: "/blog" },
+      { name: post.title, path: `/blog/${post.slug}` },
+    ]),
+    buildArticleSchema({
+      headline: post.title,
+      description: post.metaDescription,
+      image: post.heroImage,
+      datePublished: post.date,
+      url: canonicalUrl,
+    }),
+  ];
+
   return (
     <>
+      <SEOHead
+        title={post.metaTitle}
+        description={post.metaDescription}
+        canonical={canonicalUrl}
+        structuredData={structuredData}
+      />
       <BlogReadingProgress />
       <Navbar />
       <main>
         {/* Hero */}
         <section className="pt-24 pb-12 section-padding" style={{ background: "var(--hero-gradient)" }}>
           <div className="container mx-auto max-w-4xl">
-            <Breadcrumb className="mb-6">
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/" className="text-primary-foreground/60 hover:text-primary-foreground">Home</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="text-primary-foreground/40" />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/blog" className="text-primary-foreground/60 hover:text-primary-foreground">Blog</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="text-primary-foreground/40" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="text-primary-foreground/80 truncate max-w-[200px]">{post.title}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            <PageBreadcrumbs items={breadcrumbItems} variant="onDark" className="mb-6" />
 
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="bg-secondary text-secondary-foreground text-xs font-semibold px-3 py-1 rounded-full mb-4 inline-block">
@@ -105,7 +115,15 @@ const BlogPost = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="rounded-2xl overflow-hidden card-shadow"
           >
-            <img src={post.heroImage} alt={post.title} className="w-full h-64 md:h-96 object-cover" />
+            <img
+              src={post.heroImage}
+              alt={post.title}
+              width={1200}
+              height={630}
+              loading="eager"
+              fetchPriority="high"
+              className="w-full h-64 md:h-96 object-cover"
+            />
           </motion.div>
         </div>
 
@@ -160,7 +178,7 @@ const BlogPost = () => {
               <Download className="w-6 h-6 text-primary mt-1" />
               <div>
                 <h3 className="font-heading font-bold text-lg text-foreground">Download Free Study Plan PDF</h3>
-                <p className="text-muted-foreground text-sm">Get a personalized study plan template designed for Delhi students. Enter your email below.</p>
+                <p className="text-muted-foreground text-sm">Get a personalized study plan template designed for Indian students. Enter your email below.</p>
               </div>
             </div>
             <form onSubmit={handleEmailCapture} className="flex gap-3 max-w-md">
@@ -195,6 +213,8 @@ const BlogPost = () => {
                     <img
                       src={rp.heroImage}
                       alt={rp.title}
+                      width={400}
+                      height={160}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />

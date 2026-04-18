@@ -17,7 +17,7 @@ export type Database = {
       contact_messages: {
         Row: {
           created_at: string
-          email: string
+          email: string | null
           id: string
           inquiry_type: string
           message: string
@@ -27,7 +27,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          email: string
+          email?: string | null
           id?: string
           inquiry_type: string
           message: string
@@ -37,7 +37,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          email?: string
+          email?: string | null
           id?: string
           inquiry_type?: string
           message?: string

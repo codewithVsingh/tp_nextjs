@@ -120,8 +120,9 @@ const faqCategories = [
 const FAQ = () => (
   <>
     <SEOHead
-      title="FAQs – Home Tuition & Counselling in Delhi"
-      description="Find answers to common questions about home tutors, online classes, and student counselling in Delhi. Tutors Parliament — trusted by 10,000+ students."
+      title="FAQs — Home Tuition, Online Classes & Counselling | Tutors Parliament"
+      description="Answers to common questions about home tutors, online classes, and student/parent counselling across India. Trusted by 10,000+ students."
+      canonical="https://tutorsparliament.com/faq"
     />
     <Navbar />
     <main className="pt-20">

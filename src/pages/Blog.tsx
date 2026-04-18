@@ -7,7 +7,10 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SEOHead from "@/components/SEOHead";
+import PageBreadcrumbs from "@/components/PageBreadcrumbs";
 import { blogPosts, blogCategories } from "@/data/blogPosts";
+import { organizationSchema, buildBreadcrumbSchema } from "@/lib/seoSchema";
 
 const Blog = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -26,17 +29,35 @@ const Blog = () => {
 
   return (
     <>
+      <SEOHead
+        title="Blog & Resources — Tutoring, Study Tips & Parenting | Tutors Parliament"
+        description="Expert tips, study strategies, and education insights for students and parents across India. Articles on tutoring, board exams, and learning."
+        canonical="https://tutorsparliament.com/blog"
+        keywords="education blog India, study tips, tutoring blog, board exam preparation, parenting tips"
+        structuredData={[
+          organizationSchema,
+          buildBreadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+          ]),
+        ]}
+      />
       <Navbar />
       <main>
         {/* Hero */}
         <section className="pt-24 pb-16 section-padding" style={{ background: "var(--hero-gradient)" }}>
           <div className="container mx-auto text-center">
+            <PageBreadcrumbs
+              items={[{ label: "Home", href: "/" }, { label: "Blog" }]}
+              variant="onDark"
+              className="mb-6 justify-center"
+            />
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-primary-foreground mb-4">
                 Blog & <span className="text-secondary">Resources</span>
               </h1>
               <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto mb-8">
-                Expert tips, study strategies, and education insights for Delhi students and parents.
+                Expert tips, study strategies, and education insights for Indian students and parents.
               </p>
 
               {/* Search */}
@@ -94,6 +115,8 @@ const Blog = () => {
                         <img
                           src={post.heroImage}
                           alt={post.title}
+                          width={600}
+                          height={208}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
                         />
@@ -103,7 +126,7 @@ const Blog = () => {
                           </span>
                           {post.popular && (
                             <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
-                              <MapPin className="w-3 h-3" /> Popular in Delhi
+                              <MapPin className="w-3 h-3" /> Popular
                             </span>
                           )}
                         </div>
