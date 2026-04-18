@@ -38,6 +38,11 @@ const milestones = [
   { year: "2022", event: "Crossed 8,000 students with a 95% satisfaction rate" },
   { year: "2023", event: "Introduced AI-powered personalized learning plans" },
   { year: "2024", event: "10,000+ students trained, 500+ expert tutors, India's fastest-growing tutoring platform" },
+  {
+    year: "2025",
+    event:
+      "Expanded to a true Pan-India presence — 15,000+ students impacted and 2,500+ verified tutors across 50+ cities. Launched our AI-driven counselling and learning ecosystem with dedicated career guidance and mental wellness tracks.",
+  },
 ];
 
 const team = [
@@ -98,10 +103,10 @@ const AboutUs = () => {
             >
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {[
-                  { icon: Users, value: "10,000+", label: "Students Trained" },
+                  { icon: Users, value: "15,000+", label: "Students Impacted" },
                   { icon: Award, value: "95%", label: "Success Rate" },
-                  { icon: BookOpen, value: "500+", label: "Expert Tutors" },
-                  { icon: Target, value: "50+", label: "Courses" },
+                  { icon: BookOpen, value: "2,500+", label: "Expert Tutors" },
+                  { icon: Target, value: "50+", label: "Cities Pan-India" },
                 ].map((stat, i) => (
                   <div key={i} className="text-center">
                     <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center mx-auto mb-3">

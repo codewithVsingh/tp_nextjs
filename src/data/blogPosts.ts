@@ -1,3 +1,8 @@
+export interface BlogFAQ {
+  question: string;
+  answer: string;
+}
+
 export interface BlogPost {
   id: number;
   title: string;
@@ -7,11 +12,23 @@ export interface BlogPost {
   metaDescription: string;
   excerpt: string;
   category: string;
+  /** Optional city tag for city-based filtering & local SEO. Use "Pan India" for non-localised posts. */
+  city?: string;
   date: string;
+  /** Last updated date (defaults to date when missing). */
+  updatedDate?: string;
   readTime: string;
   popular: boolean;
+  /** Marked as currently trending — drives the Trending tab. */
+  trending?: boolean;
+  /** Marked as featured — drives the hero Featured slot. */
+  featured?: boolean;
+  /** Approximate view count for ordering by popularity. */
+  views?: number;
   heroImage: string;
   content: BlogSection[];
+  /** Optional FAQ block — emitted as FAQPage JSON-LD on the post page. */
+  faqs?: BlogFAQ[];
 }
 
 export interface BlogSection {
@@ -28,7 +45,35 @@ export const blogCategories = [
   "Parenting",
   "Board Exams",
   "Kids Learning",
+  "Career Guidance",
+  "Mental Health & Student Wellness",
+  "Competitive Exams",
+  "Productivity",
+  "Learning Techniques",
+  "School Education",
+  "City-Based Guides",
+  "Health",
+  "Counselling",
 ];
+
+export const blogCities = [
+  "All Cities",
+  "Pan India",
+  "Delhi",
+  "Mumbai",
+  "Bangalore",
+  "Hyderabad",
+  "Pune",
+  "Chennai",
+  "Kolkata",
+  "Ahmedabad",
+  "Noida",
+  "Gurgaon",
+];
+
+/** Stable fallback when a hero image fails to load. */
+export const FALLBACK_BLOG_IMAGE =
+  "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=80";
 
 export const blogPosts: BlogPost[] = [
   {
@@ -1712,7 +1757,15 @@ const comparisonBlogPosts: BlogPost[] = [
 ];
 
 // Merge all blog categories
-blogPosts.push(...examBlogPosts, ...costBlogPosts, ...problemBlogPosts, ...locationBlogPosts, ...comparisonBlogPosts);
+import { extendedBlogPosts } from "./blogPostsExtended";
+blogPosts.push(
+  ...examBlogPosts,
+  ...costBlogPosts,
+  ...problemBlogPosts,
+  ...locationBlogPosts,
+  ...comparisonBlogPosts,
+  ...extendedBlogPosts,
+);
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
@@ -1723,6 +1776,29 @@ export function getRelatedPosts(currentSlug: string, count = 3): BlogPost[] {
   if (!current) return blogPosts.slice(0, count);
   return blogPosts
     .filter((p) => p.slug !== currentSlug)
-    .sort((a, b) => (a.category === current.category ? -1 : 1))
+    .sort((a, b) => {
+      const aScore =
+        (a.category === current.category ? 2 : 0) +
+        (current.city && a.city === current.city ? 1 : 0);
+      const bScore =
+        (b.category === current.category ? 2 : 0) +
+        (current.city && b.city === current.city ? 1 : 0);
+      return bScore - aScore;
+    })
     .slice(0, count);
+}
+
+/** Posts tagged with a specific city (excludes posts without a city). */
+export function getPostsByCity(city: string): BlogPost[] {
+  return blogPosts.filter((p) => p.city === city);
+}
+
+/** Featured posts for the hero spot on the blog index. */
+export function getFeaturedPosts(count = 3): BlogPost[] {
+  const featured = blogPosts.filter((p) => p.featured);
+  if (featured.length >= count) return featured.slice(0, count);
+  const extras = blogPosts
+    .filter((p) => !p.featured && p.popular)
+    .slice(0, count - featured.length);
+  return [...featured, ...extras];
 }
