@@ -178,7 +178,7 @@ const BlogPost = () => {
               <Download className="w-6 h-6 text-primary mt-1" />
               <div>
                 <h3 className="font-heading font-bold text-lg text-foreground">Download Free Study Plan PDF</h3>
-                <p className="text-muted-foreground text-sm">Get a personalized study plan template designed for Delhi students. Enter your email below.</p>
+                <p className="text-muted-foreground text-sm">Get a personalized study plan template designed for Indian students. Enter your email below.</p>
               </div>
             </div>
             <form onSubmit={handleEmailCapture} className="flex gap-3 max-w-md">
@@ -213,6 +213,8 @@ const BlogPost = () => {
                     <img
                       src={rp.heroImage}
                       alt={rp.title}
+                      width={400}
+                      height={160}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
