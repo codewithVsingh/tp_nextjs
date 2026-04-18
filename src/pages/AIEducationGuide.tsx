@@ -38,8 +38,8 @@ const AIEducationGuide = () => {
       <SEOHead
         title="AI in Education for Kids: Benefits, Risks & What Parents Should Know"
         description="Learn how AI tools impact your child's learning, risks of overuse, and how guided tutoring helps build real understanding."
-        keywords="AI in education, AI for kids, ChatGPT for students, AI risks children, home tutor vs AI, guided learning Delhi"
-        canonical="https://www.example.com/ai-in-education-for-kids-guide"
+        keywords="AI in education, AI for kids, ChatGPT for students, AI risks children, home tutor vs AI, guided learning India"
+        canonical="https://tutorsparliament.com/ai-in-education-for-kids-guide"
       />
       <Navbar />
 
@@ -159,7 +159,7 @@ const AIEducationGuide = () => {
         <section className="py-12 md:py-16 bg-background">
           <div className="container max-w-3xl mx-auto px-4 text-center">
             <motion.div {...fadeUp} className="space-y-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Trusted by 5,000+ Delhi/NCR Parents</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Trusted by 5,000+ Parents Across India</h2>
               <div className="grid gap-4 sm:grid-cols-3">
                 {[
                   { icon: ShieldCheck, label: "Verified & Background-Checked Tutors" },

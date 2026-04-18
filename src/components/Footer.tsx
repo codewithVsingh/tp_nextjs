@@ -35,7 +35,6 @@ const footerSections = [
     items: [
       { label: "FAQs", href: "/faq" },
       { label: "Contact Us", href: "/contact" },
-      { label: "Privacy Policy", href: "#" },
       { label: "Terms & Conditions", href: "/terms-and-conditions" },
     ],
   },
@@ -96,7 +95,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-sm leading-relaxed">
-              Delhi's trusted platform for home &amp; online tutors, exam prep, and counselling.
+              India's trusted platform for home &amp; online tutors, exam prep, and counselling.
             </p>
           </div>
 
@@ -105,11 +104,11 @@ const Footer = () => {
               <span>✔ 10,000+ Students</span>
               <span>✔ 2,500+ Verified Tutors</span>
               <span>✔ 4.8★ Rating</span>
-              <span>✔ Serving Delhi NCR</span>
+              <span>✔ Pan-India Online · Select Cities In-Person</span>
             </div>
             <div className="flex gap-3">
               <Button variant="cta" size="sm" className="h-12 px-6 active:scale-[0.96] transition-transform" asChild>
-                <Link to="/demo">Start Free Demo</Link>
+                <Link to="/demo-booking">Start Free Demo</Link>
               </Button>
               <Button variant="hero-outline" size="sm" className="h-12 px-6 active:scale-[0.96] transition-transform" asChild>
                 <Link to="/become-a-tutor">Become a Tutor</Link>
@@ -246,7 +245,7 @@ const Footer = () => {
         {/* Bottom strip */}
         <div className="border-t border-primary-foreground/10 pt-6 text-center">
           <p className="text-xs text-primary-foreground/40">
-            © {new Date().getFullYear()} Tutors Parliament · Serving Delhi NCR · All Rights Reserved
+            © {new Date().getFullYear()} Tutors Parliament · Online across India · All Rights Reserved
           </p>
         </div>
       </div>

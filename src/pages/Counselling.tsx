@@ -66,8 +66,8 @@ const counsellingTypes = [
   },
   {
     icon: UserPlus,
-    title: "Become a Counsellor",
-    desc: "Are you a certified counsellor? Join our growing network of experts.",
+    title: "Join as a Tutor or Counsellor",
+    desc: "Are you a qualified tutor or counsellor? Join our growing network of experts.",
     href: "/become-a-tutor",
   },
 ];
