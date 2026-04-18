@@ -1,3 +1,8 @@
+export interface BlogFAQ {
+  question: string;
+  answer: string;
+}
+
 export interface BlogPost {
   id: number;
   title: string;
@@ -7,11 +12,23 @@ export interface BlogPost {
   metaDescription: string;
   excerpt: string;
   category: string;
+  /** Optional city tag for city-based filtering & local SEO. Use "Pan India" for non-localised posts. */
+  city?: string;
   date: string;
+  /** Last updated date (defaults to date when missing). */
+  updatedDate?: string;
   readTime: string;
   popular: boolean;
+  /** Marked as currently trending — drives the Trending tab. */
+  trending?: boolean;
+  /** Marked as featured — drives the hero Featured slot. */
+  featured?: boolean;
+  /** Approximate view count for ordering by popularity. */
+  views?: number;
   heroImage: string;
   content: BlogSection[];
+  /** Optional FAQ block — emitted as FAQPage JSON-LD on the post page. */
+  faqs?: BlogFAQ[];
 }
 
 export interface BlogSection {
@@ -28,7 +45,35 @@ export const blogCategories = [
   "Parenting",
   "Board Exams",
   "Kids Learning",
+  "Career Guidance",
+  "Mental Health & Student Wellness",
+  "Competitive Exams",
+  "Productivity",
+  "Learning Techniques",
+  "School Education",
+  "City-Based Guides",
+  "Health",
+  "Counselling",
 ];
+
+export const blogCities = [
+  "All Cities",
+  "Pan India",
+  "Delhi",
+  "Mumbai",
+  "Bangalore",
+  "Hyderabad",
+  "Pune",
+  "Chennai",
+  "Kolkata",
+  "Ahmedabad",
+  "Noida",
+  "Gurgaon",
+];
+
+/** Stable fallback when a hero image fails to load. */
+export const FALLBACK_BLOG_IMAGE =
+  "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&q=80";
 
 export const blogPosts: BlogPost[] = [
   {
