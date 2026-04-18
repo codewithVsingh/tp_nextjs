@@ -147,7 +147,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
-                <span>New Delhi, India</span>
+                <span>India · Online Pan-India</span>
               </li>
             </ul>
             <button
@@ -194,7 +194,7 @@ const Footer = () => {
                   </li>
                   <li className="flex items-start gap-2 min-h-[44px]">
                     <MapPin className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
-                    <span>New Delhi, India</span>
+                    <span>India · Online Pan-India</span>
                   </li>
                 </ul>
                 <button
