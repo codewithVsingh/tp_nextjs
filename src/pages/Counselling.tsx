@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/lib/seoSchema";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -205,6 +206,15 @@ const Counselling = () => {
         title="Student, Parent & Personal Counselling in India | Tutors Parliament"
         description="Get expert student, parent, and personal counselling across India. Identify learning gaps, improve focus, and build long-term academic success with guided support."
         keywords="student counselling India, parent counselling, academic guidance, career counselling students, learning gaps help, child focus issues, AI impact on education"
+        canonical="https://tutorsparliament.com/counselling"
+        structuredData={[
+          organizationSchema,
+          buildFaqSchema(faqs),
+          buildBreadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Counselling", path: "/counselling" },
+          ]),
+        ]}
       />
       <Navbar />
 

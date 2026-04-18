@@ -23,6 +23,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
 import CounsellingCallbackForm from "@/components/CounsellingCallbackForm";
+import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/lib/seoSchema";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -93,6 +94,16 @@ const PersonalCounselling = () => {
         title="Personal Counselling India | Life, Career & Relationship Guidance"
         description="Personal counselling India for life clarity, relationship counselling, stress management, and online life coaching. Confidential sessions across India."
         keywords="personal counselling India, relationship counselling India, stress management counselling, life coaching India online"
+        canonical="https://tutorsparliament.com/counselling/personal"
+        structuredData={[
+          organizationSchema,
+          buildFaqSchema(faqs),
+          buildBreadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Counselling", path: "/counselling" },
+            { name: "Personal Counselling", path: "/counselling/personal" },
+          ]),
+        ]}
       />
       <Navbar />
       <main>
