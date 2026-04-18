@@ -115,6 +115,8 @@ const Blog = () => {
                         <img
                           src={post.heroImage}
                           alt={post.title}
+                          width={600}
+                          height={208}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
                         />
@@ -124,7 +126,7 @@ const Blog = () => {
                           </span>
                           {post.popular && (
                             <span className="bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
-                              <MapPin className="w-3 h-3" /> Popular in Delhi
+                              <MapPin className="w-3 h-3" /> Popular
                             </span>
                           )}
                         </div>
