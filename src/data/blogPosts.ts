@@ -1757,7 +1757,15 @@ const comparisonBlogPosts: BlogPost[] = [
 ];
 
 // Merge all blog categories
-blogPosts.push(...examBlogPosts, ...costBlogPosts, ...problemBlogPosts, ...locationBlogPosts, ...comparisonBlogPosts);
+import { extendedBlogPosts } from "./blogPostsExtended";
+blogPosts.push(
+  ...examBlogPosts,
+  ...costBlogPosts,
+  ...problemBlogPosts,
+  ...locationBlogPosts,
+  ...comparisonBlogPosts,
+  ...extendedBlogPosts,
+);
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
@@ -1768,6 +1776,29 @@ export function getRelatedPosts(currentSlug: string, count = 3): BlogPost[] {
   if (!current) return blogPosts.slice(0, count);
   return blogPosts
     .filter((p) => p.slug !== currentSlug)
-    .sort((a, b) => (a.category === current.category ? -1 : 1))
+    .sort((a, b) => {
+      const aScore =
+        (a.category === current.category ? 2 : 0) +
+        (current.city && a.city === current.city ? 1 : 0);
+      const bScore =
+        (b.category === current.category ? 2 : 0) +
+        (current.city && b.city === current.city ? 1 : 0);
+      return bScore - aScore;
+    })
     .slice(0, count);
+}
+
+/** Posts tagged with a specific city (excludes posts without a city). */
+export function getPostsByCity(city: string): BlogPost[] {
+  return blogPosts.filter((p) => p.city === city);
+}
+
+/** Featured posts for the hero spot on the blog index. */
+export function getFeaturedPosts(count = 3): BlogPost[] {
+  const featured = blogPosts.filter((p) => p.featured);
+  if (featured.length >= count) return featured.slice(0, count);
+  const extras = blogPosts
+    .filter((p) => !p.featured && p.popular)
+    .slice(0, count - featured.length);
+  return [...featured, ...extras];
 }
