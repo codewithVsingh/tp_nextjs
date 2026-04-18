@@ -10,8 +10,9 @@ const navLinks = [
   { label: "Courses", href: "/courses" },
   {
     label: "Counselling",
-    href: "#",
+    href: "/counselling",
     children: [
+      { label: "All Counselling", href: "/counselling" },
       { label: "Student Counselling", href: "/counselling/student" },
       { label: "Parent Counselling", href: "/counselling/parent" },
       { label: "Personal Counselling", href: "/counselling/personal" },
