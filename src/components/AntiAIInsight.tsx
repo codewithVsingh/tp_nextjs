@@ -27,18 +27,18 @@ const AntiAIInsight = () => (
         </h2>
 
         <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-          AI tools can give answers instantly — but real learning comes from guided understanding.
-          Discover how a dedicated tutor builds critical thinking your child will carry for life.
+          AI tools can give answers instantly — but real learning comes from guided thinking.
+          Identify learning gaps early and help your child build real understanding.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
           <Button asChild size="lg" className="w-full sm:w-auto font-semibold text-base" style={{ background: "var(--cta-gradient)" }}>
-            <Link to="/tutor-registry">
-              Start Free Demo
+            <Link to="/counselling">
+              Get Expert Guidance
             </Link>
           </Button>
-          <Link 
-            to="/ai-in-education-for-kids-guide" 
+          <Link
+            to="/ai-in-education-for-kids-guide"
             className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium underline underline-offset-4"
           >
             Learn more about AI risks
