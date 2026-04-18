@@ -22,6 +22,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
 import CounsellingCallbackForm from "@/components/CounsellingCallbackForm";
+import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/lib/seoSchema";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -80,6 +81,16 @@ const ParentCounselling = () => {
         title="Parent Counselling India | Help Your Child Focus & Succeed"
         description="Expert parent counselling India. Child education guidance, academic stress help for students, and how to help your child focus on studies — online across India."
         keywords="parent counselling India, child education guidance India, academic stress help for students, how to help child focus on studies"
+        canonical="https://tutorsparliament.com/counselling/parent"
+        structuredData={[
+          organizationSchema,
+          buildFaqSchema(faqs),
+          buildBreadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Counselling", path: "/counselling" },
+            { name: "Parent Counselling", path: "/counselling/parent" },
+          ]),
+        ]}
       />
       <Navbar />
       <main>

@@ -23,6 +23,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
 import CounsellingCallbackForm from "@/components/CounsellingCallbackForm";
+import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/lib/seoSchema";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },

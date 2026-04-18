@@ -22,6 +22,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
 import CounsellingCallbackForm from "@/components/CounsellingCallbackForm";
+import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/lib/seoSchema";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -75,6 +76,16 @@ const StudentCounselling = () => {
         title="Student Counselling India | Career Guidance After 10th & 12th"
         description="Expert student counselling in India. Get career guidance after 10th & 12th, academic counselling online, and the right strategy to choose your career after school."
         keywords="student counselling India, career guidance after 10th and 12th, academic counselling online India, how to choose career after school"
+        canonical="https://tutorsparliament.com/counselling/student"
+        structuredData={[
+          organizationSchema,
+          buildFaqSchema(faqs),
+          buildBreadcrumbSchema([
+            { name: "Home", path: "/" },
+            { name: "Counselling", path: "/counselling" },
+            { name: "Student Counselling", path: "/counselling/student" },
+          ]),
+        ]}
       />
       <Navbar />
       <main>
