@@ -457,7 +457,7 @@ const Counselling = () => {
       </main>
 
       <Footer />
-      <StickyMobileCTA onCtaClick={scrollToForm} />
+      <StickyMobileCTA onCtaClick={scrollToForm} ctaLabel="Request Callback" />
     </>
   );
 };
