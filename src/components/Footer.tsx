@@ -8,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import FooterCTAStrip from "@/components/FooterCTAStrip";
 
 const footerSections = [
   {
@@ -40,6 +41,9 @@ const footerSections = [
   },
 ];
 
+// All slugs below resolve via existing TutorSeoPage routing (parseSlug → legacy
+// area-delhi / subject-delhi patterns, ALIAS_MAP, and subject-tuition-in-area-class-N).
+// DO NOT add slugs that are not covered by these resolvers — they will 404.
 const seoSections = [
   {
     id: "locations",
@@ -48,8 +52,11 @@ const seoSections = [
       { label: "Home Tutor in South Delhi", slug: "south-delhi-delhi" },
       { label: "Home Tutor in North Delhi", slug: "north-delhi-delhi" },
       { label: "Home Tutor in West Delhi", slug: "west-delhi-delhi" },
+      { label: "Home Tutor in East Delhi", slug: "east-delhi-delhi" },
       { label: "Home Tutor in Dwarka", slug: "dwarka-delhi" },
       { label: "Home Tutor in Rohini", slug: "rohini-delhi" },
+      { label: "Home Tutor in Noida", slug: "noida-delhi" },
+      { label: "Home Tutor in Gurgaon", slug: "gurgaon-delhi" },
     ],
     viewAllLabel: "View All Locations",
     viewAllLink: "/courses",
@@ -62,14 +69,33 @@ const seoSections = [
       { label: "Science Home Tutor", slug: "science-delhi" },
       { label: "Physics Home Tutor", slug: "physics-delhi" },
       { label: "Chemistry Home Tutor", slug: "chemistry-delhi" },
+      { label: "Biology Home Tutor", slug: "biology-delhi" },
+      { label: "English Home Tutor", slug: "english-delhi" },
+      { label: "Accounts Home Tutor", slug: "accounts-delhi" },
+      { label: "Economics Home Tutor", slug: "economics-delhi" },
     ],
     viewAllLabel: "View All Subjects",
+    viewAllLink: "/courses",
+  },
+  {
+    id: "class-board",
+    title: "Tutors by Class & Board",
+    items: [
+      { label: "Class 6–8 Home Tutors", slug: "math-tuition-in-south-delhi-class-8" },
+      { label: "Class 9–10 Home Tutors", slug: "math-tuition-in-south-delhi-class-10" },
+      { label: "Class 11–12 Home Tutors", slug: "math-tuition-in-south-delhi-class-12" },
+      { label: "CBSE Home Tutors in Delhi", slug: "cbse-tuition-delhi" },
+      { label: "ICSE Home Tutors in Delhi", slug: "math-home-tutor-south-delhi-class-10-icse" },
+    ],
+    viewAllLabel: "View All Boards",
     viewAllLink: "/courses",
   },
   {
     id: "languages",
     title: "Tutors by Language",
     items: [
+      { label: "Hindi Home Tutor", slug: "hindi-delhi" },
+      { label: "English Speaking Tutor", slug: "english-delhi" },
       { label: "French Tutor", slug: "french-delhi" },
       { label: "German Tutor", slug: "german-delhi" },
       { label: "Spanish Tutor", slug: "spanish-delhi" },
@@ -81,7 +107,9 @@ const seoSections = [
 
 const Footer = () => {
   return (
-    <footer id="contact" className="bg-foreground text-primary-foreground/70">
+    <>
+      <FooterCTAStrip />
+      <footer id="contact" className="bg-foreground text-primary-foreground/70">
       <div className="container mx-auto px-4 py-12 md:py-16">
         {/* Brand + Trust + CTA */}
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-10">
