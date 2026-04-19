@@ -1790,6 +1790,7 @@ blogPosts.push(
   ...extendedBlogPosts,
   ...gapBlogPosts,
   ...massGapBlogPosts,
+  ...finalGapBlogPosts,
 );
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
