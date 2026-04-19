@@ -293,9 +293,35 @@ const Blog = () => {
             </p>
 
             {pageItems.length === 0 ? (
-              <p className="text-center text-muted-foreground py-12">
-                No articles found. Try a different search, category or city.
-              </p>
+              <div className="py-8">
+                <p className="text-center text-muted-foreground mb-8">
+                  No articles match this filter combination yet. Here are related reads:
+                </p>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {(activeCategory !== "All"
+                    ? blogPosts.filter((p) => p.category === activeCategory)
+                    : activeCity !== "All Cities"
+                      ? blogPosts.filter((p) => p.city === activeCity)
+                      : blogPosts
+                  )
+                    .slice(0, 6)
+                    .map((post) => (
+                      <Link
+                        key={post.id}
+                        to={`/blog/${post.slug}`}
+                        className="block bg-background rounded-2xl overflow-hidden card-shadow hover:card-shadow-hover transition-all p-6"
+                      >
+                        <span className="bg-secondary/15 text-secondary text-xs font-semibold px-2 py-1 rounded-full">
+                          {post.category}
+                        </span>
+                        <h3 className="font-heading font-bold text-base text-foreground mt-3 mb-2 line-clamp-2">
+                          {post.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm line-clamp-2">{post.excerpt}</p>
+                      </Link>
+                    ))}
+                </div>
+              </div>
             ) : (
               <>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
