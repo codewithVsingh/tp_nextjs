@@ -1780,6 +1780,7 @@ const comparisonBlogPosts: BlogPost[] = [
 import { extendedBlogPosts } from "./blogPostsExtended";
 import { gapBlogPosts } from "./blogPostsGap";
 import { massGapBlogPosts } from "./blogPostsMassGap";
+import { finalGapBlogPosts } from "./blogPostsFinal";
 blogPosts.push(
   ...examBlogPosts,
   ...costBlogPosts,
@@ -1789,6 +1790,7 @@ blogPosts.push(
   ...extendedBlogPosts,
   ...gapBlogPosts,
   ...massGapBlogPosts,
+  ...finalGapBlogPosts,
 );
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
