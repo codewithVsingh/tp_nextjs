@@ -182,7 +182,7 @@ priorityServices.forEach(svc => {
 // Auto-extract every blog post slug from the TS data files (no transpile needed).
 const fsForSlugs = require("fs");
 const pathForSlugs = require("path");
-const blogFiles = ["blogPosts.ts", "blogPostsExtended.ts", "blogPostsGap.ts"];
+const blogFiles = ["blogPosts.ts", "blogPostsExtended.ts", "blogPostsGap.ts", "blogPostsMassGap.ts", "blogPostsFinal.ts"];
 const slugRegex = /slug:\s*"([a-z0-9-]+)"/g;
 const blogSlugs = new Set();
 for (const f of blogFiles) {
