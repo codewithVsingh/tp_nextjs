@@ -270,8 +270,15 @@ const Footer = () => {
           ))}
         </Accordion>
 
+        {/* Trust signals (lightweight inline) */}
+        <div className="border-t border-primary-foreground/10 pt-6 pb-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-primary-foreground/60">
+          <span>⭐ 4.8+ Rating</span>
+          <span>👨‍🎓 10,000+ Students</span>
+          <span>✅ 2,500+ Verified Tutors</span>
+        </div>
+
         {/* Bottom strip */}
-        <div className="border-t border-primary-foreground/10 pt-6 text-center">
+        <div className="text-center">
           <p className="text-xs text-primary-foreground/40">
             © {new Date().getFullYear()} Tutors Parliament · Online across India · All Rights Reserved
           </p>
