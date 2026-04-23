@@ -24,6 +24,9 @@ export interface LeadData {
   preferred_time: string;
   frequency: string;
   start_time: string;
+  preferred_tutor_gender: string;
+  source_page: string;
+  source_cta: string;
 }
 
 export const INITIAL_LEAD_DATA: LeadData = {
@@ -52,6 +55,9 @@ export const INITIAL_LEAD_DATA: LeadData = {
   preferred_time: "",
   frequency: "",
   start_time: "",
+  preferred_tutor_gender: "",
+  source_page: "",
+  source_cta: "",
 };
 
 export interface StepProps {

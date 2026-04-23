@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";;
 import { openWhatsApp } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -106,10 +106,11 @@ export const FeesSection = ({ pageData }: { pageData: SeoPageData }) => {
                 { range: "Classes 9–10", fee: "₹500–₹1,000/hr", note: "Board exam prep", highlight: classNum >= 9 && classNum <= 10 },
                 { range: "Classes 11–12", fee: "₹600–₹1,200/hr", note: "Advanced + entrance prep", highlight: classNum >= 11 },
                 { range: "JEE / NEET / CUET", fee: "₹800–₹1,500/hr", note: "Mock tests, strategy", highlight: false },
+                { range: "Bulk Discount (10+ hrs)", fee: "10% OFF", note: "Monthly pre-paid plans", highlight: true, special: true },
               ].map((row, i) => (
-                <tr key={i} className={`border-b border-border/50 transition-colors ${row.highlight ? "bg-primary/5" : "hover:bg-muted/30"}`}>
+                <tr key={i} className={`border-b border-border/50 transition-colors ${(row as any).special ? "bg-secondary/10" : row.highlight ? "bg-primary/5" : "hover:bg-muted/30"}`}>
                   <td className="p-3 text-foreground text-sm font-medium">{row.range}</td>
-                  <td className="p-3 text-primary font-bold text-sm">{row.fee}</td>
+                  <td className={`p-3 font-bold text-sm ${(row as any).special ? "text-secondary" : "text-primary"}`}>{row.fee}</td>
                   <td className="p-3 text-muted-foreground text-xs hidden sm:table-cell">{row.note}</td>
                 </tr>
               ))}
@@ -117,8 +118,8 @@ export const FeesSection = ({ pageData }: { pageData: SeoPageData }) => {
           </table>
         </div>
         <div className="text-center mt-6">
-          <Button variant="cta" size="lg" asChild>
-            <Link to="/demo-booking">Get Exact Fees for Your Requirement</Link>
+          <Button id="cta-fees-table-demo" variant="cta" size="lg" asChild>
+            <Link href={`/demo-booking?from=${pageData.slug}&cta=fees_table`}>Get Exact Fees for Your Requirement</Link>
           </Button>
         </div>
       </div>
@@ -130,13 +131,24 @@ export const FeesSection = ({ pageData }: { pageData: SeoPageData }) => {
 export const TopTutorsNearYou = ({ pageData }: { pageData: SeoPageData }) => {
   const area = pageData.area?.name || "Delhi";
   const subj = pageData.subject?.name || "All Subjects";
-  const tutors = [
+  const seed = pageData.slug.length;
+  const pool = [
     { name: "Priya Sharma", initials: "PS", exp: "8 yrs", subjects: "Maths & Science", rating: 4.9, classes: "6-12", board: "CBSE/ICSE" },
     { name: "Rajesh Kumar", initials: "RK", exp: "12 yrs", subjects: "Physics & Chemistry", rating: 4.8, classes: "9-12", board: "CBSE/IB" },
     { name: "Anita Verma", initials: "AV", exp: "6 yrs", subjects: "English & Hindi", rating: 4.9, classes: "1-10", board: "All Boards" },
     { name: "Dr. Suresh Gupta", initials: "SG", exp: "15 yrs", subjects: "Biology & Chemistry", rating: 4.7, classes: "11-12", board: "CBSE" },
     { name: "Meena Devi", initials: "MD", exp: "7 yrs", subjects: "Accounts & Economics", rating: 4.8, classes: "11-12", board: "CBSE/ISC" },
+    { name: "Sanjay Joshi", initials: "SJ", exp: "10 yrs", subjects: "Maths & Physics", rating: 4.9, classes: "9-12", board: "CBSE/IIT-JEE" },
+    { name: "Vikas Singh", initials: "VS", exp: "9 yrs", subjects: "Coding & Robotics", rating: 5.0, classes: "4-12", board: "Skill Development" },
+    { name: "Kiran Mazumdar", initials: "KM", exp: "5 yrs", subjects: "History & Geography", rating: 4.6, classes: "6-10", board: "CBSE/ICSE" },
   ];
+
+  // Pick 3 tutors based on seed for variety
+  const tutors = [...pool].sort((a, b) => {
+    const hashA = a.name.length + seed;
+    const hashB = b.name.length + seed;
+    return (hashA % 5) - (hashB % 5);
+  }).slice(0, 3);
 
   return (
     <section className="py-12 bg-muted/20">
@@ -182,7 +194,7 @@ export const TopTutorsNearYou = ({ pageData }: { pageData: SeoPageData }) => {
                   <span className="text-xs text-muted-foreground ml-1">{t.rating}</span>
                 </div>
                 <Button variant="cta" size="sm" className="text-xs h-7 px-3" asChild>
-                  <Link to="/demo-booking">Book Demo</Link>
+                  <Link href="/demo-booking">Book Demo</Link>
                 </Button>
               </div>
             </motion.div>
@@ -190,7 +202,7 @@ export const TopTutorsNearYou = ({ pageData }: { pageData: SeoPageData }) => {
         </div>
         <div className="text-center mt-6">
           <Button variant="outline" asChild>
-            <Link to="/demo-booking" className="flex items-center gap-2">
+            <Link href="/demo-booking" className="flex items-center gap-2">
               View All Tutor Profiles <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
@@ -224,11 +236,11 @@ export const InternalLinkingBlock = ({ pageData }: { pageData: SeoPageData }) =>
 
   const sections = [
     { title: "Related Subjects", links: subjectLinks, icon: categoryIcon.subject },
-    { title: "Nearby Areas (Delhi NCR)", links: areaLinks, icon: categoryIcon.area },
+    { title: "Nearby Tutors", links: areaLinks, icon: categoryIcon.area },
     { title: "Find What You Need", links: intentLinks, icon: categoryIcon.intent },
     { title: "Compare & Decide", links: decisionLinks, icon: categoryIcon.decision },
     { title: "Exam Preparation", links: examLinks, icon: categoryIcon.exam },
-    { title: "Helpful Reads", links: blogLinks, icon: categoryIcon.blog },
+    { title: "Helpful Guides", links: blogLinks, icon: categoryIcon.blog },
     { title: "Explore More Classes", links: serviceLinks, icon: categoryIcon.service },
   ].filter(s => s.links.length > 0);
 
@@ -264,7 +276,7 @@ export const InternalLinkingBlock = ({ pageData }: { pageData: SeoPageData }) =>
                   {section.links.map((l, li) => (
                     <li key={li}>
                       <Link
-                        to={l.href}
+                        href={l.href}
                         className="flex items-start gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
                       >
                         <ArrowRight className="h-3 w-3 shrink-0 mt-1 group-hover:translate-x-0.5 transition-transform" />
@@ -312,7 +324,7 @@ export const ExamConnectionBlock = ({ pageData }: { pageData: SeoPageData }) => 
           {examLinks.map((e, i) => (
             <Link
               key={i}
-              to={e.href}
+              href={e.href}
               className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-background hover:border-primary hover:text-primary transition-colors text-sm text-foreground font-medium card-shadow"
             >
               <ArrowRight className="h-3.5 w-3.5" />
@@ -328,12 +340,12 @@ export const ExamConnectionBlock = ({ pageData }: { pageData: SeoPageData }) => 
 // ===== STICKY BOTTOM CTA =====
 export const StickyBottomCTA = ({ pageData }: { pageData: SeoPageData }) => (
   <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-background/95 backdrop-blur-md border-t border-border p-3 flex gap-2">
-    <Button variant="cta" className="flex-1 py-5 text-sm font-semibold" asChild>
-      <Link to="/demo-booking">
+    <Button id="cta-sticky-mobile-demo" variant="cta" className="flex-1 py-5 text-sm font-semibold" asChild>
+      <Link href={`/demo-booking?from=${pageData.slug}&cta=sticky_mobile`}>
         Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
       </Link>
     </Button>
-    <Button variant="outline" className="py-5 text-sm font-semibold" onClick={() => openWhatsApp("Hi, I need a tutor")}>
+    <Button id="cta-sticky-mobile-whatsapp" variant="outline" className="py-5 text-sm font-semibold" onClick={() => openWhatsApp(`Hi, I need a tutor for ${pageData.keyword} in ${pageData.area?.name || "Delhi"}`)}>
       <MessageCircle className="w-4 h-4 mr-1" /> Talk Now
     </Button>
   </div>

@@ -1,7 +1,7 @@
 import { USER_TYPES, type LeadData } from "../types";
 
 export type ReviewEditTarget =
-  | "phone" | "user_type" | "self_subtype" | "location" | "details" | "subjects_goals" | "schedule";
+  | "phone" | "user_type" | "self_subtype" | "location" | "details" | "subjects_goals" | "schedule" | "tutor_gender";
 
 interface ReviewSubmitProps {
   data: LeadData;
@@ -67,6 +67,7 @@ const ReviewSubmit = ({ data, onEditStep }: ReviewSubmitProps) => {
         <Row label="Time" value={data.preferred_time} target="schedule" onEdit={onEditStep} />
         <Row label="Frequency" value={data.frequency} target="schedule" onEdit={onEditStep} />
         <Row label="Start" value={data.start_time} target="schedule" onEdit={onEditStep} />
+        <Row label="Preferred Tutor Gender" value={data.preferred_tutor_gender} target="tutor_gender" onEdit={onEditStep} />
       </div>
     </div>
   );

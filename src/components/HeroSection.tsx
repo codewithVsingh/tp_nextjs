@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,7 @@ const HeroSection = () => {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handlePhoneChange = (raw: string) => {
     setPhone(raw.replace(/\D/g, "").slice(0, 10));
@@ -32,11 +33,11 @@ const HeroSection = () => {
     const params = new URLSearchParams();
     params.set("phone", phone);
     if (name.trim()) params.set("name", name.trim());
-    navigate(`/demo-booking?${params.toString()}`);
+    router.push(`/demo-booking?${params.toString()}`);
   };
 
   const handleCTAClick = () => {
-    navigate("/demo-booking");
+    router.push("/demo-booking");
   };
 
   return (
@@ -45,11 +46,17 @@ const HeroSection = () => {
       className="relative min-h-screen flex items-center pt-16 overflow-hidden"
       style={{ background: "var(--hero-gradient)" }}
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-15"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/80 to-primary/60" />
+      <div className="absolute inset-0 z-0">
+        <Image
+          src={heroImage}
+          alt="Happy students studying"
+          fill
+          priority
+          className="object-cover opacity-15"
+          sizes="100vw"
+        />
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/80 to-primary/60 z-[1]" />
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">

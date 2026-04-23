@@ -16,6 +16,7 @@ import DynamicRequirement from "./steps/DynamicRequirement";
 import SubjectsGoals from "./steps/SubjectsGoals";
 import SchedulePrefs from "./steps/SchedulePrefs";
 import ReviewSubmit from "./steps/ReviewSubmit";
+import TutorGenderPreference from "./steps/TutorGenderPreference";
 import SuccessRedirect from "./steps/SuccessRedirect";
 
 // TODO: Set to true when OTP verification is ready for production
@@ -27,6 +28,8 @@ interface LeadCaptureFlowProps {
   prefill?: Partial<LeadData>;
   /** When true, shows a desktop side-panel with trust signals next to the form */
   showDesktopPanel?: boolean;
+  sourcePage?: string;
+  sourceCta?: string;
 }
 
 type StepId =
@@ -38,6 +41,7 @@ type StepId =
   | "details"
   | "subjects_goals"
   | "schedule"
+  | "tutor_gender"
   | "review"
   | "done";
 
@@ -54,6 +58,7 @@ const STEP_TITLES: Record<StepId, string> = {
   details: "Tell us about your requirement",
   subjects_goals: "Subjects & Goals",
   schedule: "Schedule Preferences",
+  tutor_gender: "Tutor Preference",
   review: "Review your details",
   done: "All done!",
 };
@@ -65,8 +70,20 @@ const TRUST_HIGHLIGHTS = [
   { icon: Clock, title: "Match in 24 Hours", subtitle: "Fast, no waiting around" },
 ];
 
-const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPanel = false }: LeadCaptureFlowProps) => {
-  const [data, setData] = useState<LeadData>({ ...INITIAL_LEAD_DATA, ...prefill });
+const LeadCaptureFlow = ({ 
+  onClose, 
+  source = "unknown", 
+  prefill, 
+  showDesktopPanel = false, 
+  sourcePage, 
+  sourceCta 
+}: LeadCaptureFlowProps) => {
+  const [data, setData] = useState<LeadData>(() => ({
+    ...INITIAL_LEAD_DATA, 
+    ...prefill,
+    source_page: sourcePage || prefill?.source_page || "",
+    source_cta: sourceCta || prefill?.source_cta || ""
+  }));
   const [leadId, setLeadId] = useState<string | null>(null);
 
   const onChange = useCallback((updates: Partial<LeadData>) => {
@@ -85,7 +102,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
       data.user_type === "child" ||
       (data.user_type === "self" && data.self_subtype === "school");
     if (showSubjects) base.push("subjects_goals");
-    base.push("schedule", "review", "done");
+    base.push("schedule", "tutor_gender", "review", "done");
     return base;
   }, [data.user_type, data.self_subtype]);
 
@@ -121,6 +138,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
       }
       case "subjects_goals": return data.subjects.length > 0 && data.goals.length > 0;
       case "schedule": return !!data.preferred_time && !!data.frequency && !!data.start_time;
+      case "tutor_gender": return !!data.preferred_tutor_gender;
       case "review": return true;
       default: return false;
     }
@@ -128,6 +146,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
 
   const persistFields = () => ({
     name: data.name || null,
+    phone: data.phone,
     user_type: data.user_type || null,
     city: data.city || null,
     area: data.area || null,
@@ -144,12 +163,17 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
     preferred_time: data.preferred_time || null,
     frequency: data.frequency || null,
     start_time: data.start_time || null,
+    preferred_tutor_gender: data.preferred_tutor_gender || null,
+    source_page: data.source_page || null,
+    source_cta: data.source_cta || null,
   });
+
+  const getTable = () => "leads";
 
   const saveLead = async (stepReached: number) => {
     if (!leadId) return;
     try {
-      await supabase.from("leads").update({ ...persistFields(), step_reached: stepReached }).eq("id", leadId);
+      await supabase.from(getTable()).update({ ...persistFields(), step_reached: stepReached }).eq("id", leadId);
     } catch (err) { console.error("Failed to save lead:", err); }
   };
 
@@ -157,13 +181,20 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
   const createLeadWithoutOtp = async () => {
     try {
       const { data: lead, error } = await supabase
-        .from("leads")
-        .insert({ phone: data.phone, name: data.name || null, otp_verified: false, step_reached: 2 })
+        .from(getTable())
+        .insert({ 
+          phone: data.phone, 
+          name: data.name || null, 
+          otp_verified: false, 
+          step_reached: 2,
+          source_page: data.source_page || null,
+          source_cta: data.source_cta || null
+        })
         .select("id")
         .single();
-      if (error) { console.error("Failed to create lead:", error); return null; }
+      if (error) { console.error("Failed to create lead:", error.message || JSON.stringify(error)); return null; }
       return lead.id;
-    } catch (err) { console.error("Failed to create lead:", err); return null; }
+    } catch (err: any) { console.error("Failed to create lead (catch):", err?.message || JSON.stringify(err)); return null; }
   };
 
   const goTo = (idx: number) => setStepIndex(Math.max(0, Math.min(steps.length - 1, idx)));
@@ -216,6 +247,7 @@ const LeadCaptureFlow = ({ onClose, source = "unknown", prefill, showDesktopPane
       case "details": return <DynamicRequirement data={data} onChange={onChange} />;
       case "subjects_goals": return <SubjectsGoals data={data} onChange={onChange} />;
       case "schedule": return <SchedulePrefs data={data} onChange={onChange} />;
+      case "tutor_gender": return <TutorGenderPreference data={data} onChange={onChange} />;
       case "review": return <ReviewSubmit data={data} onEditStep={(s) => handleEditStep(s)} />;
       case "done": return <SuccessRedirect data={data} onClose={onClose} />;
     }

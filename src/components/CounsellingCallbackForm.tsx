@@ -63,13 +63,12 @@ const CounsellingCallbackForm = ({
       const message = form.classAge.trim()
         ? `Class/Age: ${form.classAge.trim()}\n\n${form.concern.trim()}`
         : form.concern.trim();
-      const { error } = await supabase.from("contact_messages").insert({
+      const { error } = await supabase.from("counselling_requests").insert({
         name: form.name.trim(),
-        email: null,
         phone: cleanedPhone,
-        inquiry_type: `Counselling - ${form.type}`,
-        subject: `Counselling Request: ${form.type}`,
-        message,
+        type: form.type,
+        class_age: form.classAge.trim() || null,
+        concern: form.concern.trim(),
       });
       if (error) throw error;
       setSubmitted(true);

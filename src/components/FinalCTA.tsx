@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MessageCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { openWhatsApp } from "@/lib/whatsapp";
 
 const FinalCTA = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <section className="section-padding">
@@ -24,7 +24,7 @@ const FinalCTA = () => {
             Join thousands of successful students. Start your free demo and see the difference expert tutoring makes.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button variant="hero" size="lg" className="text-base px-10 py-6" onClick={() => navigate("/demo-booking")}>
+            <Button variant="hero" size="lg" className="text-base px-10 py-6" onClick={() => router.push("/demo-booking")}>
               Start Free Demo <ArrowRight className="w-5 h-5" />
             </Button>
             <Button 

@@ -92,3 +92,47 @@ export const buildArticleSchema = ({
   },
   mainEntityOfPage: { "@type": "WebPage", "@id": url },
 });
+
+export const buildLocalBusinessSchema = ({
+  name,
+  area,
+  description,
+  url,
+  image
+}: {
+  name: string;
+  area: string;
+  description: string;
+  url: string;
+  image?: string;
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name,
+  image: image || `${SITE_URL}/placeholder.svg`,
+  "@id": url,
+  url: url,
+  telephone: "+91-1234567890", // Placeholder or dynamic if available
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: area,
+    addressLocality: "New Delhi",
+    addressRegion: "Delhi",
+    postalCode: "110001", // Should be dynamic from area data
+    addressCountry: "IN"
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 28.6139,
+    longitude: 77.2090
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: [
+      "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+    ],
+    opens: "08:00",
+    closes: "21:00"
+  },
+  description
+});

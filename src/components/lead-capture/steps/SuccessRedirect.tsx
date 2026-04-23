@@ -29,6 +29,7 @@ const buildWhatsAppMessage = (data: LeadData): string => {
     data.goals.length > 0 ? `Goals: ${data.goals.join(", ")}` : "",
     data.preferred_time ? `Time: ${data.preferred_time}` : "",
     data.frequency ? `Frequency: ${data.frequency}` : "",
+    data.preferred_tutor_gender ? `Preferred Tutor Gender: ${data.preferred_tutor_gender}` : "",
   ].filter(Boolean).join("\n");
 
   return lines;

@@ -1,17 +1,15 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Headphones, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";;
 
 interface BlogCounsellingCTAProps {
   variant?: "inline" | "block";
+  postSlug?: string;
 }
 
-/**
- * Counselling-focused CTA shown mid-content and at the end of blog posts.
- * Different copy + icon vs the generic BlogCTA so users see two distinct offers.
- */
-const BlogCounsellingCTA = ({ variant = "block" }: BlogCounsellingCTAProps) => {
+const BlogCounsellingCTA = ({ variant = "block", postSlug }: BlogCounsellingCTAProps) => {
+  const trackingParams = postSlug ? `?from=blog_${postSlug}&cta=blog_counselling_${variant}` : "";
   if (variant === "inline") {
     return (
       <motion.aside
@@ -31,8 +29,8 @@ const BlogCounsellingCTA = ({ variant = "block" }: BlogCounsellingCTAProps) => {
             Talk to a Tutors Parliament expert counsellor — first call is free.
           </p>
         </div>
-        <Button variant="cta" size="sm" className="gap-2 w-full sm:w-auto" asChild>
-          <Link to="/counselling">
+        <Button id={`cta-blog-counselling-${variant}`} variant="cta" size="sm" className="gap-2 w-full sm:w-auto" asChild>
+          <Link href={`/counselling${trackingParams}`}>
             <MessageCircle className="w-4 h-4" /> Talk to Counsellor
           </Link>
         </Button>
@@ -58,13 +56,13 @@ const BlogCounsellingCTA = ({ variant = "block" }: BlogCounsellingCTAProps) => {
         India over a single 30-minute conversation. The first call is on us.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Button variant="cta" size="lg" className="gap-2" asChild>
-          <Link to="/counselling">
+        <Button id={`cta-blog-counselling-${variant}-main`} variant="cta" size="lg" className="gap-2" asChild>
+          <Link href={`/counselling${trackingParams}`}>
             <MessageCircle className="w-5 h-5" /> Talk to Counsellor
           </Link>
         </Button>
         <Button variant="outline" size="lg" className="gap-2" asChild>
-          <Link to="/counselling/student">Explore Counselling Plans</Link>
+          <Link href="/counselling/student">Explore Counselling Plans</Link>
         </Button>
       </div>
     </motion.section>

@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import Link from "next/link";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -42,18 +43,20 @@ const PageBreadcrumbs = ({ items, variant = "default", className = "" }: PageBre
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (
-            <BreadcrumbItem key={`${item.label}-${i}`}>
+            <React.Fragment key={`${item.label}-${i}`}>
               {i > 0 && <BreadcrumbSeparator className={sepClass} />}
-              {isLast || !item.href ? (
-                <BreadcrumbPage className={pageClass}>{item.label}</BreadcrumbPage>
-              ) : (
-                <BreadcrumbLink asChild>
-                  <Link to={item.href} className={linkClass}>
-                    {item.label}
-                  </Link>
-                </BreadcrumbLink>
-              )}
-            </BreadcrumbItem>
+              <BreadcrumbItem>
+                {isLast || !item.href ? (
+                  <BreadcrumbPage className={pageClass}>{item.label}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link href={item.href} className={linkClass}>
+                      {item.label}
+                    </Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </React.Fragment>
           );
         })}
       </BreadcrumbList>

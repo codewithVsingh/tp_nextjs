@@ -1,5 +1,5 @@
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { openWhatsApp } from "@/lib/whatsapp";
 import {
@@ -114,7 +114,7 @@ const Footer = () => {
         {/* Brand + Trust + CTA */}
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-10">
           <div className="max-w-md">
-            <Link to="/" className="flex items-center gap-2.5 mb-3">
+            <Link href="/" className="flex items-center gap-2.5 mb-3">
               <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-lg">T</span>
               </div>
@@ -136,10 +136,10 @@ const Footer = () => {
             </div>
             <div className="flex gap-3">
               <Button variant="cta" size="sm" className="h-12 px-6 active:scale-[0.96] transition-transform" asChild>
-                <Link to="/demo-booking">Start Free Demo</Link>
+                <Link href="/demo-booking">Start Free Demo</Link>
               </Button>
               <Button variant="hero-outline" size="sm" className="h-12 px-6 active:scale-[0.96] transition-transform" asChild>
-                <Link to="/become-a-tutor">Become a Tutor</Link>
+                <Link href="/become-a-tutor">Become a Tutor</Link>
               </Button>
             </div>
           </div>
@@ -156,7 +156,7 @@ const Footer = () => {
               <ul className="space-y-2.5 text-sm">
                 {section.items.map((item) => (
                   <li key={item.label}>
-                    <Link to={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</Link>
+                    <Link href={item.href} className="hover:text-primary-foreground transition-colors">{item.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -199,7 +199,7 @@ const Footer = () => {
                   <ul className="space-y-1 text-sm">
                     {section.items.map((item) => (
                       <li key={item.label}>
-                        <Link to={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</Link>
+                        <Link href={item.href} className="block py-2 min-h-[44px] flex items-center hover:text-primary-foreground transition-colors">{item.label}</Link>
                       </li>
                     ))}
                   </ul>
@@ -250,7 +250,7 @@ const Footer = () => {
                   {section.items.map((item) => (
                     <li key={item.slug}>
                       <Link
-                        to={`/tutors/${item.slug}`}
+                        href={`/tutors/${item.slug}`}
                         className="flex items-center gap-1 hover:text-primary-foreground transition-colors py-1 min-h-[44px]"
                       >
                         <ArrowRight className="w-3 h-3 text-secondary shrink-0" />
@@ -260,7 +260,7 @@ const Footer = () => {
                   ))}
                 </ul>
                 <Link
-                  to={section.viewAllLink}
+                  href={section.viewAllLink}
                   className="text-xs font-medium text-secondary hover:text-secondary/80 transition-colors"
                 >
                   {section.viewAllLabel} →

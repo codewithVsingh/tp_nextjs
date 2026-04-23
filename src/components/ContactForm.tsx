@@ -39,7 +39,12 @@ const contactSchema = z.object({
 
 type FormState = z.infer<typeof contactSchema>;
 
-const ContactForm = () => {
+interface ContactFormProps {
+  sourcePage?: string;
+  sourceCta?: string;
+}
+
+const ContactForm = ({ sourcePage, sourceCta }: ContactFormProps) => {
   const [form, setForm] = useState<FormState>({
     name: "", email: "", phone: "", inquiry_type: "", subject: "", message: "",
   });
@@ -74,9 +79,17 @@ const ContactForm = () => {
         inquiry_type: parsed.data.inquiry_type,
         subject: parsed.data.subject,
         message: parsed.data.message,
+        // @ts-ignore
+        source_page: sourcePage || null,
+        // @ts-ignore
+        source_cta: sourceCta || null,
       });
       if (error) throw error;
-      trackEvent("contact_submitted", { inquiry_type: parsed.data.inquiry_type });
+      trackEvent("contact_submitted", { 
+        inquiry_type: parsed.data.inquiry_type,
+        source_page: sourcePage,
+        source_cta: sourceCta 
+      });
       setSubmitted(true);
       toast({ title: "Inquiry sent!", description: "We'll get back to you within 24 hours." });
     } catch (err) {

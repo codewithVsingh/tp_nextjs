@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Lazy-load the tutor registration modal — it's only needed when the user clicks the CTA.
@@ -34,8 +35,8 @@ const Navbar = () => {
   const [tutorModalOpen, setTutorModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => {
@@ -53,13 +54,13 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (location.hash) {
-      const el = document.querySelector(location.hash);
+    if (typeof window !== "undefined" && window.location.hash) {
+      const el = document.querySelector(window.location.hash);
       if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 100);
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [location]);
+  }, [pathname]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -94,7 +95,7 @@ const Navbar = () => {
   const handleNavClick = (href: string) => {
     setIsOpen(false);
     setMobileDropdownOpen(false);
-    if (location.pathname === "/" && href.startsWith("/#")) {
+    if (pathname === "/" && href.startsWith("/#")) {
       const el = document.querySelector(href.replace("/", ""));
       if (el) el.scrollIntoView({ behavior: "smooth" });
     }
@@ -125,7 +126,7 @@ const Navbar = () => {
                   className="pl-4 space-y-1 overflow-hidden"
                 >
                   {link.children.map((child) => (
-                    <Link key={child.label} to={child.href} className={`${mobileLinkClass} min-h-[44px] flex items-center`} onClick={() => handleNavClick(child.href)}>
+                    <Link key={child.label} href={child.href} className={`${mobileLinkClass} min-h-[44px] flex items-center`} onClick={() => handleNavClick(child.href)}>
                       {child.label}
                     </Link>
                   ))}
@@ -162,7 +163,7 @@ const Navbar = () => {
                   {link.children.map((child) => (
                     <Link
                       key={child.label}
-                      to={child.href}
+                      href={child.href}
                       className="block px-5 py-3 text-sm text-muted-foreground hover:text-primary hover:bg-accent/60 transition-colors"
                       onClick={() => setDropdownOpen(false)}
                     >
@@ -178,7 +179,7 @@ const Navbar = () => {
     }
 
     if (link.href.startsWith("/#")) {
-      if (location.pathname === "/") {
+      if (pathname === "/") {
         return (
           <a key={link.label} href={link.href.replace("/", "")} className={cls}
             onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}>
@@ -186,12 +187,12 @@ const Navbar = () => {
           </a>
         );
       }
-      return <Link key={link.label} to={link.href} className={cls} onClick={() => setIsOpen(false)}>{link.label}</Link>;
+      return <Link key={link.label} href={link.href} className={cls} onClick={() => setIsOpen(false)}>{link.label}</Link>;
     }
 
-    const isActive = location.pathname === link.href;
+    const isActive = pathname === link.href;
     return (
-      <Link key={link.label} to={link.href} className={`${cls} ${isActive ? "!text-primary" : ""}`} onClick={() => setIsOpen(false)}>
+      <Link key={link.label} href={link.href} className={`${cls} ${isActive ? "!text-primary" : ""}`} onClick={() => setIsOpen(false)}>
         {link.label}
       </Link>
     );
@@ -200,7 +201,7 @@ const Navbar = () => {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/95 backdrop-blur-md border-b border-border shadow-sm" : "bg-background/95 backdrop-blur-md border-b border-border"}`}>
       <div className="container mx-auto flex items-center justify-between h-16 px-4 lg:px-8">
-        <Link to="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-lg">T</span>
           </div>
@@ -211,11 +212,11 @@ const Navbar = () => {
 
         <div className="hidden md:flex items-center gap-4">
           {navLinks.map((link) => renderLink(link))}
-          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary" onClick={() => navigate("/become-a-tutor")}>Become a Tutor</Button>
-          {location.pathname.startsWith("/counselling") ? (
-            <Button variant="cta" size="lg" onClick={() => navigate("/counselling#counselling-form")}>Request Callback</Button>
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary" onClick={() => router.push("/become-a-tutor")}>Become a Tutor</Button>
+          {pathname.startsWith("/counselling") ? (
+            <Button variant="cta" size="lg" onClick={() => router.push("/counselling#counselling-form")}>Request Callback</Button>
           ) : (
-            <Button variant="cta" size="lg" onClick={() => navigate("/demo-booking")}>Start Free Demo</Button>
+            <Button variant="cta" size="lg" onClick={() => router.push("/demo-booking")}>Start Free Demo</Button>
           )}
         </div>
 
@@ -233,11 +234,11 @@ const Navbar = () => {
             className="md:hidden bg-background border-b border-border px-4 pb-4 overflow-hidden"
           >
             {navLinks.map((link) => renderLink(link, true))}
-            <Button variant="outline" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/become-a-tutor"); }}>Become a Tutor</Button>
-            {location.pathname.startsWith("/counselling") ? (
-              <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/counselling#counselling-form"); }}>Request Callback</Button>
+            <Button variant="outline" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); router.push("/become-a-tutor"); }}>Become a Tutor</Button>
+            {pathname.startsWith("/counselling") ? (
+              <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); router.push("/counselling#counselling-form"); }}>Request Callback</Button>
             ) : (
-              <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); navigate("/demo-booking"); }}>Start Free Demo</Button>
+              <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); router.push("/demo-booking"); }}>Start Free Demo</Button>
             )}
           </motion.div>
         )}

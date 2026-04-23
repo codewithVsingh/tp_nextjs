@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Upload, Video, ArrowRight, ArrowLeft, X, Loader2, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { openWhatsApp } from "@/lib/whatsapp";
+import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "tutor_registration_draft";
 
@@ -29,6 +30,8 @@ const EXPERIENCE_OPTIONS = ["0–1 years", "1–3 years", "3–5 years", "5+ yea
 const STATUS_OPTIONS = ["Student", "Working Professional", "Full-time Tutor"];
 const CITIES = ["Delhi", "Noida", "Gurgaon", "Faridabad", "Ghaziabad"];
 const STATES = ["Delhi", "Haryana", "Uttar Pradesh", "Rajasthan", "Punjab", "Maharashtra", "Karnataka", "Tamil Nadu", "West Bengal", "Bihar", "Madhya Pradesh"];
+const GENDER_OPTIONS = ["Male", "Female", "Other", "Prefer not to say"];
+const COMMUNICATION_LEVELS = ["Competent", "Proficient", "Expert", "Master"];
 
 interface FormData {
   name: string;
@@ -37,6 +40,8 @@ interface FormData {
   state: string;
   city: string;
   pincode: string;
+  gender: string;
+  age: string;
   subjects: string[];
   classes: string[];
   boards: string[];
@@ -47,6 +52,7 @@ interface FormData {
   specialization: string;
   experience: string;
   currentStatus: string;
+  communicationLevel: string;
   availableDays: string[];
   timeSlots: string[];
   expectedFees: string;
@@ -58,8 +64,9 @@ interface FormData {
 
 const defaultForm: FormData = {
   name: "", phone: "", email: "", state: "", city: "", pincode: "",
+  gender: "", age: "",
   subjects: [], classes: [], boards: [], teachingMode: "", preferredLocations: "", languages: [],
-  qualification: "", specialization: "", experience: "", currentStatus: "", availableDays: [], timeSlots: [], expectedFees: "", travelWilling: "", travelRadius: "",
+  qualification: "", specialization: "", experience: "", currentStatus: "", communicationLevel: "", availableDays: [], timeSlots: [], expectedFees: "", travelWilling: "", travelRadius: "",
   bio: "", videoLink: "",
 };
 
@@ -68,9 +75,11 @@ const stepTitles = ["Basic Info", "Teaching Profile", "Experience", "Verificatio
 interface Props {
   onClose?: () => void;
   isModal?: boolean;
+  sourcePage?: string;
+  sourceCta?: string;
 }
 
-const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
+const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta }: Props) => {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(() => {
     try {
@@ -87,6 +96,7 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
   const [pincodeStatus, setPincodeStatus] = useState<"idle" | "success" | "error" | "manual">("idle");
   const [postOffices, setPostOffices] = useState<string[]>([]);
   const [locationLocked, setLocationLocked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -151,6 +161,8 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
       if (!form.pincode.match(/^\d{6}$/)) e.pincode = "Valid 6-digit pincode required";
       if (!form.state) e.state = "State is required";
       if (!form.city) e.city = "City is required";
+      if (!form.gender) e.gender = "Gender is required";
+      if (!form.age || parseInt(form.age) < 18 || parseInt(form.age) > 80) e.age = "Valid age required (18-80)";
     }
     if (s === 2) {
       if (form.subjects.length === 0) e.subjects = "Select at least one subject";
@@ -164,6 +176,7 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
       if (!form.qualification) e.qualification = "Select qualification";
       if (!form.experience) e.experience = "Select experience";
       if (!form.currentStatus) e.currentStatus = "Select current status";
+      if (!form.communicationLevel) e.communicationLevel = "Select communication level";
       if (form.availableDays.length === 0) e.availableDays = "Select available days";
       if (form.timeSlots.length === 0) e.timeSlots = "Select time slots";
       if (!form.expectedFees) e.expectedFees = "Enter expected fees";
@@ -180,11 +193,56 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
   const next = () => { if (validate(step)) setStep(s => Math.min(s + 1, 4)); };
   const prev = () => setStep(s => Math.max(s - 1, 1));
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate(4)) return;
-    localStorage.removeItem(STORAGE_KEY);
-    setSubmitted(true);
-    toast.success("Registration submitted successfully!");
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.from('tutor_registrations').insert({
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        state: form.state,
+        city: form.city,
+        pincode: form.pincode,
+        subjects: form.subjects,
+        classes: form.classes,
+        boards: form.boards,
+        gender: form.gender,
+        age: parseInt(form.age),
+        communication_level: form.communicationLevel,
+        teaching_mode: form.teachingMode,
+        preferred_locations: form.preferredLocations || null,
+        languages: form.languages,
+        qualification: form.qualification,
+        specialization: form.specialization || null,
+        experience: form.experience,
+        current_status: form.currentStatus,
+        available_days: form.availableDays,
+        time_slots: form.timeSlots,
+        expected_fees: form.expectedFees,
+        travel_willing: form.travelWilling,
+        travel_radius: form.travelRadius || null,
+        bio: form.bio || null,
+        video_link: form.videoLink || null,
+        photo_name: photoName || null,
+        id_proof_name: idProofName || null,
+        resume_name: resumeName || null,
+        // @ts-ignore
+        source_page: sourcePage || null,
+        // @ts-ignore
+        source_cta: sourceCta || null,
+      });
+
+      if (error) throw error;
+
+      localStorage.removeItem(STORAGE_KEY);
+      setSubmitted(true);
+      toast.success("Registration submitted successfully!");
+    } catch (err: any) {
+      toast.error(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFileChange = (setter: (n: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -276,6 +334,21 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
                 <label className="block text-sm font-medium text-foreground mb-1">Email ID *</label>
                 <Input type="email" placeholder="your@email.com" value={form.email} onChange={e => set("email", e.target.value)} />
                 <FieldError field="email" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">Gender *</label>
+                  <Select value={form.gender} onValueChange={v => set("gender", v)}>
+                    <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                    <SelectContent>{GENDER_OPTIONS.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}</SelectContent>
+                  </Select>
+                  <FieldError field="gender" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">Age *</label>
+                  <Input type="number" placeholder="e.g. 25" value={form.age} onChange={e => set("age", e.target.value)} />
+                  <FieldError field="age" />
+                </div>
               </div>
               {/* Pincode - PRIMARY input */}
               <div>
@@ -423,6 +496,14 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
                   <FieldError field="currentStatus" />
                 </div>
               </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">Communication Level *</label>
+                <Select value={form.communicationLevel} onValueChange={v => set("communicationLevel", v)}>
+                  <SelectTrigger><SelectValue placeholder="Select level" /></SelectTrigger>
+                  <SelectContent>{COMMUNICATION_LEVELS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}</SelectContent>
+                </Select>
+                <FieldError field="communicationLevel" />
+              </div>
               <MultiSelect label="Available Days *" options={DAYS} field="availableDays" />
               <MultiSelect label="Preferred Time Slots *" options={TIME_SLOTS} field="timeSlots" />
               <div>
@@ -511,7 +592,10 @@ const TutorRegistrationForm = ({ onClose, isModal = false }: Props) => {
         {step < 4 ? (
           <Button variant="cta" onClick={next}>Next <ArrowRight className="w-4 h-4 ml-1" /></Button>
         ) : (
-          <Button variant="cta" size="lg" onClick={handleSubmit}>Submit Registration</Button>
+          <Button variant="cta" size="lg" onClick={handleSubmit} disabled={isSubmitting}>
+            {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            Submit Registration
+          </Button>
         )}
       </div>
     </div>

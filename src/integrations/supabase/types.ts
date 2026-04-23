@@ -47,7 +47,7 @@ export type Database = {
         }
         Relationships: []
       }
-      leads: {
+      demo_bookings: {
         Row: {
           area: string | null
           board: string | null
@@ -70,6 +70,7 @@ export type Database = {
           start_time: string | null
           step_reached: number
           subjects: string[] | null
+          status: string | null
           updated_at: string
           user_type: string | null
         }
@@ -95,6 +96,7 @@ export type Database = {
           start_time?: string | null
           step_reached?: number
           subjects?: string[] | null
+          status?: string | null
           updated_at?: string
           user_type?: string | null
         }
@@ -120,7 +122,197 @@ export type Database = {
           start_time?: string | null
           step_reached?: number
           subjects?: string[] | null
+          status?: string | null
           updated_at?: string
+          user_type?: string | null
+        }
+        Relationships: []
+      }
+      counselling_requests: {
+        Row: {
+          id: string
+          name: string | null
+          phone: string | null
+          type: string | null
+          class_age: string | null
+          concern: string | null
+          status: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name?: string | null
+          phone?: string | null
+          type?: string | null
+          class_age?: string | null
+          concern?: string | null
+          status?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string | null
+          phone?: string | null
+          type?: string | null
+          class_age?: string | null
+          concern?: string | null
+          status?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      reported_tutors: {
+        Row: {
+          id: string
+          tutor_name: string | null
+          mobile: string | null
+          whatsapp: string | null
+          state: string | null
+          city: string | null
+          area: string | null
+          fraud_type: string | null
+          description: string | null
+          incident_date: string | null
+          agency_name: string | null
+          contact_person: string | null
+          agency_phone: string | null
+          agency_email: string | null
+          status: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          tutor_name?: string | null
+          mobile?: string | null
+          whatsapp?: string | null
+          state?: string | null
+          city?: string | null
+          area?: string | null
+          fraud_type?: string | null
+          description?: string | null
+          incident_date?: string | null
+          agency_name?: string | null
+          contact_person?: string | null
+          agency_phone?: string | null
+          agency_email?: string | null
+          status?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          tutor_name?: string | null
+          mobile?: string | null
+          whatsapp?: string | null
+          state?: string | null
+          city?: string | null
+          area?: string | null
+          fraud_type?: string | null
+          description?: string | null
+          incident_date?: string | null
+          agency_name?: string | null
+          contact_person?: string | null
+          agency_phone?: string | null
+          agency_email?: string | null
+          status?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          area: string | null
+          board: string | null
+          budget: string | null
+          city: string | null
+          class_level: string | null
+          created_at: string
+          exam: string | null
+          exam_category: string | null
+          frequency: string | null
+          goals: string[] | null
+          hobby_type: string | null
+          id: string
+          is_new: boolean | null
+          lead_score: number | null
+          lead_temperature: string | null
+          mode: string | null
+          name: string | null
+          next_follow_up: string | null
+          otp_verified: boolean
+          phone: string
+          preferred_time: string | null
+          prep_level: string | null
+          skill_type: string | null
+          start_time: string | null
+          status: string | null
+          step_reached: number
+          subjects: string[] | null
+          updated_at: string
+          urgency: string | null
+          user_type: string | null
+        }
+        Insert: {
+          area?: string | null
+          board?: string | null
+          budget?: string | null
+          city?: string | null
+          class_level?: string | null
+          created_at?: string
+          exam?: string | null
+          exam_category?: string | null
+          frequency?: string | null
+          goals?: string[] | null
+          hobby_type?: string | null
+          id?: string
+          is_new?: boolean | null
+          lead_score?: number | null
+          lead_temperature?: string | null
+          mode?: string | null
+          name?: string | null
+          next_follow_up?: string | null
+          otp_verified?: boolean
+          phone: string
+          preferred_time?: string | null
+          prep_level?: string | null
+          skill_type?: string | null
+          start_time?: string | null
+          status?: string | null
+          step_reached?: number
+          subjects?: string[] | null
+          updated_at?: string
+          urgency?: string | null
+          user_type?: string | null
+        }
+        Update: {
+          area?: string | null
+          board?: string | null
+          budget?: string | null
+          city?: string | null
+          class_level?: string | null
+          created_at?: string
+          exam?: string | null
+          exam_category?: string | null
+          frequency?: string | null
+          goals?: string[] | null
+          hobby_type?: string | null
+          id?: string
+          is_new?: boolean | null
+          lead_score?: number | null
+          lead_temperature?: string | null
+          mode?: string | null
+          name?: string | null
+          next_follow_up?: string | null
+          otp_verified?: boolean
+          phone?: string
+          preferred_time?: string | null
+          prep_level?: string | null
+          skill_type?: string | null
+          start_time?: string | null
+          status?: string | null
+          step_reached?: number
+          subjects?: string[] | null
+          updated_at?: string
+          urgency?: string | null
           user_type?: string | null
         }
         Relationships: []
@@ -149,6 +341,99 @@ export type Database = {
           id?: string
           phone?: string
           verified?: boolean
+        }
+        Relationships: []
+      }
+      tutor_registrations: {
+        Row: {
+          available_days: string[]
+          bio: string | null
+          boards: string[]
+          city: string
+          classes: string[]
+          created_at: string
+          current_status: string
+          email: string
+          expected_fees: string
+          experience: string
+          id: string
+          id_proof_name: string | null
+          languages: string[]
+          name: string
+          phone: string
+          photo_name: string | null
+          pincode: string
+          preferred_locations: string | null
+          qualification: string
+          resume_name: string | null
+          specialization: string | null
+          state: string
+          subjects: string[]
+          teaching_mode: string
+          time_slots: string[]
+          travel_radius: string | null
+          travel_willing: string
+          video_link: string | null
+        }
+        Insert: {
+          available_days: string[]
+          bio?: string | null
+          boards: string[]
+          city: string
+          classes: string[]
+          created_at?: string
+          current_status: string
+          email: string
+          expected_fees: string
+          experience: string
+          id?: string
+          id_proof_name?: string | null
+          languages: string[]
+          name: string
+          phone: string
+          photo_name?: string | null
+          pincode: string
+          preferred_locations?: string | null
+          qualification: string
+          resume_name?: string | null
+          specialization?: string | null
+          state: string
+          subjects: string[]
+          teaching_mode: string
+          time_slots: string[]
+          travel_radius?: string | null
+          travel_willing: string
+          video_link?: string | null
+        }
+        Update: {
+          available_days?: string[]
+          bio?: string | null
+          boards?: string[]
+          city?: string
+          classes?: string[]
+          created_at?: string
+          current_status?: string
+          email?: string
+          expected_fees?: string
+          experience?: string
+          id?: string
+          id_proof_name?: string | null
+          languages?: string[]
+          name?: string
+          phone?: string
+          photo_name?: string | null
+          pincode?: string
+          preferred_locations?: string | null
+          qualification?: string
+          resume_name?: string | null
+          specialization?: string | null
+          state?: string
+          subjects?: string[]
+          teaching_mode?: string
+          time_slots?: string[]
+          travel_radius?: string | null
+          travel_willing?: string
+          video_link?: string | null
         }
         Relationships: []
       }

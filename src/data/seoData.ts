@@ -660,17 +660,17 @@ export function getAllSlugs(): string[] {
   }
 
   // === SEO 2.0 ===
-  // Money pages: fees & top-10 for all areas (60 pages)
+  // Money pages: fees & top-10 for all areas (92 pages)
   for (const area of areas) {
     slugs.push(`home-tuition-fees-in-${area.slug}`);
     slugs.push(`top-10-home-tutors-${area.slug}`);
   }
 
-  // Board pages: top 4 subjects × top 10 areas × classes 10-12 × 3 boards (360 pages)
-  const boardSubjects = topSubjects.slice(0, 4);
+  // Board pages: top 6 subjects × top 25 areas × classes 10-12 × 3 boards (~1350 pages)
+  const boardSubjects = topSubjects.slice(0, 6);
   const boardClasses = classes.filter(c => ["10", "11", "12"].includes(c.slug));
   for (const subj of boardSubjects) {
-    for (const area of topAreas) {
+    for (const area of areas.slice(0, 25)) {
       for (const cls of boardClasses) {
         for (const board of boards) {
           slugs.push(`${subj.slug}-home-tutor-${area.slug}-class-${cls.slug}-${board.slug}`);
@@ -679,9 +679,9 @@ export function getAllSlugs(): string[] {
     }
   }
 
-  // Female tutor pages: top 6 subjects × top 15 areas (90 pages)
-  for (const subj of topSubjects) {
-    for (const area of areas.slice(0, 15)) {
+  // Female tutor pages: top 8 subjects × all 46 areas (~360 pages)
+  for (const subj of subjects.slice(0, 8)) {
+    for (const area of areas) {
       slugs.push(`female-${subj.slug}-home-tutor-${area.slug}`);
     }
   }
@@ -693,30 +693,30 @@ export function getAllSlugs(): string[] {
     }
   }
 
-  // Home vs online: top 15 areas (15 pages)
-  for (const area of areas.slice(0, 15)) {
+  // Home vs online: all 46 areas (46 pages)
+  for (const area of areas) {
     slugs.push(`home-vs-online-tuition-${area.slug}`);
   }
 
-  // Fees pages: top 6 subjects × top 10 areas (60 pages)
-  for (const subj of topSubjects) {
-    for (const area of topAreas) {
+  // Fees pages: top 10 subjects × all 46 areas (~460 pages)
+  for (const subj of subjects.slice(0, 10)) {
+    for (const area of areas) {
       slugs.push(`${subj.slug}-home-tutor-${area.slug}-fees`);
     }
   }
 
-  // Exam coaching pages: 7 exams × top 15 areas + near-me (120 pages)
+  // Exam coaching pages: 7 exams × all 46 areas + near-me (~330 pages)
   for (const exam of examTypes) {
     slugs.push(`${exam.slug}-coaching-near-me`);
-    for (const area of areas.slice(0, 15)) {
+    for (const area of areas) {
       slugs.push(`${exam.slug}-coaching-${area.slug}`);
     }
   }
 
   // === SEO 3.0: SERVICE PAGES ===
-  // High-priority services × Delhi + top 10 areas + NCR cities
-  const priorityServices = services.slice(0, 20); // top 20 services
-  const serviceAreas = areas.slice(0, 10); // top 10 Delhi areas
+  // High-priority services × Delhi + top 25 areas + NCR cities (~600 pages)
+  const priorityServices = services.slice(0, 25);
+  const serviceAreas = areas.slice(0, 25);
   const ncrCities = ["noida", "gurgaon", "ghaziabad", "faridabad"];
   for (const svc of priorityServices) {
     slugs.push(`${svc.slug}-delhi`);

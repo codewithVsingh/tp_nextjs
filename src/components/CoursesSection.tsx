@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const courses = [
   {
@@ -60,7 +60,7 @@ const CoursesSection = () => {
               </div>
               <div className="p-6">
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">{course.description}</p>
-                <Link to="/courses">
+                <Link href="/courses">
                   <Button variant="ghost" className="text-primary font-semibold p-0 h-auto hover:bg-transparent hover:text-secondary group-hover:gap-3 transition-all">
                     Explore Courses <ArrowRight className="w-4 h-4" />
                   </Button>

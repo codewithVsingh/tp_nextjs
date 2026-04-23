@@ -8,11 +8,13 @@ interface DemoBookingFormProps {
 
 const DemoBookingForm = ({
   source = "unknown",
+  ctaLabel = "Default",
   onSubmitSuccess,
 }: DemoBookingFormProps) => {
   return (
     <LeadCaptureFlow
       source={source}
+      sourceCta={ctaLabel}
       onClose={onSubmitSuccess}
     />
   );

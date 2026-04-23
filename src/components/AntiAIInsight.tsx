@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 const AntiAIInsight = () => (
@@ -33,12 +33,12 @@ const AntiAIInsight = () => (
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
           <Button asChild size="lg" className="w-full sm:w-auto font-semibold text-base" style={{ background: "var(--cta-gradient)" }}>
-            <Link to="/counselling">
+            <Link href="/counselling">
               Get Expert Guidance
             </Link>
           </Button>
           <Link
-            to="/ai-in-education-for-kids-guide"
+            href="/ai-in-education-for-kids-guide"
             className="text-sm text-muted-foreground hover:text-primary transition-colors font-medium underline underline-offset-4"
           >
             Learn more about AI risks

@@ -258,19 +258,16 @@ export function getEnrichedContent(pageData: SeoPageData): { intro: string; valu
 
 // ===== FAQ GENERATOR =====
 
-const faqPool = [
-  (kw: string, area: string, cls: string) => ({ q: `What is the fee for ${kw}?`, a: `Fees for ${kw} typically range from ₹300 to ₹800 per hour, depending on the subject, class level${cls ? ` (${cls})` : ""}, and tutor experience. Contact us for a personalised quote — the first demo class is always free.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Are female tutors available${area ? ` in ${area}` : ""}?`, a: `Yes, we have a large pool of qualified female tutors available${area ? ` in ${area}` : ""} for home tuition. Specify your preference when booking.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Which subjects are covered${cls ? ` for ${cls}` : ""}?`, a: `Our tutors cover Maths, Science, English, Hindi, Social Studies, Accounts, Economics, and more${cls ? ` for ${cls}` : ""}. CBSE, ICSE, IGCSE, IB, and state board curricula supported.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Is home tuition better than coaching classes?`, a: `Home tuition offers personalised attention and flexible scheduling that group coaching cannot match. Students typically show 20–30% faster improvement with one-on-one tuition.` }),
-  (kw: string, area: string, cls: string) => ({ q: `How quickly can I get a tutor${area ? ` in ${area}` : ""}?`, a: `We typically match you with a suitable tutor within 24–48 hours${area ? ` in ${area}` : ""}. Book a free demo to get started.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Do you provide online classes as well?`, a: `Yes! Both home tuition and online classes available. Flexible morning, afternoon, or evening slots${cls ? ` for ${cls}` : ""}.` }),
-  (kw: string, area: string, cls: string) => ({ q: `How are your tutors verified?`, a: `Multi-step verification: identity checks, qualification verification, background screening, and demo teaching evaluation before listing.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Can I change my tutor if I'm not satisfied?`, a: `Yes, tutor replacement is free. We'll assign a new tutor at no additional cost until you find the perfect match.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Do tutors help with homework and assignments?`, a: `Yes, our tutors assist with homework, projects, and assignments${cls ? ` for ${cls}` : ""}. They also provide practice worksheets and mock tests.` }),
-  (kw: string, area: string, cls: string) => ({ q: `What boards do your tutors cover?`, a: `CBSE, ICSE, IGCSE, IB, and all state boards. Whether NCERT or custom syllabus, we have specialist tutors.` }),
-  (kw: string, area: string, cls: string) => ({ q: `Is there a registration fee?`, a: `No registration fee. You only pay for sessions. First demo class is completely free.` }),
   (kw: string, area: string, cls: string) => ({ q: `What is the difference between home and online tuition?`, a: `Home tuition offers face-to-face interaction ideal for younger students. Online classes provide flexibility and access to a wider tutor pool. Both are available at similar rates.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Do you provide tutors for IB and IGCSE boards in ${area}?`, a: `Yes, we have specialized tutors for IB (MYP/DP) and IGCSE boards in ${area}. They are familiar with the international curriculum and assessment patterns.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Can I get a crash course for ${kw} before exams?`, a: `Yes, we offer intensive 30-day crash courses for ${kw} to help students revise the entire syllabus and practice previous year papers.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Are there any group study options in ${area}?`, a: `While we specialize in 1-on-1 tuition, we can arrange small group sessions (2-3 students) in ${area} if you have a group ready, offering a 30-40% discount per student.` }),
+  (kw: string, area: string, cls: string) => ({ q: `How do you track the progress of the student?`, a: `We provide monthly progress reports, conduct regular chapter-wise tests, and maintain a feedback loop between the tutor, student, and parents.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Do tutors in ${area} teach on weekends?`, a: `Yes, many of our tutors in ${area} are available for weekend-only classes or extra sessions during exam months.` }),
+  (kw: string, area: string, cls: string) => ({ q: `What if the tutor is on leave?`, a: `We ensure minimal disruption. If a tutor is on long leave, we provide a temporary or permanent replacement within 48 hours in ${area}.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Do you provide study material for ${kw}?`, a: `Our tutors provide customized notes, practice worksheets, and reference materials. We also follow school-recommended books and NCERT.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Is there a demo class for ${kw}?`, a: `Yes, the first demo class for ${kw} is completely free. It helps you assess the tutor's teaching style before you commit.` }),
+  (kw: string, area: string, cls: string) => ({ q: `Are tutors in ${area} familiar with local school patterns?`, a: `Yes, our tutors in ${area} often teach students from the same schools and are well-versed with their internal marking schemes and test schedules.` }),
 ];
 
 // Intent-specific FAQs
@@ -303,12 +300,32 @@ export function getEnrichedFaqs(pageData: SeoPageData): { q: string; a: string }
     return faqFn(pageData.service.name, area);
   }
 
-  // Intent-specific FAQs
-  if (pageData.intent === "fees" || pageData.isMoneyPage && pageData.type === "tuition-fees-area") {
+  // Intent-specific FAQs (Money Pages)
+  if (pageData.intent === "fees" || (pageData.isMoneyPage && pageData.type === "tuition-fees-area")) {
     return feesFaqs(area);
   }
   if (pageData.intent === "female-tutors") {
     return femaleFaqs(pageData.subject?.name || "Home Tuition", area);
+  }
+
+  // Board specific logic
+  if (pageData.board) {
+    const boardName = pageData.board.name;
+    const boardFaqs = [
+      { q: `How do your tutors handle the ${boardName} curriculum?`, a: `Our ${boardName} specialists focus on NCERT/standard textbooks, past 10 years' board papers, and marking scheme analysis to maximize student scores.` },
+      { q: `Do you provide ${boardName}-specific mock tests?`, a: `Yes, we conduct monthly mock exams strictly following the ${boardName} pattern and time limits.` },
+    ];
+    // Fill the rest from pool
+    const selected = [...boardFaqs];
+    const used = new Set<number>();
+    while (selected.length < 5) {
+      const idx = (seed + selected.length * 7) % faqPool.length;
+      if (!used.has(idx)) {
+        used.add(idx);
+        selected.push(faqPool[idx](kw, area, cls));
+      }
+    }
+    return selected;
   }
 
   // Default: pick 5 unique from pool
@@ -605,4 +622,35 @@ export function getOptimizedMeta(pageData: SeoPageData): { title: string; descri
   if (desc.length > 160) desc = desc.slice(0, 157) + "...";
 
   return { title, description: desc };
+}
+
+export function getRelevantTutoringPages(postSlug: string): { href: string; anchor: string }[] {
+  const seed = hashStr(postSlug);
+  // Default recommendations
+  const defaultLinks = [
+    { href: "/maths-tutor-delhi", anchor: "Maths Home Tutor in Delhi" },
+    { href: "/science-tutor-delhi", anchor: "Science Home Tutor in Delhi" },
+    { href: "/home-tutor-in-delhi", anchor: "Find Best Home Tutors in Delhi" },
+    { href: "/cbse-tuition-delhi", anchor: "CBSE Tuition in Delhi NCR" },
+  ];
+
+  // Specific matches
+  if (postSlug.includes("math")) return [
+    { href: "/maths-tutor-delhi", anchor: "Expert Maths Tutors in Delhi" },
+    { href: "/math-tuition-in-rohini-class-10", anchor: "Class 10 Maths Tuition in Rohini" },
+    { href: "/math-tuition-in-dwarka-class-12", anchor: "Class 12 Maths Tuition in Dwarka" },
+  ];
+  if (postSlug.includes("science")) return [
+    { href: "/science-tutor-delhi", anchor: "Expert Science Tutors in Delhi" },
+    { href: "/physics-tuition-in-pitampura-class-12", anchor: "Class 12 Physics Tuition in Pitampura" },
+    { href: "/chemistry-tuition-in-janakpuri-class-11", anchor: "Class 11 Chemistry Tuition in Janakpuri" },
+  ];
+  if (postSlug.includes("board") || postSlug.includes("cbse")) return [
+    { href: "/cbse-tuition-delhi", anchor: "CBSE Board Exam Coaching" },
+    { href: "/home-tuition-in-rohini", anchor: "Best Home Tuition in Rohini" },
+    { href: "/home-tuition-in-dwarka", anchor: "Top Home Tutors in Dwarka" },
+  ];
+
+  // Variety based on seed
+  return defaultLinks.sort(() => (seed % 3) - 1).slice(0, 3);
 }

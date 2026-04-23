@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { openWhatsApp } from "@/lib/whatsapp";
 
@@ -26,7 +26,7 @@ const FooterCTAStrip = () => {
           </div>
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <Button variant="cta" size="lg" asChild>
-              <Link to="/demo-booking">Start Free Demo</Link>
+              <Link href="/demo-booking">Start Free Demo</Link>
             </Button>
             <Button
               variant="outline"
