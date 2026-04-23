@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import AntiAIInsight from "@/components/AntiAIInsight";
@@ -16,7 +17,7 @@ import BehaviorPopup from "@/components/BehaviorPopup";
 import ScrollTracker from "@/components/ScrollTracker";
 import SEOHead from "@/components/SEOHead";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
-import { useState } from "react";
+import OSPortalSection from "@/components/OSPortalSection";
 
 const Index = () => {
   const [showModal, setShowModal] = useState(false);

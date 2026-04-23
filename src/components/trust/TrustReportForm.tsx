@@ -11,7 +11,9 @@ import {
   Info, 
   ShieldAlert,
   Calendar as CalendarIcon,
-  CheckCircle2
+  CheckCircle2,
+  Activity,
+  Zap
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -28,6 +30,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useTrustAuth } from "@/components/trust/TrustAuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { trackAgencyActivity } from "@/lib/intelligence-tracking";
 
 const reportSchema = z.object({
   entity_type: z.enum(["tutor", "parent"]),
@@ -85,6 +88,12 @@ const TrustReportForm = ({ onClose, onSuccess, defaultType = "tutor" }: TrustRep
 
       if (error) throw error;
 
+      // Track report submission
+      await trackAgencyActivity(user.id, 'report_submission', {
+        entity_type: values.entity_type,
+        normalized_phone: values.phone.replace(/\D/g, "")
+      });
+
       setIsSuccess(true);
       setTimeout(() => {
         onSuccess();
@@ -119,12 +128,15 @@ const TrustReportForm = ({ onClose, onSuccess, defaultType = "tutor" }: TrustRep
         <motion.div 
           initial={{ scale: 0 }} 
           animate={{ scale: 1 }} 
-          className="bg-emerald-500/20 p-4 rounded-full mb-4"
+          className="bg-amber-500/20 p-4 rounded-full mb-4"
         >
-          <CheckCircle2 className="w-12 h-12 text-emerald-500" />
+          <Activity className="w-12 h-12 text-amber-500" />
         </motion.div>
-        <h3 className="text-xl font-bold text-white">Report Submitted</h3>
-        <p className="text-slate-400 mt-2">The registry has been updated. Thank you for contributing.</p>
+        <h3 className="text-xl font-bold text-white">Signal Received</h3>
+        <p className="text-slate-400 mt-2 max-w-sm">
+          Our intelligence engine is now verifying this signal across the network. 
+          Thank you for protecting the ecosystem.
+        </p>
       </div>
     );
   }
@@ -133,13 +145,16 @@ const TrustReportForm = ({ onClose, onSuccess, defaultType = "tutor" }: TrustRep
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <ShieldAlert className="w-5 h-5 text-red-500" />
-          Submit Intelligence Report
+          <Zap className="w-5 h-5 text-amber-500" />
+          Signal Intelligence Submission
         </h2>
         <Button variant="ghost" size="icon" onClick={onClose} type="button">
           <X className="w-4 h-4 text-slate-500" />
         </Button>
       </div>
+      <p className="text-xs text-slate-500 -mt-4 mb-4">
+        Your contribution will be cross-referenced across the agency network.
+      </p>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">

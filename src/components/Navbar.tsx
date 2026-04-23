@@ -31,10 +31,14 @@ const Navbar = () => {
   const [showLazyCta, setShowLazyCta] = useState(false);
   const [lazyCTADismissed, setLazyCTADismissed] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [loginDropdownOpen, setLoginDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const [loginMobileDropdownOpen, setLoginMobileDropdownOpen] = useState(false);
   const [tutorModalOpen, setTutorModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const loginDropdownRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const loginCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -67,6 +71,9 @@ const Navbar = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
       }
+      if (loginDropdownRef.current && !loginDropdownRef.current.contains(e.target as Node)) {
+        setLoginDropdownOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -75,6 +82,7 @@ const Navbar = () => {
   useEffect(() => {
     return () => {
       if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+      if (loginCloseTimeoutRef.current) clearTimeout(loginCloseTimeoutRef.current);
     };
   }, []);
 
@@ -89,6 +97,20 @@ const Navbar = () => {
   const handleDropdownLeave = useCallback(() => {
     closeTimeoutRef.current = setTimeout(() => {
       setDropdownOpen(false);
+    }, 400);
+  }, []);
+
+  const handleLoginDropdownEnter = useCallback(() => {
+    if (loginCloseTimeoutRef.current) {
+      clearTimeout(loginCloseTimeoutRef.current);
+      loginCloseTimeoutRef.current = null;
+    }
+    setLoginDropdownOpen(true);
+  }, []);
+
+  const handleLoginDropdownLeave = useCallback(() => {
+    loginCloseTimeoutRef.current = setTimeout(() => {
+      setLoginDropdownOpen(false);
     }, 400);
   }, []);
 
@@ -213,6 +235,50 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-4">
           {navLinks.map((link) => renderLink(link))}
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary" onClick={() => router.push("/become-a-tutor")}>Become a Tutor</Button>
+          
+          {/* Login Dropdown */}
+          <div
+            className="relative"
+            ref={loginDropdownRef}
+            onMouseEnter={handleLoginDropdownEnter}
+            onMouseLeave={handleLoginDropdownLeave}
+          >
+            <button
+              className={`${linkClass} flex items-center gap-1 min-h-[44px]`}
+              onClick={() => setLoginDropdownOpen((prev) => !prev)}
+            >
+              Login <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${loginDropdownOpen ? "rotate-180" : ""}`} />
+            </button>
+            <AnimatePresence>
+              {loginDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="absolute top-full right-0 mt-1 pt-2"
+                >
+                  <div className="w-56 bg-background rounded-xl border border-border card-shadow py-2 z-50">
+                    <Link
+                      href="/institute-login"
+                      className="block px-5 py-3 text-sm text-muted-foreground hover:text-primary hover:bg-accent/60 transition-colors"
+                      onClick={() => setLoginDropdownOpen(false)}
+                    >
+                      Institute / Bureau
+                    </Link>
+                    <Link
+                      href="/tutor-login"
+                      className="block px-5 py-3 text-sm text-muted-foreground hover:text-primary hover:bg-accent/60 transition-colors"
+                      onClick={() => setLoginDropdownOpen(false)}
+                    >
+                      Tutor
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           {pathname.startsWith("/counselling") ? (
             <Button variant="cta" size="lg" onClick={() => router.push("/counselling#counselling-form")}>Request Callback</Button>
           ) : (
@@ -234,6 +300,34 @@ const Navbar = () => {
             className="md:hidden bg-background border-b border-border px-4 pb-4 overflow-hidden"
           >
             {navLinks.map((link) => renderLink(link, true))}
+            
+            {/* Mobile Login Dropdown */}
+            <div key="mobile-login">
+              <button
+                className={`${mobileLinkClass} flex items-center gap-1 w-full min-h-[44px]`}
+                onClick={() => setLoginMobileDropdownOpen(!loginMobileDropdownOpen)}
+              >
+                Login <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${loginMobileDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+              <AnimatePresence>
+                {loginMobileDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="pl-4 space-y-1 overflow-hidden"
+                  >
+                    <Link href="/institute-login" className={`${mobileLinkClass} min-h-[44px] flex items-center`} onClick={() => { setIsOpen(false); setLoginMobileDropdownOpen(false); }}>
+                      Institute / Bureau
+                    </Link>
+                    <Link href="/tutor-login" className={`${mobileLinkClass} min-h-[44px] flex items-center`} onClick={() => { setIsOpen(false); setLoginMobileDropdownOpen(false); }}>
+                      Tutor
+                    </Link>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <Button variant="outline" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); router.push("/become-a-tutor"); }}>Become a Tutor</Button>
             {pathname.startsWith("/counselling") ? (
               <Button variant="cta" className="w-full mt-2 h-12" onClick={() => { setIsOpen(false); router.push("/counselling#counselling-form"); }}>Request Callback</Button>

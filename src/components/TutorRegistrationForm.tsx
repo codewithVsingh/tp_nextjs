@@ -81,12 +81,7 @@ interface Props {
 
 const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta }: Props) => {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState<FormData>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? { ...defaultForm, ...JSON.parse(saved) } : defaultForm;
-    } catch { return defaultForm; }
-  });
+  const [form, setForm] = useState<FormData>(defaultForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [photoName, setPhotoName] = useState("");
@@ -97,11 +92,26 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
   const [postOffices, setPostOffices] = useState<string[]>([]);
   const [locationLocked, setLocationLocked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
-  }, [form]);
+    setMounted(true);
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        setForm(prev => ({ ...prev, ...JSON.parse(saved) }));
+      }
+    } catch (e) {
+      console.error("Failed to load draft:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+    }
+  }, [form, mounted]);
 
   const fetchPincodeData = useCallback(async (pincode: string) => {
     if (!/^\d{6}$/.test(pincode)) return;
@@ -270,6 +280,12 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
         })}
       </div>
       <FieldError field={field} />
+    </div>
+  );
+
+  if (!mounted) return (
+    <div className="flex items-center justify-center py-20">
+      <Loader2 className="w-8 h-8 animate-spin text-primary" />
     </div>
   );
 

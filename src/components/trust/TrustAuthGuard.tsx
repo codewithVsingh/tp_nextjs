@@ -14,7 +14,7 @@ export const TrustAuthGuard = ({ children }: TrustAuthGuardProps) => {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/trust/login");
+      router.push("/institute-login");
     }
   }, [user, loading, router]);
 

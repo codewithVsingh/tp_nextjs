@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
+import { trackAgencyActivity } from "@/lib/intelligence-tracking";
 
 interface TrustUser {
   id: string;
@@ -59,6 +60,10 @@ export const TrustAuthProvider = ({ children }: { children: ReactNode }) => {
       // 2. Set session
       setUser(data as TrustUser);
       localStorage.setItem("trust_user", JSON.stringify(data));
+      
+      // 3. Track login activity
+      await trackAgencyActivity(data.id, 'login');
+
       return true;
     } catch (err) {
       console.error("Trust Login Error:", err);

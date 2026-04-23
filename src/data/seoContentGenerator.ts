@@ -257,7 +257,7 @@ export function getEnrichedContent(pageData: SeoPageData): { intro: string; valu
 }
 
 // ===== FAQ GENERATOR =====
-
+const faqPool = [
   (kw: string, area: string, cls: string) => ({ q: `What is the difference between home and online tuition?`, a: `Home tuition offers face-to-face interaction ideal for younger students. Online classes provide flexibility and access to a wider tutor pool. Both are available at similar rates.` }),
   (kw: string, area: string, cls: string) => ({ q: `Do you provide tutors for IB and IGCSE boards in ${area}?`, a: `Yes, we have specialized tutors for IB (MYP/DP) and IGCSE boards in ${area}. They are familiar with the international curriculum and assessment patterns.` }),
   (kw: string, area: string, cls: string) => ({ q: `Can I get a crash course for ${kw} before exams?`, a: `Yes, we offer intensive 30-day crash courses for ${kw} to help students revise the entire syllabus and practice previous year papers.` }),

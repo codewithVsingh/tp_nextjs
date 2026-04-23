@@ -61,6 +61,9 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "tp-admin": "hsl(var(--tp-admin))",
+        "tp-institute": "hsl(var(--tp-institute))",
+        "tp-tutor": "hsl(var(--tp-tutor))",
       },
       borderRadius: {
         lg: "var(--radius)",
