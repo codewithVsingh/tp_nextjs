@@ -83,7 +83,7 @@ const AIEducationGuide = () => {
             description:
               "How AI tools impact your child's learning, the risks of overuse, and how guided tutoring helps build real understanding.",
             url: canonicalUrl,
-            datePublished: "2025-01-15",
+            datePublished: "2026-01-15",
           }),
           buildFaqSchema(aiGuideFaqs),
         ]}

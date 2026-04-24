@@ -233,6 +233,7 @@ export function getFaqs(keyword: string, area: string | undefined, index: number
 
 // ---- SEO 2.0 NEW PATTERNS ----
 export function parseSlug2(slug: string): SeoPageData | null {
+  if (!slug) return null;
   // top-10-home-tutors-{area}
   let m = slug.match(/^top-10-home-tutors-(.+)$/);
   if (m) {
@@ -253,7 +254,7 @@ export function parseSlug2(slug: string): SeoPageData | null {
     if (area) {
       const kw = `Home Tuition Fees in ${area.name}`;
       return { type: "tuition-fees-area", slug, area, keyword: kw, intent: "fees", isMoneyPage: true,
-        title: `Home Tuition Fees in ${area.name} (2025) | Tutors Parliament`,
+        title: `Home Tuition Fees in ${area.name} (2026) | Tutors Parliament`,
         metaDescription: `Check home tuition fees in ${area.name}, Delhi. ₹300–₹800/hr. Affordable, transparent pricing. Book a free demo!`,
         h1: `Home Tuition Fees in ${area.name}, Delhi` };
     }
@@ -460,6 +461,7 @@ const ALIAS_MAP: Record<string, () => SeoPageData | null> = {
 
 // ---- Existing 1.0 patterns ----
 export function parseNewSlug(slug: string): SeoPageData | null {
+  if (!slug) return null;
   // Phase 1 short aliases
   if (ALIAS_MAP[slug]) {
     const r = ALIAS_MAP[slug]();
@@ -523,6 +525,7 @@ export function parseNewSlug(slug: string): SeoPageData | null {
 
 // Master parser — tries 2.0 first, then 1.0, then legacy
 export function parseSlug(slug: string): SeoPageData | null {
+  if (!slug) return null;
   // SEO 2.0
   const v2 = parseSlug2(slug);
   if (v2) return v2;

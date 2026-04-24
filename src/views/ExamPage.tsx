@@ -63,7 +63,7 @@ const examDatabase: Record<string, ExamData> = {
       ]
     },
     syllabus: {
-      title: "CBSE Syllabus Breakdown 2025–26",
+      title: "CBSE Syllabus Breakdown 2026–27",
       icon: <Target className="w-6 h-6" />,
       content: [
         "CBSE has streamlined its syllabus post-2020, focusing on core competencies and application-based learning. Here's what students need to master:"
@@ -138,7 +138,7 @@ const examDatabase: Record<string, ExamData> = {
     faqs: [
       { q: "When should I start CBSE board exam preparation with a home tutor?", a: "Ideally 6–8 months before the exam. For Class 10, start by July–August. For Class 12, begin by June. However, even 3 months of focused home tuition can significantly improve scores." },
       { q: "How much does a CBSE board exam home tutor cost in Delhi?", a: "Fees range from ₹800–₹1,500/hour depending on the subject and tutor experience. Monthly packages for 2–3 subjects typically cost ₹8,000–₹20,000." },
-      { q: "Can home tuition help score 95%+ in CBSE boards?", a: "Absolutely. 68% of our Delhi students scored above 90% in 2025 CBSE boards. Personalized attention ensures no concept gaps remain." },
+      { q: "Can home tuition help score 95%+ in CBSE boards?", a: "Absolutely. 68% of our Delhi students scored above 90% in 2026 CBSE boards. Personalized attention ensures no concept gaps remain." },
       { q: "Do you provide CBSE board exam tutors across Delhi NCR?", a: "Yes, we have verified tutors in all Delhi areas — Rohini, Dwarka, Laxmi Nagar, Janakpuri, Pitampura, and across Noida, Gurgaon, Ghaziabad, and Faridabad." },
       { q: "Is NCERT enough for CBSE boards or do I need extra books?", a: "NCERT is the foundation and covers 85–90% of the paper. Our tutors supplement with RS Aggarwal (Math), HC Verma (Physics), and previous year papers for the remaining edge." },
     ]
@@ -167,7 +167,7 @@ const examDatabase: Record<string, ExamData> = {
       ]
     },
     syllabus: {
-      title: "ICSE Syllabus Breakdown 2025–26",
+      title: "ICSE Syllabus Breakdown 2026–27",
       icon: <Target className="w-6 h-6" />,
       content: [
         "ICSE covers a broader syllabus than CBSE in most subjects. Here's what makes it unique:"
@@ -264,7 +264,7 @@ const examDatabase: Record<string, ExamData> = {
         "JEE Advanced: Only top 2.5 lakh JEE Main qualifiers can appear",
         "Subjects: Physics, Chemistry, Mathematics — equal weightage",
         "Question types: MCQ, numerical, and integer-type questions",
-        "2025 cut-off trend: General category ~90 percentile for top NITs"
+        "2026 cut-off trend: General category ~90 percentile for top NITs"
       ]
     },
     syllabus: {
@@ -366,7 +366,7 @@ const examDatabase: Record<string, ExamData> = {
         "Marking: +4 correct, -1 wrong — negative marking strategy is crucial",
         "Duration: 3 hours 20 minutes",
         "Language options: English, Hindi, and 11 regional languages",
-        "2025 cut-off trend: General category ~620/720 for government MBBS seats"
+        "2026 cut-off trend: General category ~620/720 for government MBBS seats"
       ]
     },
     syllabus: {

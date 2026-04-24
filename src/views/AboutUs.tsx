@@ -41,7 +41,7 @@ const milestones = [
   { year: "2023", event: "Introduced AI-powered personalized learning plans" },
   { year: "2024", event: "10,000+ students trained, 500+ expert tutors, India's fastest-growing tutoring platform" },
   {
-    year: "2025",
+    year: "2026",
     event:
       "Expanded to a true Pan-India presence — 15,000+ students impacted and 2,500+ verified tutors across 50+ cities. Launched our AI-driven counselling and learning ecosystem with dedicated career guidance and mental wellness tracks.",
   },

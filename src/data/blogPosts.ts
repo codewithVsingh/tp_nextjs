@@ -950,7 +950,7 @@ const examBlogPosts: BlogPost[] = [
         headingLevel: "h2",
         paragraphs: [
           "The biggest advantage of a home tutor for board exams is accountability. Every session has clear goals, progress is tracked weekly, and parents receive regular updates. Unlike coaching centers where you're one of 50, your tutor knows exactly where you stand.",
-          "At Tutors Parliament, our CBSE-specialist tutors in Delhi have helped 68% of students score above 90% in the 2025 boards. Book a free demo class to experience the difference personalized preparation makes."
+          "At Tutors Parliament, our CBSE-specialist tutors in Delhi have helped 68% of students score above 90% in the 2026 boards. Book a free demo class to experience the difference personalized preparation makes."
         ]
       }
     ]

@@ -51,7 +51,7 @@ const pageDatabase: Record<string, DecisionPageData> = {
   "home-tuition-vs-coaching-delhi": {
     slug: "home-tuition-vs-coaching-delhi",
     title: "Home Tuition vs Coaching in Delhi",
-    metaTitle: "Home Tuition vs Coaching Classes in Delhi (2025) | Tutors Parliament",
+    metaTitle: "Home Tuition vs Coaching Classes in Delhi (2026) | Tutors Parliament",
     metaDescription: "Compare home tuition vs coaching classes in Delhi. Fees, results, flexibility & which is better for your child. Expert analysis for Delhi parents.",
     h1: "Home Tuition vs Coaching Classes in Delhi — Which is Better?",
     intro: [
@@ -116,7 +116,7 @@ const pageDatabase: Record<string, DecisionPageData> = {
   "home-tuition-vs-online-classes-delhi": {
     slug: "home-tuition-vs-online-classes-delhi",
     title: "Home Tuition vs Online Classes in Delhi",
-    metaTitle: "Home Tuition vs Online Classes in Delhi (2025) | Tutors Parliament",
+    metaTitle: "Home Tuition vs Online Classes in Delhi (2026) | Tutors Parliament",
     metaDescription: "Home tuition or online classes for your Delhi child? Compare cost, effectiveness, flexibility. Honest parent guide with Delhi-specific insights.",
     h1: "Home Tuition vs Online Classes in Delhi — Complete Parent Guide",
     intro: [
@@ -180,7 +180,7 @@ const pageDatabase: Record<string, DecisionPageData> = {
   "is-home-tuition-worth-it-delhi": {
     slug: "is-home-tuition-worth-it-delhi",
     title: "Is Home Tuition Worth It in Delhi?",
-    metaTitle: "Is Home Tuition Worth It in Delhi? (Honest 2025 Analysis) | Tutors Parliament",
+    metaTitle: "Is Home Tuition Worth It in Delhi? (Honest 2026 Analysis) | Tutors Parliament",
     metaDescription: "Is home tuition worth the cost in Delhi? Honest analysis with real data: ROI, grade improvements, fees breakdown. Delhi parent's guide to making the right call.",
     h1: "Is Home Tuition Worth It in Delhi? An Honest Analysis",
     intro: [
@@ -242,7 +242,7 @@ const pageDatabase: Record<string, DecisionPageData> = {
   "best-home-tuition-or-coaching-for-class-10-delhi": {
     slug: "best-home-tuition-or-coaching-for-class-10-delhi",
     title: "Best Option for Class 10 CBSE in Delhi: Home Tuition or Coaching?",
-    metaTitle: "Home Tuition or Coaching for Class 10 CBSE Delhi? (2025) | Tutors Parliament",
+    metaTitle: "Home Tuition or Coaching for Class 10 CBSE Delhi? (2026) | Tutors Parliament",
     metaDescription: "Class 10 CBSE in Delhi — should you choose home tuition or coaching? Expert comparison with fees, results & parent reviews. Make the right choice.",
     h1: "Home Tuition or Coaching for Class 10 CBSE in Delhi?",
     intro: [
@@ -384,7 +384,7 @@ const DecisionPage = () => {
                 animate={{ opacity: 1 }}
                 className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4"
               >
-                📊 Decision Guide 2025
+                📊 Decision Guide 2026
               </motion.span>
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
@@ -469,7 +469,7 @@ const DecisionPage = () => {
               className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-2 text-center"
             >
               <IndianRupee className="inline h-6 w-6 text-primary mr-1" />
-              Cost Breakdown — Delhi 2025
+              Cost Breakdown — Delhi 2026
             </motion.h2>
             <p className="text-muted-foreground text-center mb-8 text-sm max-w-xl mx-auto">
               Real pricing data from Delhi NCR. No inflated numbers.

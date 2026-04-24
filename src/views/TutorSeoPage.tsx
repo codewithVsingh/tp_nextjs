@@ -158,7 +158,7 @@ const TutorSeoPage = () => {
           <div className="container mx-auto max-w-4xl text-center">
             {pageData.isMoneyPage && (
               <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
-                {isFeesPage ? "💰 Fee Guide 2025" : "🏆 Top Rated Tutors"}
+                {isFeesPage ? "💰 Fee Guide 2026" : "🏆 Top Rated Tutors"}
               </motion.span>
             )}
             {pageData.board && (

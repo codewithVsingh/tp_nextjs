@@ -574,7 +574,7 @@ export function getOptimizedMeta(pageData: SeoPageData): { title: string; descri
 
   // Money pages
   if (pageData.type === "tuition-fees-area") {
-    title = `Home Tuition Fees in ${area} (2025 Guide) | Tutors Parliament`;
+    title = `Home Tuition Fees in ${area} (2026 Guide) | Tutors Parliament`;
   } else if (pageData.type === "top-tutors-area") {
     title = `Top 10 Rated Home Tutors in ${area}, Delhi | Expert Recommendations`;
   }
@@ -591,7 +591,7 @@ export function getOptimizedMeta(pageData: SeoPageData): { title: string; descri
   else if (pageData.type === "female-subject-area") {
     title = `Best Female ${subj} Tutor in ${area} | Verified Lady Tutors`;
   } else if (pageData.type === "subject-near-me-class") {
-    title = `Top ${subj} Home Tutor Near Me for ${cls} | 2025 Listings`;
+    title = `Top ${subj} Home Tutor Near Me for ${cls} | 2026 Listings`;
   } else if (pageData.type === "home-vs-online-area") {
     title = `Home vs Online Tuition ${area} | Which is Best for ${area}?`;
   } else if (pageData.type === "subject-area-fees") {
@@ -607,7 +607,7 @@ export function getOptimizedMeta(pageData: SeoPageData): { title: string; descri
     title = pick(variants, seed);
   } else if (subj && area) {
     const variants = [
-      `Best ${subj} Home Tutor in ${area}, Delhi | 2025 Top Tutors`,
+      `Best ${subj} Home Tutor in ${area}, Delhi | 2026 Top Tutors`,
       `Top Rated ${subj} Tuition in ${area} — Expert Home Educators`,
       `Verified ${subj} Home Tutor in ${area} | Start Free Demo`,
     ];
@@ -615,7 +615,7 @@ export function getOptimizedMeta(pageData: SeoPageData): { title: string; descri
   } else if (area) {
     const variants = [
       `Top 10 Home Tutors in ${area}, Delhi | Best Tuition Center`,
-      `Home Tuition in ${area} — Verified Expert Tutors | 2025`,
+      `Home Tuition in ${area} — Verified Expert Tutors | 2026`,
       `Best Home Tutors Near ${area}, Delhi | Start Free Trial`,
     ];
     title = pick(variants, seed);
