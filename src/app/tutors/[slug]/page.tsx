@@ -3,8 +3,9 @@ import { parseSlug } from '@/data/seoData';
 import { getOptimizedMeta } from '@/data/seoContentGenerator';
 import { Metadata } from 'next';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const pageData = parseSlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const pageData = parseSlug(slug);
   if (!pageData) return { title: 'Tutors Parliament' };
   
   const { title, description } = getOptimizedMeta(pageData);
