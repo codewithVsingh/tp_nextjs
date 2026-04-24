@@ -109,7 +109,7 @@ export const buildLocalBusinessSchema = ({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name,
-  image: image || `${SITE_URL}/placeholder.svg`,
+  image: image || `${SITE_URL}/icon.png`,
   "@id": url,
   url: url,
   telephone: "+91-1234567890", // Placeholder or dynamic if available

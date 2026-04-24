@@ -574,49 +574,69 @@ export function getOptimizedMeta(pageData: SeoPageData): { title: string; descri
 
   // Money pages
   if (pageData.type === "tuition-fees-area") {
-    title = `Home Tuition Fees in ${area} (2025) | Tutors Parliament`;
+    title = `Home Tuition Fees in ${area} (2025 Guide) | Tutors Parliament`;
   } else if (pageData.type === "top-tutors-area") {
-    title = `Top 10 Home Tutors in ${area}, Delhi | Tutors Parliament`;
+    title = `Top 10 Rated Home Tutors in ${area}, Delhi | Expert Recommendations`;
   }
   // Board-specific
   else if (subj && area && cls && board) {
-    title = `${subj} ${board} Tutor ${area} ${cls} | Tutors Parliament`;
+    const variants = [
+      `${subj} ${board} Tutor in ${area} for ${cls} | Expert Coaching`,
+      `Best ${subj} Home Tutor in ${area} (${board} Specialists)`,
+      `Top Rated ${subj} ${board} Tuition in ${area} — ${cls}`,
+    ];
+    title = pick(variants, seed);
   }
   // Intent pages
   else if (pageData.type === "female-subject-area") {
-    title = `Female ${subj} Tutor in ${area} | Tutors Parliament`;
+    title = `Best Female ${subj} Tutor in ${area} | Verified Lady Tutors`;
   } else if (pageData.type === "subject-near-me-class") {
-    title = `${subj} Home Tutor Near Me — ${cls} | Tutors Parliament`;
+    title = `Top ${subj} Home Tutor Near Me for ${cls} | 2025 Listings`;
   } else if (pageData.type === "home-vs-online-area") {
-    title = `Home vs Online Tuition ${area} | Tutors Parliament`;
+    title = `Home vs Online Tuition ${area} | Which is Best for ${area}?`;
   } else if (pageData.type === "subject-area-fees") {
-    title = `${subj} Tutor Fees in ${area} | Tutors Parliament`;
+    title = `${subj} Tutor Fees in ${area} | Affordable Home Tuition rates`;
   }
   // Standard pages
   else if (subj && area && cls) {
-    title = `${subj} Home Tutor in ${area} for ${cls} | Tutors Parliament`;
+    const variants = [
+      `Top-Rated ${subj} Home Tutor in ${area} for ${cls}`,
+      `Best ${subj} Tuition in ${area} for ${cls} | Verified Experts`,
+      `Verified ${subj} Home Tutor in ${area} — Class ${cls} Specialization`,
+    ];
+    title = pick(variants, seed);
   } else if (subj && area) {
-    title = `Best ${subj} Home Tutor in ${area}, Delhi | Tutors Parliament`;
+    const variants = [
+      `Best ${subj} Home Tutor in ${area}, Delhi | 2025 Top Tutors`,
+      `Top Rated ${subj} Tuition in ${area} — Expert Home Educators`,
+      `Verified ${subj} Home Tutor in ${area} | Start Free Demo`,
+    ];
+    title = pick(variants, seed);
   } else if (area) {
     const variants = [
-      `Best Home Tutors in ${area}, Delhi | Tutors Parliament`,
-      `Home Tuition in ${area} — Verified Tutors | Tutors Parliament`,
-      `Top Home Tutors in ${area}, Delhi | Tutors Parliament`,
+      `Top 10 Home Tutors in ${area}, Delhi | Best Tuition Center`,
+      `Home Tuition in ${area} — Verified Expert Tutors | 2025`,
+      `Best Home Tutors Near ${area}, Delhi | Start Free Trial`,
     ];
     title = pick(variants, seed);
   } else if (subj) {
-    title = `Best ${subj} Home Tutors in Delhi | Tutors Parliament`;
+    title = `Best ${subj} Home Tutors in Delhi | Top 1% Verified Experts`;
   } else {
-    title = pageData.title;
+    title = pageData.title || "Best Home Tutors in Delhi | Tutors Parliament";
+  }
+
+  // Branding append if space allows (Next.js titles should stay under ~60 chars)
+  if (title.length < 50) {
+    title += " | Tutors Parliament";
   }
 
   if (title.length > 65) title = title.slice(0, 62) + "...";
 
   const descVariants = [
-    `Find verified ${subj || "home"} tutors${area ? ` in ${area}` : " in Delhi"}${cls ? ` for ${cls}` : ""}${board ? ` (${board})` : ""}. Affordable fees, free demo. Book now!`,
-    `Top-rated ${subj || "home"} tuition${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}${board ? `, ${board}` : ""}. 4.8★ rated, verified tutors. Free demo!`,
-    `Experienced ${subj || "home"} tutors${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}. Personalized learning, all boards. Book a free demo!`,
-    `Looking for ${subj || "home"} tuition${area ? ` in ${area}` : ""}${cls ? ` (${cls})` : ""}? Verified tutors, 10K+ students. Free demo!`,
+    `Looking for verified ${subj || "home"} tutors${area ? ` in ${area}` : " in Delhi"}${cls ? ` for ${cls}` : ""}${board ? ` (${board})` : ""}? 10,000+ happy students, 4.8★ rating. Free demo in 24h. Book now!`,
+    `Hire top-rated ${subj || "home"} tuition${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}${board ? `, ${board} specialists` : ""}. Background-checked experts, affordable fees. Free demo class!`,
+    `Experienced ${subj || "home"} tutors${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}. 1-on-1 personalized learning for CBSE, ICSE & IB. 2500+ verified tutors. Book demo!`,
+    `The best ${subj || "home"} tuition platform${area ? ` in ${area}` : ""}${cls ? ` (${cls})` : ""}. Transparent fees, verified profiles, and proven academic results. Start free trial today!`,
   ];
   let desc = pick(descVariants, seed);
   if (desc.length > 160) desc = desc.slice(0, 157) + "...";

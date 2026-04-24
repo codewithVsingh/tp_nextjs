@@ -40,7 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 2. Programmatic SEO Pages (1700+)
   const seoSlugs = getAllSlugs();
   const seoPages = seoSlugs.map((slug) => ({
-    url: `${baseUrl}/${slug}`,
+    url: `${baseUrl}/tutors/${slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.6,
