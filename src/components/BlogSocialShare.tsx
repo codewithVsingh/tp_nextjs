@@ -62,3 +62,4 @@ const BlogSocialShare = ({ title, url }: BlogSocialShareProps) => {
 };
 
 export default BlogSocialShare;
+

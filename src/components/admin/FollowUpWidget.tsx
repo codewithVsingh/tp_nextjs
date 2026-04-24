@@ -276,3 +276,4 @@ export const FollowUpWidget = ({ onSelectLead, onRefresh }: Props) => {
     </div>
   );
 };
+

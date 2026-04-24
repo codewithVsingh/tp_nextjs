@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/lib/seoSchema";
+import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -474,3 +474,5 @@ const Counselling = () => {
 };
 
 export default Counselling;
+
+

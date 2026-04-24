@@ -33,3 +33,4 @@ const TutorRegistrationModal = ({ open, onOpenChange }: Props) => {
 };
 
 export default TutorRegistrationModal;
+

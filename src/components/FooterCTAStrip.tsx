@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 
 /**
  * Slim conversion strip rendered directly above the footer.
@@ -47,3 +47,4 @@ const FooterCTAStrip = () => {
 };
 
 export default FooterCTAStrip;
+

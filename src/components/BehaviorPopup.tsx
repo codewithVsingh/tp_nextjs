@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
-import { trackEvent } from "@/lib/analytics";
+import { trackEvent } from "@/modules/shared/logic/eventTrackingEngine";
 
 const POPUP_DELAY_MS = 30_000;
 const DISMISSED_KEY = "tp_popup_dismissed";
@@ -49,3 +49,5 @@ const BehaviorPopup = () => {
 };
 
 export default BehaviorPopup;
+
+

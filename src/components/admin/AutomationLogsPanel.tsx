@@ -4,7 +4,7 @@ import { format, parseISO, formatDistanceToNow } from "date-fns";
 import { Zap, Loader2, RotateCcw, AlertTriangle, CheckCircle2, Bell, UserCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { RULES, RuleName } from "@/lib/automationEngine";
+import { RULES, RuleName } from "@/modules/shared/logic/automationEngine";
 
 interface AutomationLog {
   id: string;
@@ -209,3 +209,4 @@ export const AutomationLogsPanel = ({ limit = 20 }: Props) => {
     </div>
   );
 };
+

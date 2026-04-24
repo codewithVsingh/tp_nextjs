@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import IntelligenceLayout from "./IntelligenceLayout";
-import { TPCard } from "@/components/system/TPCard";
+import { TPCard } from "@/design-system/components/TPCard";
 import { cn } from "@/lib/utils";
 import { ShieldCheck, Zap, Globe } from "lucide-react";
 import Link from "next/link";
@@ -42,8 +42,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   };
 
   return (
-    <IntelligenceLayout role={role} hideHeader={false}>
-      <div className="flex-1 flex flex-col lg:flex-row min-h-0 bg-white">
+    <div className="flex flex-col min-h-screen">
+      <IntelligenceLayout role={role} hideHeader={false} hideActions={true}>
+        <div className="flex-1 flex flex-col lg:flex-row min-h-0 bg-white">
         {/* Left Branding Panel */}
         <div className={cn(
           "hidden lg:flex lg:w-[45%] flex-col justify-center p-12 md:p-16 lg:p-24 relative overflow-hidden bg-gradient-to-br",
@@ -138,8 +139,10 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           </div>
         </div>
       </div>
-    </IntelligenceLayout>
+      </IntelligenceLayout>
+    </div>
   );
 };
 
 export default AuthLayout;
+

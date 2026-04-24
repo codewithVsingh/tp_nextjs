@@ -138,3 +138,4 @@ export const LeadsTable = ({ leads, onRowClick, onUpdateStatus }: LeadsTableProp
     </div>
   );
 };
+

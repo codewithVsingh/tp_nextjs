@@ -182,3 +182,4 @@ export const AIInsightsPanel = ({ leads, tutors, payments, assignments }: Props)
     </div>
   );
 };
+

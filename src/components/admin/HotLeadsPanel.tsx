@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { resolveScore, resolveTemperature, getTemperatureColor, getTemperatureEmoji, LeadTemperature } from "@/lib/leadScoring";
+import { resolveScore, resolveTemperature, getTemperatureColor, getTemperatureEmoji, LeadTemperature } from "@/modules/shared/logic/leadScoring";
 import { Flame, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow, parseISO } from "date-fns";
@@ -183,3 +183,4 @@ export const HotLeadsPanel = ({ onSelectLead }: Props) => {
     </div>
   );
 };
+

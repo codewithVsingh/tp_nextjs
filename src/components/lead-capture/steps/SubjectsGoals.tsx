@@ -126,3 +126,4 @@ const SubjectsGoals = ({ data, onChange }: StepProps) => {
 };
 
 export default SubjectsGoals;
+

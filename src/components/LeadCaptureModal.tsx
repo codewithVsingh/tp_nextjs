@@ -36,3 +36,4 @@ const LeadCaptureModal = ({
 };
 
 export default LeadCaptureModal;
+

@@ -12,7 +12,7 @@ import PageBreadcrumbs from "@/components/PageBreadcrumbs";
 import BlogImage from "@/components/BlogImage";
 import BlogCTA from "@/components/BlogCTA";
 import { getPostsByCity, blogCities } from "@/data/blogPosts";
-import { organizationSchema, buildBreadcrumbSchema } from "@/lib/seoSchema";
+import { organizationSchema, buildBreadcrumbSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
 /** Slugify a city for matching the URL param. */
 const toSlug = (s: string) => s.toLowerCase().replace(/\s+/g, "-");
@@ -151,3 +151,5 @@ const BlogCity = () => {
 };
 
 export default BlogCity;
+
+

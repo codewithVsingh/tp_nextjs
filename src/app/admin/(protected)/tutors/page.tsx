@@ -1,4 +1,1 @@
-export { default } from "../../../../views/admin/AdminTutors";
-
-
-
+export { default } from "@/modules/admin/tutors/views/TutorRegistry";

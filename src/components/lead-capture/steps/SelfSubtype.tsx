@@ -38,3 +38,4 @@ const SelfSubtype = ({ data, onChange }: StepProps) => (
 );
 
 export default SelfSubtype;
+

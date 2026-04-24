@@ -137,3 +137,4 @@ export const RevenueChart = ({ data, type }: BaseProps) => {
     </ResponsiveContainer>
   );
 };
+

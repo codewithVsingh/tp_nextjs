@@ -13,7 +13,7 @@ import PageBreadcrumbs from "@/components/PageBreadcrumbs";
 import BlogImage from "@/components/BlogImage";
 import { Button } from "@/components/ui/button";
 import { blogPosts, type BlogPost } from "@/data/blogPosts";
-import { organizationSchema, buildBreadcrumbSchema } from "@/lib/seoSchema";
+import { organizationSchema, buildBreadcrumbSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
 const MONTHS = [
   "january", "february", "march", "april", "may", "june",
@@ -215,3 +215,5 @@ const BlogArchive = () => {
 };
 
 export default BlogArchive;
+
+

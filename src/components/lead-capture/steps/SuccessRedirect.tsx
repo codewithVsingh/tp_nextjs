@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, MessageCircle } from "lucide-react";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { USER_TYPES, type LeadData } from "../types";
 
 interface SuccessRedirectProps {
@@ -83,3 +83,4 @@ const SuccessRedirect = ({ data, onClose }: SuccessRedirectProps) => {
 };
 
 export default SuccessRedirect;
+

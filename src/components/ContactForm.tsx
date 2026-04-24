@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CheckCircle, Loader2, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { trackEvent } from "@/lib/analytics";
+import { trackEvent } from "@/modules/shared/logic/eventTrackingEngine";
 
 const INQUIRY_TYPES = [
   { value: "general", label: "General Inquiry" },
@@ -230,3 +230,5 @@ const ContactForm = ({ sourcePage, sourceCta }: ContactFormProps) => {
 };
 
 export default ContactForm;
+
+

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Star, Shield, CheckCircle, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { trackEvent } from "@/lib/analytics";
+import { trackEvent } from "@/modules/shared/logic/eventTrackingEngine";
 import { INITIAL_LEAD_DATA, isValidCityOrPincode, type LeadData } from "./types";
 
 import PhoneEntry from "./steps/PhoneEntry";
@@ -147,7 +147,6 @@ const LeadCaptureFlow = ({
   const persistFields = () => ({
     name: data.name || null,
     phone: data.phone,
-    user_type: data.user_type || null,
     city: data.city || null,
     area: data.area || null,
     mode: data.mode || null,
@@ -160,9 +159,7 @@ const LeadCaptureFlow = ({
     hobby_type: data.hobby_type || null,
     subjects: data.subjects,
     goals: data.goals,
-    preferred_time: data.preferred_time || null,
     frequency: data.frequency || null,
-    start_time: data.start_time || null,
     preferred_tutor_gender: data.preferred_tutor_gender || null,
     source_page: data.source_page || null,
     source_cta: data.source_cta || null,
@@ -354,3 +351,5 @@ const LeadCaptureFlow = ({
 };
 
 export default LeadCaptureFlow;
+
+

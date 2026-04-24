@@ -1828,3 +1828,4 @@ export function getFeaturedPosts(count = 3): BlogPost[] {
     .slice(0, count - featured.length);
   return [...featured, ...extras];
 }
+

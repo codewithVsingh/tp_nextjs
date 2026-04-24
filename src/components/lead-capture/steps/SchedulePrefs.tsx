@@ -51,3 +51,4 @@ const SchedulePrefs = ({ data, onChange }: StepProps) => (
 );
 
 export default SchedulePrefs;
+

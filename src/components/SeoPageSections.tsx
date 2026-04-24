@@ -1,5 +1,5 @@
 import Link from "next/link";;
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -350,3 +350,4 @@ export const StickyBottomCTA = ({ pageData }: { pageData: SeoPageData }) => (
     </Button>
   </div>
 );
+

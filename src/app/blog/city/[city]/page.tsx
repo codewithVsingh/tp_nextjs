@@ -5,3 +5,4 @@ export default function Page() {
 }
 
 export const revalidate = 86400;
+

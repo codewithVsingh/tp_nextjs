@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import IntelligenceLayout from "./IntelligenceLayout";
-import TPSidebar, { NavItem, NavSection } from "@/components/system/TPSidebar";
-import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import TPSidebar, { NavSection } from "@/design-system/components/TPSidebar";
+import { TPErrorBoundary } from "@/modules/shared/components/TPErrorBoundary";
 
 export interface DashboardLayoutProps {
   children: React.ReactNode;
   role: "admin" | "institute" | "tutor";
-  navItems?: NavItem[];
   navSections?: NavSection[];
   userName?: string;
   onLogout?: () => void;
@@ -18,44 +16,33 @@ export interface DashboardLayoutProps {
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ 
   children, 
   role, 
-  navItems,
   navSections,
   userName,
   onLogout
 }) => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
-    <IntelligenceLayout role={role} userName={userName}>
-      <div className="flex flex-1 overflow-hidden">
+    <IntelligenceLayout 
+      role={role} 
+      userName={userName} 
+      navSections={navSections}
+      onLogout={onLogout}
+    >
+      <div className="flex flex-1 h-[calc(100vh-4rem)] overflow-hidden">
         <TPSidebar 
           role={role} 
-          items={navItems} 
           sections={navSections}
           onLogout={onLogout}
+          className="hidden md:flex"
         />
         
-        <main className="flex-1 overflow-y-auto bg-slate-50/50 relative">
-          {/* Subtle background pattern for premium feel */}
-          <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
-          
-          <AnimatePresence mode="wait">
-            {mounted && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="relative z-10 p-4 md:p-8 lg:p-10 max-w-[1600px] mx-auto"
-              >
+        <main className="flex-1 flex flex-col min-w-0 bg-slate-50/50 overflow-hidden">
+          <div className="flex-1 overflow-y-auto relative p-4 md:p-8 lg:p-10">
+            <div className="max-w-[1600px] mx-auto min-h-full">
+              <TPErrorBoundary>
                 {children}
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </TPErrorBoundary>
+            </div>
+          </div>
         </main>
       </div>
     </IntelligenceLayout>

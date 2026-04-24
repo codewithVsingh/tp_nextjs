@@ -32,3 +32,4 @@ export const TrustAuthGuard = ({ children }: TrustAuthGuardProps) => {
 
   return <>{children}</>;
 };
+

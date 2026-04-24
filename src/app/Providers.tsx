@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, Suspense, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
+import { useAuthStore } from "@/modules/shared/store/useAuthStore";
 import { TrustAuthProvider } from "@/components/trust/TrustAuthContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -16,30 +17,21 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
+  const { initialize } = useAuthStore();
+
   useEffect(() => {
     setMounted(true);
-  }, []);
+    initialize();
+  }, [initialize]);
 
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <TrustAuthProvider>
-            <AnimatePresence mode="wait" initial={false}>
-              {mounted ? (
-                <motion.div
-                  key={pathname}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {children}
-                </motion.div>
-              ) : (
-                <div key="ssr-initial">{children}</div>
-              )}
-            </AnimatePresence>
+            <div className="min-h-screen">
+              {children}
+            </div>
             <Toaster />
             <Sonner />
           </TrustAuthProvider>
@@ -48,3 +40,4 @@ export function Providers({ children }: { children: React.ReactNode }) {
     </HelmetProvider>
   );
 }
+

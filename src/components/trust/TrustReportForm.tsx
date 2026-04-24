@@ -30,7 +30,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useTrustAuth } from "@/components/trust/TrustAuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { trackAgencyActivity } from "@/lib/intelligence-tracking";
+import { trackAgencyActivity } from "@/modules/shared/logic/intelligenceTrackingEngine";
 
 const reportSchema = z.object({
   entity_type: z.enum(["tutor", "parent"]),
@@ -268,3 +268,5 @@ const TrustReportForm = ({ onClose, onSuccess, defaultType = "tutor" }: TrustRep
 };
 
 export default TrustReportForm;
+
+

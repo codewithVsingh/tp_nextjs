@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { useSearchParams } from "next/navigation";
 
 const fade = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.5 } };
@@ -135,3 +135,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

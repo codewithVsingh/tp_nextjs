@@ -1,6 +1,6 @@
 import { MessageCircle } from "lucide-react";
-import { trackCTAClick } from "@/lib/analytics";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { trackCTAClick } from "@/modules/shared/logic/eventTrackingEngine";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 
 interface WhatsAppButtonProps {
   area?: string;
@@ -25,3 +25,5 @@ const WhatsAppButton = ({ area, classLevel }: WhatsAppButtonProps) => {
 };
 
 export default WhatsAppButton;
+
+

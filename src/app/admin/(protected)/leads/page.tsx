@@ -1,4 +1,2 @@
-export { default } from "../../../../views/admin/AdminLeads";
-
-
+export { default } from "@/modules/admin/leads/views/LeadsListView";
 

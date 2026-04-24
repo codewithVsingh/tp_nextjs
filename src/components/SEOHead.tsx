@@ -38,3 +38,4 @@ const SEOHead = ({ title, description, canonical, keywords, structuredData }: SE
 };
 
 export default SEOHead;
+

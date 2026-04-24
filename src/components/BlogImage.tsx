@@ -34,3 +34,4 @@ const BlogImage = ({ src, alt, eager = false, className }: BlogImageProps) => {
 
 export default BlogImage;
 
+

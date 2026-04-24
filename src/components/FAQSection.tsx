@@ -53,3 +53,4 @@ const FAQSection = ({ title = "Frequently Asked Questions", subtitle, faqs }: FA
 );
 
 export default FAQSection;
+

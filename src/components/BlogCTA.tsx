@@ -33,3 +33,4 @@ const BlogCTA = ({ postSlug }: { postSlug?: string }) => {
 };
 
 export default BlogCTA;
+

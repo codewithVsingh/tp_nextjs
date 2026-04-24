@@ -12,7 +12,7 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   FUNNEL_STAGES, MAIN_FUNNEL, FunnelStage, FunnelStageConfig
-} from "@/lib/funnelStages";
+} from "@/domains/lead-management/constants/funnelStages";
 
 interface Props {
   onStageClick: (stage: FunnelStage) => void;
@@ -418,3 +418,4 @@ export const FunnelTracker = ({ onStageClick }: Props) => {
     </div>
   );
 };
+

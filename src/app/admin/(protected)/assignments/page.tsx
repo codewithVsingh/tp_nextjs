@@ -1,4 +1,1 @@
-export { default } from "../../../../views/admin/AdminAssignments";
-
-
-
+export { default } from "@/modules/admin/assignments/views/AssignmentOrchestrator";

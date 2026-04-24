@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
-import { organizationSchema, buildBreadcrumbSchema } from "@/lib/seoSchema";
+import { organizationSchema, buildBreadcrumbSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
 const values = [
   {
@@ -319,3 +319,5 @@ const AboutUs = () => {
 };
 
 export default AboutUs;
+
+

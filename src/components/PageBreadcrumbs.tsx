@@ -65,3 +65,4 @@ const PageBreadcrumbs = ({ items, variant = "default", className = "" }: PageBre
 };
 
 export default PageBreadcrumbs;
+

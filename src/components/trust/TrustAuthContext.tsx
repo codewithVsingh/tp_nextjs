@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
-import { trackAgencyActivity } from "@/lib/intelligence-tracking";
+import { trackAgencyActivity } from "@/modules/shared/logic/intelligenceTrackingEngine";
 
 interface TrustUser {
   id: string;
@@ -47,7 +47,10 @@ export const TrustAuthProvider = ({ children }: { children: ReactNode }) => {
         .eq("mobile", mobile)
         .single();
 
-      if (error && error.code !== "PGRST116") {
+      if (error) {
+        if (error.code === "PGRST116") {
+          return false; // User not found, trigger onboarding
+        }
         throw error;
       }
 
@@ -76,7 +79,7 @@ export const TrustAuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("trust_user");
-    router.push("/trust/login");
+    router.push("/institute-login");
   };
 
   return (
@@ -93,3 +96,5 @@ export const useTrustAuth = () => {
   }
   return context;
 };
+
+

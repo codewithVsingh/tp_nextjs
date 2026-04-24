@@ -1,2 +1,1 @@
-export { default } from "../../../views/admin/AdminLogin";
-
+export { default } from "@/modules/auth/views/AdminLoginView";

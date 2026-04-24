@@ -27,7 +27,7 @@ import {
   buildBreadcrumbSchema,
   buildFaqSchema,
   organizationSchema,
-} from "@/lib/seoSchema";
+} from "@/modules/shared/logic/seoMetadataGenerator";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -354,3 +354,5 @@ const BlogPost = () => {
 };
 
 export default BlogPost;
+
+

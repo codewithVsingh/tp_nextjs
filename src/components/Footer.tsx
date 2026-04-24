@@ -1,7 +1,7 @@
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import {
   Accordion,
   AccordionContent,
@@ -290,3 +290,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

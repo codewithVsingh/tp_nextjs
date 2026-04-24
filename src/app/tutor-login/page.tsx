@@ -3,8 +3,8 @@ import {
   Clock,
   ArrowRight
 } from "lucide-react";
-import { TPButton } from "@/components/system/TPButton";
-import { TPInput } from "@/components/system/TPInput";
+import { TPButton } from "@/design-system/components/TPButton";
+import { TPInput } from "@/design-system/components/TPInput";
 import AuthLayout from "@/layouts/AuthLayout";
 import { 
   Tooltip,
@@ -69,3 +69,4 @@ export default function TutorLoginPage() {
     </AuthLayout>
   );
 }
+

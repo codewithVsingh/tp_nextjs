@@ -26,7 +26,7 @@ import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
 import CounsellingCallbackForm from "@/components/CounsellingCallbackForm";
 import PageBreadcrumbs from "@/components/PageBreadcrumbs";
-import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/lib/seoSchema";
+import { buildFaqSchema, buildBreadcrumbSchema, organizationSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -309,3 +309,5 @@ const PersonalCounselling = () => {
 };
 
 export default PersonalCounselling;
+
+

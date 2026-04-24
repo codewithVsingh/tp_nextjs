@@ -36,3 +36,4 @@ const CounsellorCard = ({ name, expertise, experience, bio, rating, initials }: 
 );
 
 export default CounsellorCard;
+

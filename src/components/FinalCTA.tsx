@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 
 const FinalCTA = () => {
   const router = useRouter();
@@ -43,3 +43,4 @@ const FinalCTA = () => {
 };
 
 export default FinalCTA;
+

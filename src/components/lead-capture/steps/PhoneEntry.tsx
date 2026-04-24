@@ -76,3 +76,4 @@ const PhoneEntry = ({ data, onChange }: StepProps) => {
 };
 
 export default PhoneEntry;
+

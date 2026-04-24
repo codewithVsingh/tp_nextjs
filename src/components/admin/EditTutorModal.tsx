@@ -224,3 +224,4 @@ export const EditTutorModal = ({ isOpen, onClose, tutor, onSuccess }: Props) => 
     </Dialog>
   );
 };
+

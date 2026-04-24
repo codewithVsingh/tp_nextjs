@@ -21,6 +21,27 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
+      "no-restricted-imports": ["error", {
+        "paths": [{
+          "name": "@/integrations/supabase/client",
+          "message": "❌ ARCHITECTURE VIOLATION: Direct Supabase calls are forbidden in UI. Move to @/domains/{name}/services."
+        }],
+        "patterns": [
+          {
+            "group": ["@/modules/**"],
+            "from": ["@/modules/**"],
+            "message": "❌ ARCHITECTURE VIOLATION: Cross-module imports are forbidden. Use @/domains for shared logic."
+          },
+          {
+            "group": ["@/modules/*/views/**"],
+            "message": "❌ ARCHITECTURE VIOLATION: Views cannot import other Views. Use Domain Hooks instead."
+          },
+          {
+            "group": ["@/domains/*/domain/**"],
+            "message": "❌ ARCHITECTURE VIOLATION: Domain logic must be pure. Do not import UI or Services here."
+          }
+        ]
+      }]
     },
   },
 );

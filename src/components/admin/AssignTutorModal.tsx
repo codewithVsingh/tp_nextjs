@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Loader2, Star, CheckCircle, GraduationCap, MapPin, User, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { getSmartTutorMatches } from "@/lib/tutorMatcher";
+import { getSmartTutorMatches } from "@/modules/shared/logic/tutorMatcher";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
@@ -233,3 +233,4 @@ export const AssignTutorModal = ({ isOpen, onClose, lead, activeTab, onSuccess }
     </Dialog>
   );
 };
+

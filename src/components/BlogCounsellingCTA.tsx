@@ -70,3 +70,4 @@ const BlogCounsellingCTA = ({ variant = "block", postSlug }: BlogCounsellingCTAP
 };
 
 export default BlogCounsellingCTA;
+

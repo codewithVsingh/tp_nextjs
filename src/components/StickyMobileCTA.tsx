@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MessageCircle } from "lucide-react";
-import { trackCTAClick } from "@/lib/analytics";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { trackCTAClick } from "@/modules/shared/logic/eventTrackingEngine";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { motion } from "framer-motion";
 
 interface StickyMobileCTAProps {
@@ -49,3 +49,5 @@ const StickyMobileCTA = ({ onCtaClick, area, classLevel, ctaLabel = "Start Free 
 };
 
 export default StickyMobileCTA;
+
+

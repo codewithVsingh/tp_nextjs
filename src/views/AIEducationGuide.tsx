@@ -8,7 +8,7 @@ import LeadCaptureModal from "@/components/LeadCaptureModal";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MessageCircle, Phone, CheckCircle2, ShieldCheck, Users, BarChart3, Brain, AlertTriangle, Lightbulb } from "lucide-react";
 import { useState } from "react";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { motion } from "framer-motion";
 import Link from "next/link";;
 import {
@@ -16,7 +16,7 @@ import {
   buildBreadcrumbSchema,
   buildFaqSchema,
   organizationSchema,
-} from "@/lib/seoSchema";
+} from "@/modules/shared/logic/seoMetadataGenerator";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -193,11 +193,6 @@ const AIEducationGuide = () => {
                   </div>
                 ))}
               </div>
-              <div className="pt-4 flex justify-center">
-                <Button variant="outline" size="lg" className="font-semibold border-primary text-primary hover:bg-primary/5" onClick={() => openWhatsApp(whatsappMsg)}>
-                    <MessageCircle className="w-4 h-4 mr-1.5" /> Chat on WhatsApp
-                </Button>
-              </div>
             </motion.div>
           </div>
         </section>
@@ -245,9 +240,9 @@ const AIEducationGuide = () => {
               <p className="text-muted-foreground text-base max-w-xl mx-auto">
                 Talk to an expert counsellor to identify the real problem before it impacts performance.
               </p>
-              <Button asChild size="lg" className="font-bold" style={{ background: "var(--cta-gradient)" }}>
+              <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary/5 font-bold">
                 <Link href="/counselling">
-                  Explore Counselling <ArrowRight className="w-4 h-4 ml-1" />
+                  Get Free Counselling <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
               </Button>
             </motion.div>
@@ -262,18 +257,18 @@ const AIEducationGuide = () => {
               <p className="opacity-90 max-w-xl mx-auto">
                 Don't let AI replace genuine understanding. Connect with a verified home tutor today and see the difference guided learning makes.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <Button size="lg" variant="cta" className="w-full sm:w-auto font-bold" onClick={() => setShowModal(true)}>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button size="lg" variant="secondary" className="w-full sm:w-auto font-black shadow-xl px-10" onClick={() => setShowModal(true)}>
                   Book Free Demo <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto font-semibold border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" onClick={() => openWhatsApp(whatsappMsg)}>
-                    <MessageCircle className="w-4 h-4 mr-1" /> Chat on WhatsApp
-                </Button>
-                <Button size="lg" variant="ghost" className="w-full sm:w-auto font-semibold text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10" asChild>
-                  <a href="tel:+919873101564">
-                    <Phone className="w-4 h-4 mr-1" /> Call Now
+                <div className="flex items-center gap-6">
+                  <button onClick={() => openWhatsApp(whatsappMsg)} className="text-[13px] font-bold text-white/80 hover:text-white flex items-center gap-1.5 transition-colors">
+                    <MessageCircle className="w-4 h-4" /> WhatsApp
+                  </button>
+                  <a href="tel:+919873101564" className="text-[13px] font-bold text-white/80 hover:text-white flex items-center gap-1.5 transition-colors">
+                    <Phone className="w-4 h-4" /> Call Advisor
                   </a>
-                </Button>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -288,3 +283,5 @@ const AIEducationGuide = () => {
 };
 
 export default AIEducationGuide;
+
+

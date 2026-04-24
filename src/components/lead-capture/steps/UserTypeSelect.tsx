@@ -29,3 +29,4 @@ const UserTypeSelect = ({ data, onChange }: StepProps) => (
 );
 
 export default UserTypeSelect;
+

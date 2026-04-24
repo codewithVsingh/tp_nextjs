@@ -1,4 +1,2 @@
-export { default } from "../../../../views/admin/AdminRevenue";
-
-
+export { default } from "@/modules/admin/revenue/views/RevenueDashboardView";
 

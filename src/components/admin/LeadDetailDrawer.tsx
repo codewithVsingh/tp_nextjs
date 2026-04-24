@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getSmartTutorMatches, getAssignedTutors } from "@/lib/tutorMatcher";
-import { resolveScore, resolveTemperature, getTemperatureColor, getTemperatureEmoji } from "@/lib/leadScoring";
+import { getSmartTutorMatches, getAssignedTutors } from "@/modules/shared/logic/tutorMatcher";
+import { resolveScore, resolveTemperature, getTemperatureColor, getTemperatureEmoji } from "@/modules/shared/logic/leadScoring";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { PaymentHistoryPanel } from "@/components/admin/PaymentHistoryPanel";
@@ -582,3 +582,4 @@ export const LeadDetailDrawer = ({ isOpen, onClose, record, activeTab, onViewTut
     </Sheet>
   );
 };
+

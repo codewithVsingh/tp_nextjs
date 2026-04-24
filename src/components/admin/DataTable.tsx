@@ -133,3 +133,4 @@ export const DataTable = ({ data, columns, loading, page, totalRecords, pageSize
     </div>
   );
 };
+

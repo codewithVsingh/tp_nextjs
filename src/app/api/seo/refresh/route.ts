@@ -62,3 +62,4 @@ export async function GET() {
     docs: "Send POST with { paths: string[], secret: string } to revalidate SEO content"
   });
 }
+

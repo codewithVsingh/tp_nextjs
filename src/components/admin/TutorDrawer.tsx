@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { computeTutorMetrics, TIER_CONFIG, TutorTier } from "@/lib/tutorScore";
+import { computeTutorMetrics, TIER_CONFIG, TutorTier } from "@/modules/shared/logic/tutorScore";
 
 interface Props {
   isOpen: boolean;
@@ -377,3 +377,4 @@ export const TutorDrawer = ({ isOpen, onClose, tutor, onEditClick }: Props) => {
     </Sheet>
   );
 };
+

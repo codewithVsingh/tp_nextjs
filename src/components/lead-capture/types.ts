@@ -180,3 +180,4 @@ export const isValidCityOrPincode = (value: string): boolean => {
   // At least 3 letters; allows letters, spaces, hyphens, apostrophes, dots
   return /^[A-Za-z][A-Za-z\s'.-]{2,}$/.test(trimmed);
 };
+

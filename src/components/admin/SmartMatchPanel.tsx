@@ -12,8 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { getSmartTutorMatches, getLeadAssignmentHistory, TutorMatch } from "@/lib/tutorMatcher";
-import { TIER_CONFIG, TutorTier } from "@/lib/tutorScore";
+import { getSmartTutorMatches, getLeadAssignmentHistory, TutorMatch } from "@/modules/shared/logic/tutorMatcher";
+import { TIER_CONFIG, TutorTier } from "@/modules/shared/logic/tutorScore";
 import { format, parseISO } from "date-fns";
 
 // ─── Reason tag colour map ────────────────────────────────────────────────────
@@ -358,3 +358,4 @@ export const SmartMatchPanel = ({ lead, onClose }: Props) => {
     </div>
   );
 };
+

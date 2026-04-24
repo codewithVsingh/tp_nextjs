@@ -1,4 +1,4 @@
-import InstituteLoginView from "@/views/auth/InstituteLoginView";
+import InstituteLoginView from "@/modules/auth/InstituteLoginView";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,3 +9,4 @@ export const metadata: Metadata = {
 export default function InstituteLoginPage() {
   return <InstituteLoginView />;
 }
+

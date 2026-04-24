@@ -153,3 +153,4 @@ export const PaymentHistoryPanel = ({ leadId, leadName }: Props) => {
     </>
   );
 };
+

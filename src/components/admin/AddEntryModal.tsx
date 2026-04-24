@@ -7,8 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { calculateLeadScore } from "@/lib/leadScoring";
-import { runLeadCreatedRule } from "@/lib/automationEngine";
+import { calculateLeadScore } from "@/modules/shared/logic/leadScoring";
+import { runLeadCreatedRule } from "@/modules/shared/logic/automationEngine";
 
 interface Props {
   isOpen: boolean;
@@ -326,3 +326,4 @@ export const AddEntryModal = ({ isOpen, onClose, activeTab, onAdded, initialData
     </Dialog>
   );
 };
+

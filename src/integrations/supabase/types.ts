@@ -437,7 +437,240 @@ export type Database = {
         }
         Relationships: []
       }
-    }
+      agency_activity_logs: {
+        Row: {
+          action_type: string
+          created_at: string
+          device_fingerprint: string | null
+          id: string
+          ip_address: string | null
+          location_approx: string | null
+          metadata: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          device_fingerprint?: string | null
+          id?: string
+          ip_address?: string | null
+          location_approx?: string | null
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          device_fingerprint?: string | null
+          id?: string
+          ip_address?: string | null
+          location_approx?: string | null
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_activity_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "trust_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entity_clusters: {
+        Row: {
+          categories: string[] | null
+          city: string | null
+          created_at: string
+          entity_type: Database["public"]["Enums"]["entity_type"]
+          id: string
+          normalized_phone: string
+          primary_name: string | null
+          report_count: number | null
+          state: string | null
+          status: Database["public"]["Enums"]["cluster_status"] | null
+          unique_reporters_count: number | null
+          updated_at: string
+          risk_score: number | null
+        }
+        Insert: {
+          categories?: string[] | null
+          city?: string | null
+          created_at?: string
+          entity_type: Database["public"]["Enums"]["entity_type"]
+          id?: string
+          normalized_phone: string
+          primary_name?: string | null
+          report_count?: number | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["cluster_status"] | null
+          unique_reporters_count?: number | null
+          updated_at?: string
+          risk_score?: number | null
+        }
+        Update: {
+          categories?: string[] | null
+          city?: string | null
+          created_at?: string
+          entity_type?: Database["public"]["Enums"]["entity_type"]
+          id?: string
+          normalized_phone?: string
+          primary_name?: string | null
+          report_count?: number | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["cluster_status"] | null
+          unique_reporters_count?: number | null
+          updated_at?: string
+          risk_score?: number | null
+        }
+        Relationships: []
+      }
+      entity_reports: {
+        Row: {
+          amount: number | null
+          category: string | null
+          city: string | null
+          created_at: string
+          description: string | null
+          entity_type: Database["public"]["Enums"]["entity_type"]
+          fraud_type: string | null
+          id: string
+          incident_date: string | null
+          issue_type: string | null
+          name: string | null
+          normalized_phone: string
+          phone: string
+          proof_urls: string[] | null
+          reported_by_user_id: string | null
+          state: string | null
+          status: string | null
+          admin_notes: string | null
+        }
+        Insert: {
+          amount?: number | null
+          category?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          entity_type: Database["public"]["Enums"]["entity_type"]
+          fraud_type?: string | null
+          id?: string
+          incident_date?: string | null
+          issue_type?: string | null
+          name?: string | null
+          normalized_phone: string
+          phone: string
+          proof_urls?: string[] | null
+          reported_by_user_id?: string | null
+          state?: string | null
+          status?: string | null
+          admin_notes?: string | null
+        }
+        Update: {
+          amount?: number | null
+          category?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          entity_type?: Database["public"]["Enums"]["entity_type"]
+          fraud_type?: string | null
+          id?: string
+          incident_date?: string | null
+          issue_type?: string | null
+          name?: string | null
+          normalized_phone?: string
+          phone?: string
+          proof_urls?: string[] | null
+          reported_by_user_id?: string | null
+          state?: string | null
+          status?: string | null
+          admin_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_reports_reported_by_user_id_fkey"
+            columns: ["reported_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "trust_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      intelligence_alerts: {
+        Row: {
+          alert_type: string
+          cluster_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_resolved: boolean | null
+          metadata: Json | null
+          severity: string | null
+        }
+        Insert: {
+          alert_type: string
+          cluster_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_resolved?: boolean | null
+          metadata?: Json | null
+          severity?: string | null
+        }
+        Update: {
+          alert_type?: string
+          cluster_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_resolved?: boolean | null
+          metadata?: Json | null
+          severity?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intelligence_alerts_cluster_id_fkey"
+            columns: ["cluster_id"]
+            isOneToOne: false
+            referencedRelation: "entity_clusters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trust_users: {
+        Row: {
+          city: string
+          created_at: string
+          id: string
+          institute_name: string
+          mobile: string
+          owner_name: string
+          trust_score: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          id?: string
+          institute_name: string
+          mobile: string
+          owner_name: string
+          trust_score?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          id?: string
+          institute_name?: string
+          mobile?: string
+          owner_name?: string
+          trust_score?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     Views: {
       [_ in never]: never
     }
@@ -445,7 +678,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      entity_type: "tutor" | "parent"
+      cluster_status: "normal" | "repeat_offender" | "high_risk"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -575,3 +809,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+

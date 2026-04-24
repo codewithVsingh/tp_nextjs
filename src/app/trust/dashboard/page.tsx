@@ -1,12 +1,1 @@
-"use client";
-
-import { TrustAuthGuard } from "@/components/trust/TrustAuthGuard";
-import TrustDashboard from "@/views/trust/TrustDashboard";
-
-export default function TrustDashboardPage() {
-  return (
-    <TrustAuthGuard>
-      <TrustDashboard />
-    </TrustAuthGuard>
-  );
-}
+export { default } from "@/modules/institute/dashboard/views/InstituteDashboardView";

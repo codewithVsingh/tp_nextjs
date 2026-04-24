@@ -21,7 +21,7 @@ import {
   getFeaturedPosts,
   type BlogPost,
 } from "@/data/blogPosts";
-import { organizationSchema, buildBreadcrumbSchema } from "@/lib/seoSchema";
+import { organizationSchema, buildBreadcrumbSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
 const PAGE_SIZE = 9;
 type SortMode = "recent" | "popular" | "trending";
@@ -465,3 +465,5 @@ const Blog = () => {
 };
 
 export default Blog;
+
+

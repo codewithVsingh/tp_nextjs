@@ -21,8 +21,8 @@ interface Props {
   onSuccess: () => void;
 }
 
-import { FUNNEL_STATUS_OPTIONS } from "@/lib/funnelStages";
-import { runStatusChangeAutomations } from "@/lib/automationEngine";
+import { FUNNEL_STATUS_OPTIONS } from "@/domains/lead-management/constants/funnelStages";
+import { runStatusChangeAutomations } from "@/modules/shared/logic/automationEngine";
 
 type ActivityType = "Call Made" | "Message Sent" | "Note Added";
 
@@ -281,3 +281,4 @@ export const FollowUpModal = ({ isOpen, onClose, recordId, activeTab, currentSta
     </Dialog>
   );
 };
+

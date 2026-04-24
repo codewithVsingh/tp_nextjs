@@ -162,3 +162,4 @@ const OtpVerification = ({ phone, onVerified }: OtpVerificationProps) => {
 };
 
 export default OtpVerification;
+

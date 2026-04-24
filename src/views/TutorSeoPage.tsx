@@ -1,10 +1,10 @@
 "use client";
 
-import { buildBreadcrumbSchema, buildLocalBusinessSchema } from "@/lib/seoSchema";
+import { buildBreadcrumbSchema, buildLocalBusinessSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import React, { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -333,3 +333,5 @@ const TutorSeoPage = () => {
 };
 
 export default TutorSeoPage;
+
+

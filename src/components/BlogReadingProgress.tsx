@@ -24,3 +24,4 @@ const BlogReadingProgress = () => {
 };
 
 export default BlogReadingProgress;
+

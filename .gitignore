@@ -40,3 +40,6 @@ next-env.d.ts
 
 # Workspace
 *.code-workspace
+
+# Lovable
+.lovable/

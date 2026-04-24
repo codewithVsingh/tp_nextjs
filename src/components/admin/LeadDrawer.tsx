@@ -74,10 +74,6 @@ export const LeadDrawer = ({ lead, isOpen, onClose }: LeadDrawerProps) => {
                 <p className="text-gray-500 mb-1 flex items-center gap-1.5"><CalendarDays className="w-3.5 h-3.5"/> Mode</p>
                 <p className="font-medium capitalize">{lead.mode || "-"}</p>
               </div>
-              <div>
-                <p className="text-gray-500 mb-1 flex items-center gap-1.5"><Clock className="w-3.5 h-3.5"/> Pref. Time</p>
-                <p className="font-medium">{lead.preferred_time || "-"}</p>
-              </div>
             </div>
           </div>
 
@@ -91,10 +87,6 @@ export const LeadDrawer = ({ lead, isOpen, onClose }: LeadDrawerProps) => {
                 <span className="text-gray-500">Phone</span>
                 <span className="font-medium">{lead.phone}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-500">User Type</span>
-                <span className="font-medium capitalize">{lead.user_type || "-"}</span>
-              </div>
             </div>
           </div>
 
@@ -103,3 +95,4 @@ export const LeadDrawer = ({ lead, isOpen, onClose }: LeadDrawerProps) => {
     </Sheet>
   );
 };
+

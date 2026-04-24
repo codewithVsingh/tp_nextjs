@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Upload, Video, ArrowRight, ArrowLeft, X, Loader2, MapPin } from "lucide-react";
 import { toast } from "sonner";
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "tutor_registration_draft";
@@ -619,3 +619,4 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
 };
 
 export default TutorRegistrationForm;
+

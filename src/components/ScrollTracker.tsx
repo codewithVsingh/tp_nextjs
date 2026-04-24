@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { initScrollTracking } from "@/lib/analytics";
+import { initScrollTracking } from "@/modules/shared/logic/eventTrackingEngine";
 
 const ScrollTracker = () => {
   useEffect(() => {
@@ -10,3 +10,5 @@ const ScrollTracker = () => {
 };
 
 export default ScrollTracker;
+
+

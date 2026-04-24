@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { TrustAuthProvider } from "@/components/trust/TrustAuthContext";
-import InstituteLayout from "@/views/trust/InstituteLayout";
+import InstituteLayout from "@/modules/institute/InstituteLayout";
 
 export default function TrustLayout({ children }: { children: ReactNode }) {
   return (
@@ -13,3 +13,4 @@ export default function TrustLayout({ children }: { children: ReactNode }) {
     </TrustAuthProvider>
   );
 }
+

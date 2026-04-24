@@ -56,3 +56,4 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [...corePages, ...seoPages, ...blogPages];
 }
+

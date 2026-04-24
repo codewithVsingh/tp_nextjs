@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";;
-import { openWhatsApp } from "@/lib/whatsapp";
+import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -19,7 +19,7 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
 import { areas, subjects } from "@/data/seoData";
-import { buildBreadcrumbSchema } from "@/lib/seoSchema";
+import { buildBreadcrumbSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
 // ===== PAGE DATA =====
 
@@ -695,3 +695,5 @@ const DecisionPage = () => {
 };
 
 export default DecisionPage;
+
+
