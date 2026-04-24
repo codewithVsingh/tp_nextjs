@@ -224,8 +224,12 @@ const Navbar = () => {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/95 backdrop-blur-md border-b border-border shadow-sm" : "bg-background/95 backdrop-blur-md border-b border-border"}`}>
       <div className="container mx-auto flex items-center justify-between h-16 px-4 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">T</span>
+          <div className="relative w-9 h-9">
+            <img 
+              src="/icon.png" 
+              alt="Tutors Parliament" 
+              className="w-full h-full object-contain rounded-lg"
+            />
           </div>
           <span className="font-heading font-bold text-xl text-foreground">
             Tutors <span className="text-primary">Parliament</span>

@@ -28,7 +28,7 @@ export const organizationSchema = {
   "@type": "EducationalOrganization",
   name: "Tutors Parliament",
   url: SITE_URL,
-  logo: `${SITE_URL}/placeholder.svg`,
+  logo: `${SITE_URL}/icon.png`,
   sameAs: [
     "https://www.facebook.com/",
     "https://www.linkedin.com/",
@@ -88,7 +88,7 @@ export const buildArticleSchema = ({
   publisher: {
     "@type": "Organization",
     name: "Tutors Parliament",
-    logo: { "@type": "ImageObject", url: `${SITE_URL}/placeholder.svg` },
+    logo: { "@type": "ImageObject", url: `${SITE_URL}/icon.png` },
   },
   mainEntityOfPage: { "@type": "WebPage", "@id": url },
 });

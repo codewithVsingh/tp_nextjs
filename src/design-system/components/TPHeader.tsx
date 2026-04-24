@@ -60,13 +60,12 @@ const TPHeader: React.FC<TPHeaderProps> = ({
         </button>
         
         <Link href="/" className="flex items-center gap-2 group">
-          <div className={cn(
-            "w-9 h-9 rounded-lg flex items-center justify-center transition-all group-hover:scale-105",
-            role === "admin" ? "bg-tp-admin" : 
-            role === "institute" ? "bg-tp-institute" : 
-            role === "tutor" ? "bg-tp-tutor" : "bg-primary"
-          )}>
-            <span className="text-white font-bold text-lg">T</span>
+          <div className="relative w-9 h-9 transition-all group-hover:scale-110">
+            <img 
+              src="/icon.png" 
+              alt="Tutors Parliament" 
+              className="w-full h-full object-contain rounded-lg"
+            />
           </div>
           <div className="hidden sm:block text-left">
             <span className="font-heading font-bold text-lg text-slate-900 leading-tight block">

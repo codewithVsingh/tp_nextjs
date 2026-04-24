@@ -115,8 +115,12 @@ const Footer = () => {
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-10">
           <div className="max-w-md">
             <Link href="/" className="flex items-center gap-2.5 mb-3">
-              <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">T</span>
+              <div className="relative w-9 h-9">
+                <img 
+                  src="/icon.png" 
+                  alt="Tutors Parliament" 
+                  className="w-full h-full object-contain rounded-lg"
+                />
               </div>
               <span className="font-heading font-bold text-xl text-primary-foreground">
                 Tutors Parliament
