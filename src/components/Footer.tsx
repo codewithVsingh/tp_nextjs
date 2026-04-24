@@ -8,7 +8,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import FooterCTAStrip from "@/components/FooterCTAStrip";
 
 const footerSections = [
   {
@@ -108,7 +107,6 @@ const seoSections = [
 const Footer = () => {
   return (
     <>
-      <FooterCTAStrip />
       <footer id="contact" className="bg-foreground text-primary-foreground/70">
       <div className="container mx-auto px-4 py-12 md:py-16">
         {/* Brand + Trust + CTA */}
