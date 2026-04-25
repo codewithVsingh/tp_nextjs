@@ -5,6 +5,7 @@ import { CheckCircle, Users, Award, BookOpen, Target, Heart, Globe, Lightbulb } 
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
 import { organizationSchema, buildBreadcrumbSchema } from "@/modules/shared/logic/seoMetadataGenerator";
+import OSPortalSection from "@/components/OSPortalSection";
 
 const values = [
   {
@@ -119,6 +120,9 @@ const AboutUs = () => {
             </motion.div>
           </div>
         </section>
+
+        {/* Ecosystem Portals */}
+        <OSPortalSection />
 
         {/* Our Story */}
         <section className="section-padding">

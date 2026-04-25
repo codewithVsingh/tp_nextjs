@@ -77,36 +77,40 @@ const HeroSection = () => {
             </div>
 
             <h1 className="font-heading font-extrabold text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight mb-4">
-              The Intelligence Network for <span className="text-secondary">Education.</span>
+              Find Verified Home Tutors in Your <span className="text-secondary">City.</span>
             </h1>
 
-            <p className="text-secondary font-bold tracking-[0.3em] uppercase text-xs md:text-sm mb-8 opacity-90">
-              Shape • Represent • Elevate
-            </p>
+            <div className="flex items-center gap-3 text-secondary font-bold tracking-widest uppercase text-xs md:text-sm mb-6 opacity-90">
+              <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4" /> Verified</span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5"><Star className="w-4 h-4" /> Rated</span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4" /> Safe</span>
+            </div>
 
             <p className="text-primary-foreground/80 text-lg md:text-xl mb-8 max-w-lg leading-relaxed">
-              Access the most secure ecosystem for verified learning. From fraud detection to institutional governance, we provide the intelligence layer for 2026 academic success.
+              India's Trust-Based Tutor Matching Platform. We connect students with top-tier, background-verified educators for personalized academic success.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
               <Button variant="hero" size="lg" className="text-base px-8 py-6" onClick={handleCTAClick}>
-                Access Network Intelligence
+                Find Tutors Now
               </Button>
               <Button variant="ghost" size="lg" className="text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10 text-base font-medium" asChild>
-                <a href="/courses">Ecosystem Overview →</a>
+                <a href="/courses">Explore Subjects →</a>
               </Button>
             </div>
 
             {/* Trust signals */}
             <div className="flex flex-wrap gap-4 mt-6">
-              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm font-semibold tracking-wide">
-                <ShieldCheck className="w-4 h-4" /> Fraud Detection Layer
+              <span className="flex items-center gap-1.5 text-primary-foreground/80 text-sm font-semibold tracking-wide">
+                <ShieldCheck className="w-4 h-4" /> Background Checked
               </span>
-              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm font-semibold tracking-wide">
-                <Building2 className="w-4 h-4" /> Institutional Trust
+              <span className="flex items-center gap-1.5 text-primary-foreground/80 text-sm font-semibold tracking-wide">
+                <CheckCircle className="w-4 h-4" /> Top-Rated Educators
               </span>
-              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm font-semibold tracking-wide">
-                <CheckCircle className="w-4 h-4" /> Verified Ecosystem
+              <span className="flex items-center gap-1.5 text-primary-foreground/80 text-sm font-semibold tracking-wide">
+                <Building2 className="w-4 h-4" /> Free Replacement
               </span>
             </div>
           </motion.div>

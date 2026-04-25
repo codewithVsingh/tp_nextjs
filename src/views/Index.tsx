@@ -30,7 +30,6 @@ const Index = () => {
       <main className="pb-16 md:pb-0">
         <HeroSection />
         <TrustBar />
-        <OSPortalSection />
         <AntiAIInsight />
         <FeaturesSection />
         <CoursesSection />
