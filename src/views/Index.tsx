@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import AntiAIInsight from "@/components/AntiAIInsight";
 import TrustBar from "@/components/TrustBar";
@@ -11,7 +10,6 @@ import TutorsSection from "@/components/TutorsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import HowItWorks from "@/components/HowItWorks";
 import FinalCTA from "@/components/FinalCTA";
-import Footer from "@/components/Footer";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import BehaviorPopup from "@/components/BehaviorPopup";
 import ScrollTracker from "@/components/ScrollTracker";
@@ -29,11 +27,11 @@ const Index = () => {
         description="Find the best home tutors in Delhi for CBSE, ICSE & all subjects. Personalized online & offline tuition classes for Class KG-12. Book a free demo today!"
         keywords="best home tutors Delhi, private tutors near me, online tuition classes India, CBSE ICSE tuition Delhi, home tutor Delhi NCR"
       />
-      <Navbar />
       <main className="pb-16 md:pb-0">
         <HeroSection />
-        <AntiAIInsight />
         <TrustBar />
+        <OSPortalSection />
+        <AntiAIInsight />
         <FeaturesSection />
         <CoursesSection />
         <TutorsSection />
@@ -41,7 +39,6 @@ const Index = () => {
         <HowItWorks />
         <FinalCTA />
       </main>
-      <Footer />
       {/* Removed floating WhatsApp FAB — merged into bottom CTA bar */}
       <StickyMobileCTA onCtaClick={() => setShowModal(true)} />
       <BehaviorPopup />

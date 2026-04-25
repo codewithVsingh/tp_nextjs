@@ -28,7 +28,7 @@ export const organizationSchema = {
   "@type": "EducationalOrganization",
   name: "Tutors Parliament",
   url: SITE_URL,
-  logo: `${SITE_URL}/icon.png`,
+  logo: `${SITE_URL}/brand/logo/main-logo.svg`,
   sameAs: [
     "https://www.facebook.com/",
     "https://www.linkedin.com/",
@@ -88,7 +88,7 @@ export const buildArticleSchema = ({
   publisher: {
     "@type": "Organization",
     name: "Tutors Parliament",
-    logo: { "@type": "ImageObject", url: `${SITE_URL}/icon.png` },
+    logo: { "@type": "ImageObject", url: `${SITE_URL}/brand/logo/main-logo.svg` },
   },
   mainEntityOfPage: { "@type": "WebPage", "@id": url },
 });
@@ -109,7 +109,7 @@ export const buildLocalBusinessSchema = ({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name,
-  image: image || `${SITE_URL}/icon.png`,
+  image: image || `${SITE_URL}/brand/app/icon-512.png`,
   "@id": url,
   url: url,
   telephone: "+91-1234567890", // Placeholder or dynamic if available

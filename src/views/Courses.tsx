@@ -9,8 +9,6 @@ import { ArrowRight, Monitor, MapPin, Search, ChevronRight, Sparkles, BookOpen, 
 import Link from "next/link";;
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
@@ -111,7 +109,7 @@ const Courses = () => {
         keywords="tuition classes India, home tutor, CBSE tuition, ICSE tuition, JEE coaching, NEET coaching, online tuition"
         canonical="https://tutorsparliament.com/courses"
       />
-      <Navbar />
+      
       <main className="pb-16 md:pb-0">
 
         {/* ━━━ HERO ━━━ */}
@@ -342,8 +340,8 @@ const Courses = () => {
         <FAQSection faqs={faqs} subtitle="Common Questions" title="Everything You Need to Know" />
 
       </main>
-      <Footer />
-      <WhatsAppButton />
+      
+
       <StickyMobileCTA onCtaClick={() => openLead({})} />
       <LeadCaptureModal open={modalOpen} onOpenChange={setModalOpen} prefill={prefill} />
     </>

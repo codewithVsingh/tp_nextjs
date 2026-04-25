@@ -1,7 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { motion } from "framer-motion";
@@ -126,7 +124,7 @@ const FAQ = () => (
       description="Answers to common questions about home tutors, online classes, and student/parent counselling across India. Trusted by 10,000+ students."
       canonical="https://tutorsparliament.com/faq"
     />
-    <Navbar />
+    
     <main className="pt-20">
       {/* Hero */}
       <section className="section-padding bg-accent/30">
@@ -201,8 +199,8 @@ const FAQ = () => (
         </div>
       </section>
     </main>
-    <Footer />
-    <WhatsAppButton />
+    
+
   </>
 );
 

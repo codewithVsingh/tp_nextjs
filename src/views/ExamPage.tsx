@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";;
 import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { Helmet } from "react-helmet-async";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import { Button } from "@/components/ui/button";
@@ -534,7 +532,7 @@ const ExamPage = () => {
         <script type="application/ld+json">{JSON.stringify(eduSchema)}</script>
       </Helmet>
 
-      <Navbar />
+      
 
       {/* Hero */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-20" style={{ background: "var(--hero-gradient)" }}>
@@ -667,8 +665,8 @@ const ExamPage = () => {
         </div>
       </section>
 
-      <Footer />
-      <WhatsAppButton />
+      
+
       <StickyMobileCTA onCtaClick={() => setShowModal(true)} />
       <LeadCaptureModal open={showModal} onOpenChange={setShowModal} />
     </>

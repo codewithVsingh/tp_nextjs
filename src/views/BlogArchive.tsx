@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";;
 import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowRight, ArrowLeft } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import PageBreadcrumbs from "@/components/PageBreadcrumbs";
@@ -76,14 +74,14 @@ const BlogArchive = () => {
   if (!validYear || !validMonth) {
     return (
       <>
-        <Navbar />
+        
         <main className="min-h-screen flex items-center justify-center section-padding">
           <div className="text-center">
             <h1 className="font-heading font-bold text-2xl mb-3">Archive not found</h1>
             <Button asChild><Link href="/blog">Back to Blog</Link></Button>
           </div>
         </main>
-        <Footer />
+        
       </>
     );
   }
@@ -104,7 +102,7 @@ const BlogArchive = () => {
           ]),
         ]}
       />
-      <Navbar />
+      
       <main>
         <section className="pt-24 pb-10 section-padding" style={{ background: "var(--hero-gradient)" }}>
           <div className="container mx-auto text-center">
@@ -208,8 +206,8 @@ const BlogArchive = () => {
           </div>
         </section>
       </main>
-      <WhatsAppButton />
-      <Footer />
+
+      
     </>
   );
 };

@@ -19,9 +19,6 @@ import {
   Target,
   TrendingUp,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
 import CounsellingCallbackForm from "@/components/CounsellingCallbackForm";
@@ -108,7 +105,6 @@ const PersonalCounselling = () => {
           ]),
         ]}
       />
-      <Navbar />
       <main>
         {/* HERO */}
         <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden" style={{ background: "var(--hero-gradient)" }}>
@@ -287,10 +283,10 @@ const PersonalCounselling = () => {
           </div>
         </section>
 
-        <FAQSection faqs={faqs} subtitle="Common Questions" />
+        <FAQSection faqs={faqs} subtitle="Common Questions" className="bg-muted/50" />
 
         {/* INTERNAL LINKING */}
-        <section className="py-12 bg-muted/40">
+        <section className="py-12 bg-background">
           <div className="container max-w-4xl mx-auto px-4 text-center">
             <h3 className="font-heading font-semibold text-xl text-foreground mb-4">Explore More</h3>
             <div className="flex flex-wrap justify-center gap-3">
@@ -302,8 +298,6 @@ const PersonalCounselling = () => {
           </div>
         </section>
       </main>
-      <Footer />
-      <WhatsAppButton />
     </>
   );
 };

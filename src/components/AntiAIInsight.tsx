@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const AntiAIInsight = () => (
   <section
     id="anti-ai-insight"
-    className="py-12 md:py-20 bg-muted/50"
+    className="py-12 md:py-20 bg-background"
   >
     <div className="container max-w-4xl mx-auto px-4 text-center">
       <motion.div

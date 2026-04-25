@@ -1,8 +1,6 @@
 "use client";
 
 import SEOHead from "@/components/SEOHead";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import TutorRegistrationForm from "@/components/TutorRegistrationForm";
 import { Badge } from "@/components/ui/badge";
 import { Users, Clock, ShieldCheck, Star } from "lucide-react";
@@ -57,7 +55,7 @@ const BecomeATutor = () => {
         provider: { "@type": "EducationalOrganization", name: "Tutors Parliament" },
       })}} />
 
-      <Navbar />
+      
 
       <main className="pt-20">
         {/* Hero */}
@@ -119,7 +117,7 @@ const BecomeATutor = () => {
         </section>
       </main>
 
-      <Footer />
+      
     </>
   );
 };

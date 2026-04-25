@@ -14,8 +14,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { fraudTypeLabels, statesAndCities } from "@/data/registryData";
 
@@ -117,7 +115,7 @@ const ReportTutor = () => {
     return (
       <>
         <SEOHead title="Report Submitted | Tutors Parliament" description="Your tutor complaint report has been submitted." />
-        <Navbar />
+        
         <main className="min-h-screen bg-background flex items-center justify-center px-4">
           <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center max-w-md">
             <div className="w-20 h-20 rounded-full bg-green-100 mx-auto mb-6 flex items-center justify-center">
@@ -128,7 +126,7 @@ const ReportTutor = () => {
             <Button asChild variant="cta"><a href="/tutor-registry">Back to Registry</a></Button>
           </motion.div>
         </main>
-        <Footer />
+        
       </>
     );
   }
@@ -136,7 +134,7 @@ const ReportTutor = () => {
   return (
     <>
       <SEOHead title="Report a Tutor | Tutors Parliament" description="Submit a verified complaint about tutor misconduct." />
-      <Navbar />
+      
       <main className="min-h-screen bg-background pt-24 pb-16 px-4">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
@@ -196,7 +194,7 @@ const ReportTutor = () => {
           </Form>
         </div>
       </main>
-      <Footer />
+      
     </>
   );
 };

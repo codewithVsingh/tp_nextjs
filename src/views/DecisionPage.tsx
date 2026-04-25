@@ -4,8 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";;
 import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { useMemo } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import PageBreadcrumbs from "@/components/PageBreadcrumbs";
@@ -312,14 +310,14 @@ const DecisionPage = () => {
   if (!data) {
     return (
       <>
-        <Navbar />
+        
         <main className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-foreground mb-4">Page Not Found</h1>
             <Link href="/" className="text-primary underline">Go Home</Link>
           </div>
         </main>
-        <Footer />
+        
       </>
     );
   }
@@ -366,7 +364,7 @@ const DecisionPage = () => {
           ]),
         ]}
       />
-      <Navbar />
+      
       <main className="pb-16 md:pb-0">
         {/* === HERO === */}
         <section className="section-padding bg-gradient-to-br from-primary/5 to-secondary/5">
@@ -688,8 +686,8 @@ const DecisionPage = () => {
             <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp
         </Button>
       </div>
-      <WhatsAppButton />
-      <Footer />
+
+      
     </>
   );
 };

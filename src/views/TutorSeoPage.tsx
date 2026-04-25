@@ -6,9 +6,6 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import React, { useMemo } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,14 +52,12 @@ const TutorSeoPage = () => {
   if (!pageData) {
     return (
       <>
-        <Navbar />
         <main className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-foreground mb-4">Page Not Found</h1>
             <Link href="/" className="text-primary underline">Go Home</Link>
           </div>
         </main>
-        <Footer />
       </>
     );
   }
@@ -131,7 +126,6 @@ const TutorSeoPage = () => {
           __html: JSON.stringify(buildBreadcrumbSchema(breadcrumbs.map(b => ({ name: b.label, path: b.href }))))
         }}
       />
-      <Navbar />
       <main className="pb-16 md:pb-0">
         {/* Breadcrumb */}
         <div className="container mx-auto px-4 pt-24 pb-2">
@@ -326,8 +320,6 @@ const TutorSeoPage = () => {
       </main>
 
       <StickyBottomCTA pageData={pageData} />
-      <WhatsAppButton />
-      <Footer />
     </>
   );
 };

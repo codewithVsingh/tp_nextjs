@@ -1,8 +1,6 @@
 "use client";
 
 import { Helmet } from "react-helmet-async";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const TermsAndConditions = () => {
   return (
@@ -11,7 +9,7 @@ const TermsAndConditions = () => {
         <title>Terms & Conditions | Tutors Parliament</title>
         <meta name="description" content="Read the terms and conditions for using Tutors Parliament's home tuition and online tutoring services across Delhi NCR." />
       </Helmet>
-      <Navbar />
+      
       <main className="min-h-screen pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
           <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-8">
@@ -118,7 +116,7 @@ const TermsAndConditions = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      
     </>
   );
 };

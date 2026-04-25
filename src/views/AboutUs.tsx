@@ -3,9 +3,6 @@
 import { motion } from "framer-motion";
 import { CheckCircle, Users, Award, BookOpen, Target, Heart, Globe, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import { organizationSchema, buildBreadcrumbSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
@@ -70,7 +67,7 @@ const AboutUs = () => {
           ]),
         ]}
       />
-      <Navbar />
+      
       <main>
         {/* Hero */}
         <section className="pt-24 pb-16 section-padding" style={{ background: "var(--hero-gradient)" }}>
@@ -312,8 +309,8 @@ const AboutUs = () => {
           </div>
         </section>
       </main>
-      <Footer />
-      <WhatsAppButton />
+      
+
     </>
   );
 };

@@ -10,8 +10,6 @@ import { Calendar, Clock, ArrowLeft, ArrowRight, Download, Mail, RefreshCw, Help
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BlogReadingProgress from "@/components/BlogReadingProgress";
 import BlogCTA from "@/components/BlogCTA";
@@ -38,7 +36,7 @@ const BlogPost = () => {
   if (!post) {
     return (
       <>
-        <Navbar />
+        
         <main className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="font-heading font-bold text-3xl mb-4">Blog Post Not Found</h1>
@@ -47,7 +45,7 @@ const BlogPost = () => {
             </Link>
           </div>
         </main>
-        <Footer />
+        
       </>
     );
   }
@@ -109,7 +107,7 @@ const BlogPost = () => {
         structuredData={structuredData}
       />
       <BlogReadingProgress />
-      <Navbar />
+      
       <main>
         {/* Hero */}
         <section className="pt-24 pb-12 section-padding" style={{ background: "var(--hero-gradient)" }}>
@@ -347,8 +345,8 @@ const BlogPost = () => {
           </Button>
         </div>
       </main>
-      <Footer />
-      <WhatsAppButton />
+      
+
     </>
   );
 };

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, CheckCircle, Users, Clock } from "lucide-react";
+import { Star, CheckCircle, ShieldCheck, Building2 } from "lucide-react";
 import heroImage from "@/assets/hero-students.jpg";
 
 const formatPhone = (raw: string) => {
@@ -76,35 +76,37 @@ const HeroSection = () => {
               </span>
             </div>
 
-            <h1 className="font-heading font-extrabold text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight mb-6">
-              Unlock Your Academic Potential.{" "}
-              <span className="text-secondary">All in One Place.</span>
+            <h1 className="font-heading font-extrabold text-4xl md:text-5xl lg:text-6xl text-primary-foreground leading-tight mb-4">
+              The Intelligence Network for <span className="text-secondary">Education.</span>
             </h1>
 
+            <p className="text-secondary font-bold tracking-[0.3em] uppercase text-xs md:text-sm mb-8 opacity-90">
+              Shape • Represent • Elevate
+            </p>
+
             <p className="text-primary-foreground/80 text-lg md:text-xl mb-8 max-w-lg leading-relaxed">
-              Join India's fastest-growing tutoring platform — where expert guidance
-              meets personalized learning to help you succeed.
+              Access the most secure ecosystem for verified learning. From fraud detection to institutional governance, we provide the intelligence layer for 2026 academic success.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
               <Button variant="hero" size="lg" className="text-base px-8 py-6" onClick={handleCTAClick}>
-                Start Free Demo
+                Access Network Intelligence
               </Button>
               <Button variant="ghost" size="lg" className="text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10 text-base font-medium" asChild>
-                <a href="/courses">Explore Courses →</a>
+                <a href="/courses">Ecosystem Overview →</a>
               </Button>
             </div>
 
             {/* Trust signals */}
             <div className="flex flex-wrap gap-4 mt-6">
-              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm">
-                <Users className="w-4 h-4" /> 10,000+ students
+              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm font-semibold tracking-wide">
+                <ShieldCheck className="w-4 h-4" /> Fraud Detection Layer
               </span>
-              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm">
-                <Clock className="w-4 h-4" /> Free demo in 24 hrs
+              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm font-semibold tracking-wide">
+                <Building2 className="w-4 h-4" /> Institutional Trust
               </span>
-              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm">
-                <CheckCircle className="w-4 h-4" /> Verified tutors
+              <span className="flex items-center gap-1.5 text-primary-foreground/70 text-sm font-semibold tracking-wide">
+                <CheckCircle className="w-4 h-4" /> Verified Ecosystem
               </span>
             </div>
           </motion.div>

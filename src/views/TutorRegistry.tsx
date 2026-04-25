@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import {
   mockRecords,
@@ -79,7 +77,7 @@ const TutorRegistry = () => {
         title="Tutor Verification & Complaint Registry | Tutors Parliament"
         description="Search and report verified cases of tutor misconduct across agencies. Privacy-safe, verified complaint registry."
       />
-      <Navbar />
+      
       <main className="min-h-screen bg-background">
         {/* Hero */}
         <section className="bg-gradient-to-br from-primary/10 via-background to-accent/10 pt-28 pb-12 px-4">
@@ -187,7 +185,7 @@ const TutorRegistry = () => {
           )}
         </section>
       </main>
-      <Footer />
+      
     </>
   );
 };

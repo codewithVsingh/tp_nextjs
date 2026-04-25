@@ -1,7 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
@@ -88,7 +86,7 @@ const AIEducationGuide = () => {
           buildFaqSchema(aiGuideFaqs),
         ]}
       />
-      <Navbar />
+      
 
       <main className="pb-16 md:pb-0">
         {/* Hero — single CTA only */}
@@ -275,7 +273,7 @@ const AIEducationGuide = () => {
         </section>
       </main>
 
-      <Footer />
+      
       <StickyMobileCTA onCtaClick={() => setShowModal(true)} />
       <LeadCaptureModal open={showModal} onOpenChange={setShowModal} source="ai_guide_page" />
     </>

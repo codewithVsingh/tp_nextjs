@@ -59,20 +59,20 @@ const TPHeader: React.FC<TPHeaderProps> = ({
           <Menu className="w-5 h-5 text-slate-600" />
         </button>
         
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="relative w-9 h-9 transition-all group-hover:scale-110">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative h-[28px] md:h-[36px] transition-all group-hover:scale-105">
             <img 
-              src="/icon.png" 
+              src="/brand/logo/main-logo.svg" 
               alt="Tutors Parliament" 
-              className="w-full h-full object-contain rounded-lg"
+              className="h-full w-auto object-contain"
             />
           </div>
           <div className="hidden sm:block text-left">
             <span className="font-heading font-bold text-lg text-slate-900 leading-tight block">
-              Tutors Parliament
+              Tutors&nbsp;Parliament
             </span>
             {role !== "global" && (
-              <span className={cn("text-[10px] font-bold uppercase tracking-[0.2em] block", roleColors[role])}>
+              <span className={cn("text-[9px] font-black uppercase tracking-[0.25em] block mt-0.5", roleColors[role])}>
                 {roleLabels[role]}
               </span>
             )}

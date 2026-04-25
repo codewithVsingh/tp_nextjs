@@ -20,8 +20,6 @@ import {
   AlertTriangle,
   CheckCircle2,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
@@ -219,7 +217,6 @@ const Counselling = () => {
           ]),
         ]}
       />
-      <Navbar />
 
       <main className="pb-16 md:pb-0">
         {/* HERO */}
@@ -464,10 +461,10 @@ const Counselling = () => {
           subtitle="FAQs"
           title="Counselling — Common Questions"
           faqs={faqs}
+          className="bg-muted/50"
         />
       </main>
 
-      <Footer />
       <StickyMobileCTA onCtaClick={scrollToForm} ctaLabel="Request Callback" />
     </>
   );

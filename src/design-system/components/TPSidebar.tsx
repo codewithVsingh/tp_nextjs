@@ -79,6 +79,7 @@ const TPSidebar: React.FC<TPSidebarProps> = ({ role, items, sections, onLogout, 
   };
   return (
     <aside className={cn("w-64 h-full border-r border-slate-100 bg-white/50 backdrop-blur-xl flex flex-col z-40 shadow-[1px_0_0_0_rgba(0,0,0,0.02)]", className)}>
+
       <div className="flex-1 py-6 px-4 space-y-6 overflow-y-auto scrollbar-hide">
         {sections ? (
           sections.map((section) => (

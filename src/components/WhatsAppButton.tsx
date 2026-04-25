@@ -1,6 +1,8 @@
+"use client";
 import { MessageCircle } from "lucide-react";
 import { trackCTAClick } from "@/modules/shared/logic/eventTrackingEngine";
 import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
+import { usePathname } from "next/navigation";
 
 interface WhatsAppButtonProps {
   area?: string;
@@ -8,6 +10,9 @@ interface WhatsAppButtonProps {
 }
 
 const WhatsAppButton = ({ area, classLevel }: WhatsAppButtonProps) => {
+  const pathname = usePathname();
+
+
   const msg = `Hi, I need a home tutor${area ? ` in ${area}` : ""}${classLevel ? ` for ${classLevel}` : ""}`;
 
   return (

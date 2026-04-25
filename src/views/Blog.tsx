@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import BlogCTA from "@/components/BlogCTA";
 import SEOHead from "@/components/SEOHead";
@@ -124,7 +122,7 @@ const Blog = () => {
           ]),
         ]}
       />
-      <Navbar />
+      
       <main>
         {/* Hero */}
         <section className="pt-24 pb-12 section-padding" style={{ background: "var(--hero-gradient)" }}>
@@ -458,8 +456,8 @@ const Blog = () => {
           </div>
         </section>
       </main>
-      <Footer />
-      <WhatsAppButton />
+      
+
     </>
   );
 };

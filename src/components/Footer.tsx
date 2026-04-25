@@ -1,5 +1,7 @@
+"use client";
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import {
@@ -105,6 +107,10 @@ const seoSections = [
 ];
 
 const Footer = () => {
+  const pathname = usePathname();
+
+
+
   return (
     <>
       <footer id="contact" className="bg-foreground text-primary-foreground/70">
@@ -112,19 +118,24 @@ const Footer = () => {
         {/* Brand + Trust + CTA */}
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-10">
           <div className="max-w-md">
-            <Link href="/" className="flex items-center gap-2.5 mb-3">
-              <div className="relative w-9 h-9">
+            <Link href="/" className="flex items-center gap-3 mb-6">
+              <div className="relative h-12 md:h-16 bg-white rounded-md p-1.5 shadow-sm">
                 <img 
-                  src="/icon.png" 
+                  src="/brand/logo/main-logo.svg" 
                   alt="Tutors Parliament" 
-                  className="w-full h-full object-contain rounded-lg"
+                  className="h-full w-auto object-contain"
                 />
               </div>
-              <span className="font-heading font-bold text-xl text-primary-foreground">
-                Tutors Parliament
-              </span>
+              <div className="flex flex-col">
+                <span className="font-heading font-bold text-xl md:text-2xl text-primary-foreground flex items-center leading-tight">
+                  Tutors&nbsp;<span className="text-primary">Parliament</span>
+                </span>
+                <span className="text-[10px] md:text-xs tracking-[0.2em] font-bold flex items-center gap-1 mt-0.5">
+                  <span className="text-[#3b82f6]">SHAPE</span> <span className="text-primary-foreground/40">•</span> <span className="text-[#10b981]">REPRESENT</span> <span className="text-primary-foreground/40">•</span> <span className="text-[#f59e0b]">ELEVATE</span>
+                </span>
+              </div>
             </Link>
-            <p className="text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed mb-4">
               India's trusted platform for home &amp; online tutors, exam prep, and counselling.
             </p>
           </div>

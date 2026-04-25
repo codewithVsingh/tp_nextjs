@@ -15,10 +15,11 @@ interface FAQSectionProps {
   title?: string;
   subtitle?: string;
   faqs: FAQ[];
+  className?: string;
 }
 
-const FAQSection = ({ title = "Frequently Asked Questions", subtitle, faqs }: FAQSectionProps) => (
-  <section className="section-padding">
+const FAQSection = ({ title = "Frequently Asked Questions", subtitle, faqs, className }: FAQSectionProps) => (
+  <section className={`section-padding ${className || ""}`}>
     <div className="container mx-auto max-w-3xl">
       <motion.div
         initial={{ opacity: 0, y: 20 }}

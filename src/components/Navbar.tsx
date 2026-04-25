@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -42,9 +43,12 @@ const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
 
+
+
+
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 40);
       // Show lazy CTA after 40% scroll
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (docHeight > 0 && window.scrollY / docHeight >= 0.4) {
@@ -221,19 +225,24 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/95 backdrop-blur-md border-b border-border shadow-sm" : "bg-background/95 backdrop-blur-md border-b border-border"}`}>
+    <nav className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/95 backdrop-blur-md border-b border-border shadow-sm" : "bg-background/95 backdrop-blur-md border-b border-border"}`}>
       <div className="container mx-auto flex items-center justify-between h-16 px-4 lg:px-8">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="relative w-9 h-9">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="relative h-10 md:h-14">
             <img 
-              src="/icon.png" 
+              src="/brand/logo/main-logo.svg" 
               alt="Tutors Parliament" 
-              className="w-full h-full object-contain rounded-lg"
+              className="h-full w-auto object-contain"
             />
           </div>
-          <span className="font-heading font-bold text-xl text-foreground">
-            Tutors <span className="text-primary">Parliament</span>
-          </span>
+          <div className="flex flex-col">
+            <span className="font-heading font-bold text-xl md:text-2xl text-foreground flex items-center leading-tight">
+              Tutors&nbsp;<span className="text-primary">Parliament</span>
+            </span>
+            <span className="text-[10px] md:text-xs tracking-[0.2em] font-bold flex items-center gap-1 mt-0.5">
+              <span className="text-[#3b82f6]">SHAPE</span> <span className="text-muted-foreground/40">•</span> <span className="text-[#10b981]">REPRESENT</span> <span className="text-muted-foreground/40">•</span> <span className="text-[#f59e0b]">ELEVATE</span>
+            </span>
+          </div>
         </Link>
 
         <div className="hidden md:flex items-center gap-4">

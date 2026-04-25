@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useParams, redirect } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import PageBreadcrumbs from "@/components/PageBreadcrumbs";
@@ -46,7 +44,7 @@ const BlogCity = () => {
           ]),
         ]}
       />
-      <Navbar />
+      
       <main>
         <section
           className="pt-24 pb-12 section-padding"
@@ -144,8 +142,8 @@ const BlogCity = () => {
           </div>
         </section>
       </main>
-      <Footer />
-      <WhatsAppButton />
+      
+
     </>
   );
 };

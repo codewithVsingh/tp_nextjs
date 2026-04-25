@@ -18,8 +18,6 @@ import {
   Lock,
   TrendingUp,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEOHead from "@/components/SEOHead";
 import FAQSection from "@/components/FAQSection";
@@ -95,7 +93,7 @@ const ParentCounselling = () => {
           ]),
         ]}
       />
-      <Navbar />
+      
       <main>
         {/* HERO */}
         <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden" style={{ background: "var(--hero-gradient)" }}>
@@ -262,8 +260,8 @@ const ParentCounselling = () => {
           </div>
         </section>
       </main>
-      <Footer />
-      <WhatsAppButton />
+      
+
     </>
   );
 };

@@ -2,8 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone, MessageCircle, Clock } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import ContactForm from "@/components/ContactForm";
 import { Button } from "@/components/ui/button";
@@ -24,7 +22,7 @@ const Contact = () => {
         description="Get in touch with Tutors Parliament for general inquiries, partnerships, tutor onboarding, feedback or support. We respond within 24 hours."
         keywords="contact tutors parliament, support, partnership, become a tutor"
       />
-      <Navbar />
+      
       <main className="pb-16 md:pb-0">
         {/* HERO */}
         <section className="relative pt-24 pb-12 md:pt-32 md:pb-20 overflow-hidden" style={{ background: "var(--hero-gradient)" }}>
@@ -129,7 +127,7 @@ const Contact = () => {
           </div>
         </section>
       </main>
-      <Footer />
+      
     </>
   );
 };
