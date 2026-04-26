@@ -11,16 +11,15 @@ import {
   MapPin, 
   ArrowRight, 
   Loader2, 
-  CheckCircle2, 
-  Search, 
-  Users
+  Zap,
+  Lock,
+  ShieldCheck,
+  Activity
 } from "lucide-react";
 import { toast } from "sonner";
-import { TPButton } from "@/design-system/components/TPButton";
-import { TPInput } from "@/design-system/components/TPInput";
-import AuthLayout from "@/layouts/AuthLayout";
 import { useTrustAuth } from "@/components/trust/TrustAuthContext";
 import { instituteService } from "@/domains/network/services/instituteService";
+import { cn } from "@/lib/utils";
 
 const InstituteLoginView = () => {
   const [mobile, setMobile] = useState("");
@@ -29,16 +28,14 @@ const InstituteLoginView = () => {
   const router = useRouter();
   const { login } = useTrustAuth();
 
-  // Safety Valve: Clear stale sessions
+  const [instituteName, setInstituteName] = useState("");
+  const [ownerName, setOwnerName] = useState("");
+  const [city, setCity] = useState("");
+
   useEffect(() => {
     localStorage.removeItem('supabase.auth.token');
     sessionStorage.clear();
   }, []);
-
-  // Onboarding fields
-  const [instituteName, setInstituteName] = useState("");
-  const [ownerName, setOwnerName] = useState("");
-  const [city, setCity] = useState("");
 
   const handleInitialCheck = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,16 +47,15 @@ const InstituteLoginView = () => {
     setLoading(true);
     try {
       const success = await login(mobile);
-      
       if (success) {
-        toast.success("Welcome back to Trust Platform");
+        toast.success("Intelligence Clearance Verified");
         router.push("/trust/dashboard");
       } else {
         setStep("onboarding");
-        toast.info("Register your institute to join the network");
+        toast.info("Registering New Node in Intelligence Network");
       }
     } catch (err: any) {
-      toast.error("An error occurred. Please check your connection.");
+      toast.error("Network communication failure.");
     } finally {
       setLoading(false);
     }
@@ -78,7 +74,7 @@ const InstituteLoginView = () => {
       });
 
       await login(mobile);
-      toast.success("Institute registered successfully!");
+      toast.success("Node Registered Successfully");
       router.push("/trust/dashboard");
     } catch (err: any) {
       toast.error(err.message || "Registration failed");
@@ -88,122 +84,185 @@ const InstituteLoginView = () => {
   };
 
   return (
-    <AuthLayout
-      role="institute"
-      title={step === "login" ? "Welcome Back" : "Join the Network"}
-      subtitle={step === "login" 
-        ? "Sign in to access India's tutor intelligence network." 
-        : "Register your organization to join India's shared intelligence platform."}
-    >
-      <AnimatePresence mode="wait">
-        {step === "login" ? (
-          <motion.div
-            key="login-form"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="space-y-6"
-          >
-            <form onSubmit={handleInitialCheck} className="space-y-6">
-              <TPInput
-                role="institute"
-                label="Mobile Number"
-                placeholder="e.g. 9876543210"
-                icon={<Phone className="w-5 h-5" />}
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                required
-              />
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans selection:bg-tp-institute/30">
+      {/* Background FX */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-tp-institute/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px]" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+      </div>
 
-              <TPButton 
-                role="institute" 
-                className="w-full h-12 text-lg" 
-                disabled={loading}
-                type="submit"
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }} 
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-md z-10"
+      >
+        <div className="text-center mb-12">
+          <motion.div 
+            animate={{ 
+              boxShadow: ["0 0 0px rgba(10, 182, 171, 0)", "0 0 40px rgba(10, 182, 171, 0.2)", "0 0 0px rgba(10, 182, 171, 0)"] 
+            }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="inline-flex items-center justify-center w-20 h-20 bg-slate-900 border-2 border-tp-institute/30 rounded-3xl mb-6 relative overflow-hidden"
+          >
+            <ShieldCheck className="w-10 h-10 text-tp-institute" />
+            <div className="absolute inset-0 bg-gradient-to-t from-tp-institute/10 to-transparent" />
+          </motion.div>
+          <h1 className="text-4xl font-black text-white tracking-tighter uppercase leading-none mb-4">
+            Sentinel <span className="text-tp-institute">Access</span>
+          </h1>
+          <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em]">Tutor Intelligence Network</p>
+        </div>
+
+        <div className="bg-slate-900/40 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-10 shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-tp-institute/50 to-transparent" />
+          
+          <AnimatePresence mode="wait">
+            {step === "login" ? (
+              <motion.form 
+                key="login"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                onSubmit={handleInitialCheck} 
+                className="space-y-8"
               >
-                {loading ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                ) : (
-                  <>
-                    Continue to Network
-                    <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-                  </>
-                )}
-              </TPButton>
-            </form>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Identity Clearance (Mobile)</label>
+                  <div className="relative group/input">
+                    <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within/input:text-tp-institute transition-colors" />
+                    <input 
+                      type="text"
+                      className="w-full bg-slate-950 border-2 border-white/5 rounded-3xl py-5 pl-16 pr-6 text-white font-bold text-lg focus:outline-none focus:border-tp-institute/40 transition-all placeholder:text-slate-700"
+                      placeholder="9876XXXXXX"
+                      value={mobile}
+                      onChange={(e) => setMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                      required
+                    />
+                  </div>
+                </div>
 
-            <div className="text-center">
-              <p className="text-slate-500 text-sm font-medium">
-                New institute?{" "}
-                <TPButton 
-                  variant="link"
-                  className="text-tp-institute font-bold p-0 h-auto" 
-                  onClick={() => setStep("onboarding")}
+                <Button 
+                  disabled={loading}
+                  className="w-full h-16 bg-tp-institute hover:bg-tp-institute/90 text-white font-black uppercase text-xs tracking-[0.2em] rounded-3xl shadow-xl shadow-tp-institute/20 transition-all active:scale-[0.98]"
                 >
-                  Continue to get started
-                </TPButton>
-              </p>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="onboarding-form"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="space-y-6"
-          >
-            <form onSubmit={handleOnboarding} className="space-y-4">
-              <TPInput
-                role="institute"
-                label="Institute Name"
-                placeholder="Full Institute Name"
-                icon={<Building2 className="w-5 h-5" />}
-                value={instituteName}
-                onChange={(e) => setInstituteName(e.target.value)}
-                required
-              />
+                  {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
+                    <span className="flex items-center gap-2">Verify Clearance <ArrowRight className="w-4 h-4" /></span>
+                  )}
+                </Button>
+                
+                <div className="flex items-center gap-4 text-center">
+                   <div className="h-[1px] flex-1 bg-white/5" />
+                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Protocol Check</span>
+                   <div className="h-[1px] flex-1 bg-white/5" />
+                </div>
 
-              <TPInput
-                role="institute"
-                label="Owner Name"
-                placeholder="Owner / Manager Name"
-                icon={<User className="w-5 h-5" />}
-                value={ownerName}
-                onChange={(e) => setOwnerName(e.target.value)}
-                required
-              />
+                <div className="text-center">
+                  <button 
+                    type="button"
+                    onClick={() => setStep("onboarding")}
+                    className="text-[10px] font-black text-slate-500 hover:text-tp-institute uppercase tracking-widest transition-colors"
+                  >
+                    Request New Node Registration
+                  </button>
+                </div>
+              </motion.form>
+            ) : (
+              <motion.form 
+                key="onboarding"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                onSubmit={handleOnboarding} 
+                className="space-y-6"
+              >
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Organization Name</label>
+                    <div className="relative">
+                      <Building2 className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                      <input 
+                        className="w-full bg-slate-950 border-2 border-white/5 rounded-3xl py-4 pl-16 pr-6 text-white font-bold focus:outline-none focus:border-tp-institute/40 transition-all"
+                        placeholder="Institute / Bureau Name"
+                        value={instituteName}
+                        onChange={(e) => setInstituteName(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
 
-              <TPInput
-                role="institute"
-                label="City"
-                placeholder="e.g. New Delhi"
-                icon={<MapPin className="w-5 h-5" />}
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                required
-              />
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Primary Contact</label>
+                    <div className="relative">
+                      <User className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                      <input 
+                        className="w-full bg-slate-950 border-2 border-white/5 rounded-3xl py-4 pl-16 pr-6 text-white font-bold focus:outline-none focus:border-tp-institute/40 transition-all"
+                        placeholder="Full Name"
+                        value={ownerName}
+                        onChange={(e) => setOwnerName(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
 
-              <div className="flex flex-col gap-3 pt-4">
-                <TPButton role="institute" className="w-full h-12 text-lg" type="submit">
-                  {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Register & Access"}
-                </TPButton>
-                <TPButton 
-                  type="button" 
-                  variant="ghost"
-                  className="text-slate-500 hover:text-slate-900 font-bold text-sm h-8"
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Deployment City</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                      <input 
+                        className="w-full bg-slate-950 border-2 border-white/5 rounded-3xl py-4 pl-16 pr-6 text-white font-bold focus:outline-none focus:border-tp-institute/40 transition-all"
+                        placeholder="e.g. New Delhi"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <Button className="w-full h-16 bg-tp-institute hover:bg-tp-institute/90 text-white font-black uppercase text-xs tracking-[0.2em] rounded-3xl mt-4">
+                   {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : "Initiate Protocol"}
+                </Button>
+
+                <button 
+                  type="button"
                   onClick={() => setStep("login")}
+                  className="w-full text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors"
                 >
-                  Back to Login
-                </TPButton>
-              </div>
-            </form>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </AuthLayout>
+                  Return to Clearance Check
+                </button>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Footer Metrics */}
+        <div className="mt-12 flex justify-center gap-12">
+          <div className="text-center">
+            <div className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-1">Network Capacity</div>
+            <div className="text-white font-black text-xl">99.9%</div>
+          </div>
+          <div className="text-center">
+            <div className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-1">Encrypted Node</div>
+            <div className="text-tp-institute font-black text-xl">ACTIVE</div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
-export default InstituteLoginView;
+// Internal Button to avoid shadcn dependency issues in this rewrite
+const Button = ({ children, className, ...props }: any) => (
+  <button 
+    className={cn(
+      "flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+      className
+    )}
+    {...props}
+  >
+    {children}
+  </button>
+);
 
+export default InstituteLoginView;

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  LogOut, LayoutDashboard, Loader2, Activity, Globe, ShieldCheck
+  LogOut, LayoutDashboard, Loader2, Activity, Globe, ShieldCheck, Zap, Users
 } from "lucide-react";
 import { useTrustAuth } from "@/components/trust/TrustAuthContext";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -16,6 +16,13 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "Dashboard",   href: "/trust/dashboard",   icon: LayoutDashboard },
       { label: "My Reports",  href: "/trust/reports",     icon: Activity        },
+    ],
+  },
+  {
+    label: "Operations",
+    items: [
+      { label: "Agency CRM",   href: "/trust/crm",         icon: Zap             },
+      { label: "Tutor Supply", href: "/trust/supply",      icon: Users           },
     ],
   },
   {

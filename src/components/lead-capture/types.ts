@@ -3,6 +3,7 @@ export interface LeadData {
   phone: string;
   user_type: string;
   self_subtype: string; // school | college | adult (only when user_type === "self")
+  state: string;
   city: string;
   area: string;
   mode: string;
@@ -25,6 +26,9 @@ export interface LeadData {
   frequency: string;
   start_time: string;
   preferred_tutor_gender: string;
+  budget: string;
+  urgency: string;
+  learning_subcategory: string; // Dynamic sub-category from taxonomy
   source_page: string;
   source_cta: string;
 }
@@ -34,6 +38,7 @@ export const INITIAL_LEAD_DATA: LeadData = {
   phone: "",
   user_type: "",
   self_subtype: "",
+  state: "",
   city: "",
   area: "",
   mode: "",
@@ -56,6 +61,9 @@ export const INITIAL_LEAD_DATA: LeadData = {
   frequency: "",
   start_time: "",
   preferred_tutor_gender: "",
+  budget: "",
+  urgency: "",
+  learning_subcategory: "",
   source_page: "",
   source_cta: "",
 };

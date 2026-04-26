@@ -43,6 +43,9 @@ export const areas = [
   { slug: "sector-62-noida", name: "Sector 62 Noida", pincode: "201309" },
   { slug: "dlf-phase-3", name: "DLF Phase 3", pincode: "122002" },
   { slug: "sohna-road", name: "Sohna Road", pincode: "122018" },
+  { slug: "dwarka-sector-2", name: "Dwarka Sector 2", pincode: "110075" },
+  { slug: "rohini-sector-7", name: "Rohini Sector 7", pincode: "110085" },
+  { slug: "rohini-sector-8", name: "Rohini Sector 8", pincode: "110085" },
 ];
 
 export const subjects = [
@@ -182,7 +185,10 @@ export interface SeoPageData {
 
 // ===== HELPERS =====
 function findArea(s: string) { return areas.find(a => a.slug === s); }
-function findSubject(s: string) { return subjects.find(x => x.slug === s); }
+function findSubject(s: string) { 
+  const slug = s === "maths" ? "math" : s;
+  return subjects.find(x => x.slug === slug); 
+}
 function findClass(s: string) { return classes.find(c => c.slug === s); }
 function findBoard(s: string) { return boards.find(b => b.slug === s); }
 
@@ -297,6 +303,20 @@ export function parseSlug2(slug: string): SeoPageData | null {
       return { type: "home-vs-online-area", slug, area, keyword: kw, intent: "home-vs-online",
         title: `Home vs Online Tuition in ${area.name} | Tutors Parliament`,
         metaDescription: `Compare home tuition vs online classes in ${area.name}. Pros, cons & what works best. Expert advice inside!`,
+        h1: kw };
+    }
+  }
+
+  // {subject}-tutor-in-{area}
+  m = slug.match(/^(.+)-tutor-in-(.+)$/);
+  if (m) {
+    const subj = findSubject(m[1]);
+    const area = findArea(m[2]);
+    if (subj && area) {
+      const kw = `${subj.name} Tutor in ${area.name}`;
+      return { type: "subject-area", slug, subject: subj, area, keyword: kw,
+        title: `Best ${subj.name} Tutor in ${area.name}, Delhi | Tutors Parliament`,
+        metaDescription: `Find expert ${subj.name} home tutors in ${area.name}. Verified profiles, 1-on-1 personalized learning & free demo. Book now!`,
         h1: kw };
     }
   }

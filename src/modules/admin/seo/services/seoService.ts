@@ -40,5 +40,15 @@ export const seoService = {
     
     if (error) throw error;
     return data;
+  },
+
+  deleteConfig: async (id: string) => {
+    const { error } = await supabase
+      .from("seo_configurations")
+      .delete()
+      .eq("id", id);
+    
+    if (error) throw error;
+    return true;
   }
 };

@@ -49,7 +49,9 @@ export const AddEntryModal = ({ isOpen, onClose, activeTab, onAdded, initialData
       };
 
       if (activeTab === 'tutor_registrations') {
-        payload.current_status = "Pending";
+        payload.current_status = "approved";
+        payload.step_reached = 4;
+        payload.status = "approved";
       } else if (activeTab === 'contact_messages') {
         payload.inquiry_type = "Manual Admin Entry";
       } else {
@@ -190,6 +192,23 @@ export const AddEntryModal = ({ isOpen, onClose, activeTab, onAdded, initialData
                 <div className="space-y-1">
                   <Label className="text-xs">Age</Label>
                   <Input type="number" value={formData.age || ''} onChange={e => handleChange('age', e.target.value)} className="h-9" />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs">Teaching Mode</Label>
+                  <select value={formData.teaching_mode || ''} onChange={e => handleChange('teaching_mode', e.target.value)} className="w-full h-9 border border-gray-200 rounded-md px-3 text-sm bg-white">
+                    <option value="">Select Mode</option>
+                    <option value="Both">Both</option>
+                    <option value="Online">Online</option>
+                    <option value="Home">Home Tuition</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                   <Label className="text-xs">Qualification</Label>
+                   <Input value={formData.qualification || ''} onChange={e => handleChange('qualification', e.target.value)} className="h-9" placeholder="e.g. M.Sc Physics" />
+                </div>
+                <div className="space-y-1">
+                   <Label className="text-xs">Experience</Label>
+                   <Input value={formData.experience || ''} onChange={e => handleChange('experience', e.target.value)} className="h-9" placeholder="e.g. 5 Years" />
                 </div>
                 <div className="space-y-1 col-span-2">
                   <Label className="text-xs">Communication Level</Label>

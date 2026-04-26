@@ -34,10 +34,32 @@ export const useSEO = () => {
     }
   };
 
+  const createConfig = async (config: any) => {
+    try {
+      await seoService.createConfig(config);
+      toast.success("New SEO route created");
+      fetchAll();
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  };
+
+  const deleteConfig = async (id: string) => {
+    try {
+      await seoService.deleteConfig(id);
+      toast.success("SEO route deleted");
+      fetchAll();
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  };
+
   return {
     configs,
     loading,
     updateConfig,
+    createConfig,
+    deleteConfig,
     refresh: fetchAll
   };
 };

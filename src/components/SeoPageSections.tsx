@@ -7,8 +7,11 @@ import {
   IndianRupee, GraduationCap, BookOpen, MessageCircle, FileText,
   Scale, Newspaper, Sparkles,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { areas, subjects, examTypes, type SeoPageData } from "@/data/seoData";
 import { getSmartInternalLinks } from "@/data/seoContentGenerator";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 // ===== TRUST LAYER =====
 export const TrustLayer = ({ pageData }: { pageData: SeoPageData }) => {
@@ -23,14 +26,14 @@ export const TrustLayer = ({ pageData }: { pageData: SeoPageData }) => {
   const testimonial = testimonials[seed % testimonials.length];
 
   return (
-    <section className="py-10 bg-muted/30">
+    <section className="py-12 bg-slate-50 border-y border-slate-100">
       <div className="container mx-auto max-w-5xl px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
             { icon: Shield, label: "Verified Tutors", sub: "ID & qualification checked" },
             { icon: CheckCircle, label: "Background Checked", sub: "Criminal & reference verified" },
             { icon: Star, label: "4.5+ Rated", sub: "Avg tutor rating" },
-            { icon: Clock, label: "Free Demo in 24h", sub: "No commitment required" },
+            { icon: Clock, label: "Match in 24 Hours", sub: "No commitment required" },
           ].map((b, i) => (
             <motion.div
               key={i}
@@ -57,71 +60,63 @@ export const TrustLayer = ({ pageData }: { pageData: SeoPageData }) => {
             {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-secondary text-secondary" />)}
           </div>
           <p className="text-foreground text-sm leading-relaxed italic mb-3">"{testimonial.text}"</p>
-          <p className="text-muted-foreground text-xs font-medium">— {testimonial.name}, {testimonial.area}</p>
+          <p className="text-muted-foreground text-xs font-medium">Ã¢â‚¬â€ {testimonial.name}, {testimonial.area}</p>
         </motion.div>
       </div>
     </section>
   );
 };
 
+
 // ===== FEES SECTION =====
 export const FeesSection = ({ pageData }: { pageData: SeoPageData }) => {
-  const area = pageData.area?.name || "Delhi NCR";
-  const classSlug = pageData.classLevel?.slug;
-  const classNum = classSlug ? parseInt(classSlug) : 0;
-
-  const getFeeRange = () => {
-    if (classNum >= 11) return { low: "₹600", high: "₹1,500", label: "Classes 11-12 / Competitive" };
-    if (classNum >= 9) return { low: "₹500", high: "₹1,000", label: "Classes 9-10 (Board Prep)" };
-    if (classNum >= 6) return { low: "₹400", high: "₹700", label: "Classes 6-8" };
-    return { low: "₹300", high: "₹600", label: "Classes 1-5 (Foundation)" };
-  };
-  const fee = getFeeRange();
+  const area = pageData.area?.name || "Delhi";
+  const fees = [
+    { range: "Classes 1-5", fee: "₹300 - ₹600/hr", note: "Foundation & Homework Help" },
+    { range: "Classes 6-8", fee: "₹400 - ₹700/hr", note: "Subject Strengthening" },
+    { range: "Classes 9-10", fee: "₹500 - ₹1,000/hr", note: "Board exam prep" },
+    { range: "Classes 11-12", fee: "₹600 - ₹1,200/hr", note: "Advanced + entrance prep" },
+    { range: "JEE / NEET / CUET", fee: "₹800 - ₹1,500/hr", note: "Mock tests, strategy" },
+  ];
 
   return (
-    <section className="py-12">
+    <section className="py-16 bg-white">
       <div className="container mx-auto max-w-4xl px-4">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-2 text-center">
-            <IndianRupee className="inline h-6 w-6 text-primary mr-1" />
-            Tuition Fees in {area}
+        <div className="text-center mb-10">
+          <h2 className="font-heading font-black text-2xl md:text-3xl text-slate-900 mb-3 flex items-center justify-center gap-2">
+            <IndianRupee className="h-6 w-6 text-primary" /> Tuition Fees in {area}
           </h2>
-          <p className="text-muted-foreground text-center mb-8 max-w-xl mx-auto text-sm">
-            Transparent pricing. No hidden charges. First demo class is always free.
-          </p>
-        </motion.div>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
+          <p className="text-slate-500 text-sm">Transparent pricing. No hidden charges. First demo class is always free.</p>
+        </div>
+
+        <div className="overflow-hidden rounded-2xl border border-slate-100 shadow-sm">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b-2 border-border">
-                <th className="text-left p-3 font-heading font-semibold text-foreground text-sm">Class Range</th>
-                <th className="text-left p-3 font-heading font-semibold text-foreground text-sm">Fee / Hour</th>
-                <th className="text-left p-3 font-heading font-semibold text-foreground text-sm hidden sm:table-cell">Includes</th>
+              <tr className="bg-slate-50/50 border-b border-slate-100">
+                <th className="p-4 font-heading font-bold text-slate-700 text-xs tracking-wider uppercase">Class Range</th>
+                <th className="p-4 font-heading font-bold text-slate-700 text-xs tracking-wider uppercase">Fee / Hour</th>
+                <th className="p-4 font-heading font-bold text-slate-700 text-xs tracking-wider uppercase hidden sm:table-cell">Includes</th>
               </tr>
             </thead>
-            <tbody>
-              {[
-                { range: "Classes 1–5", fee: "₹300–₹600/hr", note: "Foundation, homework help", highlight: classNum >= 1 && classNum <= 5 },
-                { range: "Classes 6–8", fee: "₹400–₹700/hr", note: "Subject strengthening", highlight: classNum >= 6 && classNum <= 8 },
-                { range: "Classes 9–10", fee: "₹500–₹1,000/hr", note: "Board exam prep", highlight: classNum >= 9 && classNum <= 10 },
-                { range: "Classes 11–12", fee: "₹600–₹1,200/hr", note: "Advanced + entrance prep", highlight: classNum >= 11 },
-                { range: "JEE / NEET / CUET", fee: "₹800–₹1,500/hr", note: "Mock tests, strategy", highlight: false },
-                { range: "Bulk Discount (10+ hrs)", fee: "10% OFF", note: "Monthly pre-paid plans", highlight: true, special: true },
-              ].map((row, i) => (
-                <tr key={i} className={`border-b border-border/50 transition-colors ${(row as any).special ? "bg-secondary/10" : row.highlight ? "bg-primary/5" : "hover:bg-muted/30"}`}>
-                  <td className="p-3 text-foreground text-sm font-medium">{row.range}</td>
-                  <td className={`p-3 font-bold text-sm ${(row as any).special ? "text-secondary" : "text-primary"}`}>{row.fee}</td>
-                  <td className="p-3 text-muted-foreground text-xs hidden sm:table-cell">{row.note}</td>
+            <tbody className="divide-y divide-slate-50">
+              {fees.map((row, i) => (
+                <tr key={i} className="hover:bg-slate-50/30 transition-colors">
+                  <td className="p-4 text-slate-800 font-medium text-sm">{row.range}</td>
+                  <td className="p-4 text-primary font-bold text-sm">{row.fee}</td>
+                  <td className="p-4 text-slate-500 text-sm hidden sm:table-cell">{row.note}</td>
                 </tr>
               ))}
+              <tr className="bg-orange-50/30">
+                <td className="p-4 text-orange-700 font-bold text-sm underline decoration-orange-200 decoration-2 underline-offset-4">Bulk Discount (10+ hrs)</td>
+                <td className="p-4 text-orange-600 font-bold text-sm">10% OFF</td>
+                <td className="p-4 text-orange-500/70 text-xs hidden sm:table-cell italic">Monthly pre-paid plans</td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <div className="text-center mt-6">
-          <Button id="cta-fees-table-demo" variant="cta" size="lg" asChild>
-            <Link href={`/demo-booking?from=${pageData.slug}&cta=fees_table`}>Get Exact Fees for Your Requirement</Link>
-          </Button>
-        </div>
+        <p className="mt-6 text-center text-slate-400 text-xs italic">
+          *Actual fees depend on tutor experience and frequency.
+        </p>
       </div>
     </section>
   );
@@ -129,83 +124,168 @@ export const FeesSection = ({ pageData }: { pageData: SeoPageData }) => {
 
 // ===== TOP TUTORS NEAR YOU =====
 export const TopTutorsNearYou = ({ pageData }: { pageData: SeoPageData }) => {
+  const [tutors, setTutors] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const area = pageData.area?.name || "Delhi";
-  const subj = pageData.subject?.name || "All Subjects";
-  const seed = pageData.slug.length;
-  const pool = [
-    { name: "Priya Sharma", initials: "PS", exp: "8 yrs", subjects: "Maths & Science", rating: 4.9, classes: "6-12", board: "CBSE/ICSE" },
-    { name: "Rajesh Kumar", initials: "RK", exp: "12 yrs", subjects: "Physics & Chemistry", rating: 4.8, classes: "9-12", board: "CBSE/IB" },
-    { name: "Anita Verma", initials: "AV", exp: "6 yrs", subjects: "English & Hindi", rating: 4.9, classes: "1-10", board: "All Boards" },
-    { name: "Dr. Suresh Gupta", initials: "SG", exp: "15 yrs", subjects: "Biology & Chemistry", rating: 4.7, classes: "11-12", board: "CBSE" },
-    { name: "Meena Devi", initials: "MD", exp: "7 yrs", subjects: "Accounts & Economics", rating: 4.8, classes: "11-12", board: "CBSE/ISC" },
-    { name: "Sanjay Joshi", initials: "SJ", exp: "10 yrs", subjects: "Maths & Physics", rating: 4.9, classes: "9-12", board: "CBSE/IIT-JEE" },
-    { name: "Vikas Singh", initials: "VS", exp: "9 yrs", subjects: "Coding & Robotics", rating: 5.0, classes: "4-12", board: "Skill Development" },
-    { name: "Kiran Mazumdar", initials: "KM", exp: "5 yrs", subjects: "History & Geography", rating: 4.6, classes: "6-10", board: "CBSE/ICSE" },
-  ];
 
-  // Pick 3 tutors based on seed for variety
-  const tutors = [...pool].sort((a, b) => {
-    const hashA = a.name.length + seed;
-    const hashB = b.name.length + seed;
-    return (hashA % 5) - (hashB % 5);
-  }).slice(0, 3);
+  useEffect(() => {
+    const fetchTutors = async () => {
+      setLoading(true);
+      try {
+        const rawSlug = pageData.slug.toLowerCase().replace(/^\//, "");
+        const { data: overrideRecords } = await supabase
+          .from("page_overrides")
+          .select("entity_id, position")
+          .eq("entity_type", "tutor")
+          .or("page_slug.ilike." + rawSlug + ",page_slug.ilike./" + rawSlug)
+          .order("position");
+        let pinnedTutors = [];
+        if (overrideRecords && overrideRecords.length > 0) {
+          const tutorIds = overrideRecords.map(r => r.entity_id);
+          const { data: tutorsData } = await supabase
+            .from("tutor_registrations")
+            .select("*")
+            .in("id", tutorIds);
+          if (tutorsData) {
+            pinnedTutors = overrideRecords
+              .map(r => {
+                const t = tutorsData.find(td => td.id === r.entity_id);
+                return t ? { ...t, isPinned: true, position: r.position } : null;
+              })
+              .filter(t => t !== null);
+          }
+        }
+        const { data: matches } = await supabase.rpc("match_tutors_for_params", {
+          p_subject: pageData.subject?.name || null,
+          p_area_slug: pageData.area?.slug || null,
+          p_class_label: pageData.classLevel?.label || null,
+        });
+        const matchingList = (matches || [])
+          .filter(m => m.visibility_status === "active")
+          .map(m => ({
+            ...m,
+            isPinned: false,
+            match_score: m.match_score || 80,
+            match_reasons: m.match_reasons || ["Matched by Subject & Area"]
+          }));
+        const pinnedIds = new Set(pinnedTutors.map(p => p.id));
+        const combined = [
+          ...pinnedTutors,
+          ...matchingList.filter(m => !pinnedIds.has(m.id))
+        ];
+        setTutors(combined.slice(0, 6));
+      } catch (err) {
+        console.error("Error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTutors();
+  }, [pageData]);
+
+  if (loading) {
+    return (
+      <div className="py-12 flex justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+  if (tutors.length === 0) return null;
 
   return (
-    <section className="py-12 bg-muted/20">
+    <section className="py-16 bg-slate-50/50 border-y border-slate-100">
       <div className="container mx-auto max-w-5xl px-4">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-2 text-center">
-            <Users className="inline h-6 w-6 text-primary mr-2" />
+          <h2 className="font-heading font-black text-2xl md:text-3xl text-slate-900 mb-2 text-center">
+            <Users className="inline h-6 w-6 text-orange-500 mr-2" />
             Top Tutors Near {area}
           </h2>
           <p className="text-muted-foreground text-center mb-8 text-sm">
             Verified, experienced educators ready to help
           </p>
         </motion.div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tutors.slice(0, 5).map((t, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tutors.map((t, i) => (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 15 }}
+              key={t.id || i}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="p-5 rounded-xl border border-border bg-background card-shadow hover:-translate-y-0.5 transition-all duration-200"
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              className={`group relative p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden ${
+                t.isPinned 
+                  ? 'bg-gradient-to-br from-indigo-50/50 to-white border-indigo-100 shadow-xl shadow-indigo-100/50 hover:border-indigo-300' 
+                  : 'bg-white border-slate-100 shadow-sm hover:border-slate-200 hover:shadow-md'
+              }`}
             >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shrink-0">
-                  {t.initials}
+              {/* Premium Glow for Pinned */}
+              {t.isPinned && (
+                <div className="absolute -right-12 -top-12 w-32 h-32 bg-indigo-500/5 blur-[50px] group-hover:bg-indigo-500/10 transition-colors" />
+              )}
+              
+              <div className="relative flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-lg shadow-inner ${
+                    t.isPinned ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400'
+                  }`}>
+                    {t.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() || 'TP'}
+                  </div>
+                  <div>
+                    <h3 className="font-heading font-black text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">{t.name}</h3>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <div className="flex gap-0.5">
+                        {[...Array(5)].map((_, star) => (
+                          <Star key={star} className={`w-2.5 h-2.5 fill-current ${star < 4 ? 'text-amber-400' : 'text-slate-200'}`} />
+                        ))}
+                      </div>
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">4.9 Rating</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <div className="font-heading font-semibold text-foreground text-sm truncate">{t.name}</div>
-                  <div className="text-xs text-muted-foreground">{t.exp} experience</div>
-                </div>
+                {t.isPinned && (
+                  <Badge className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-slate-900 text-white border border-amber-400/40 text-[9px] font-black px-3 py-1.5 uppercase tracking-tighter rounded-full shadow-lg shadow-indigo-200/50 flex items-center gap-1.5">
+                    <Star className="w-3 h-3 fill-amber-400 text-amber-400" /> 
+                    <span className="bg-gradient-to-r from-white to-amber-200 bg-clip-text text-transparent">Elite Partner</span>
+                  </Badge>
+                )}
               </div>
-              <div className="space-y-1 text-xs text-muted-foreground mb-3">
-                <div className="flex justify-between"><span>Subjects:</span><span className="text-foreground font-medium">{t.subjects}</span></div>
-                <div className="flex justify-between"><span>Classes:</span><span className="text-foreground font-medium">{t.classes}</span></div>
-                <div className="flex justify-between"><span>Board:</span><span className="text-foreground font-medium">{t.board}</span></div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, j) => (
-                    <Star key={j} className={`h-3 w-3 ${j < Math.floor(t.rating) ? "fill-secondary text-secondary" : "text-muted-foreground/30"}`} />
+
+              <div className="relative space-y-4 mb-8">
+                <div className="flex flex-wrap gap-1.5">
+                  {(t.match_reasons || ['Verified Profile', 'Subject Expert']).map((reason: string, j: number) => (
+                    <span key={j} className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1 ${
+                      t.isPinned ? 'bg-indigo-50 text-indigo-600 border-indigo-100/50' : 'bg-slate-50 text-slate-500 border-slate-100'
+                    }`}>
+                      <CheckCircle className="w-2.5 h-2.5" /> {reason}
+                    </span>
                   ))}
-                  <span className="text-xs text-muted-foreground ml-1">{t.rating}</span>
                 </div>
-                <Button variant="cta" size="sm" className="text-xs h-7 px-3" asChild>
-                  <Link href="/demo-booking">Book Demo</Link>
-                </Button>
+                
+                <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest pt-2 border-t border-slate-50">
+                  <div className="flex items-center gap-1"><MapPin className="w-3 h-3 text-rose-500" /> {area}</div>
+                  <div className="flex items-center gap-1"><Shield className="w-3 h-3 text-emerald-500" /> ID Verified</div>
+                </div>
+              </div>
+
+              <div className="relative flex items-center justify-between pt-4 gap-4">
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Availability</span>
+                  <span className="text-xs font-black text-emerald-600 flex items-center gap-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Highly Active
+                  </span>
+                </div>
+                  <Button variant="cta" className={`flex-1 h-12 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg transition-transform active:scale-95 ${
+                    t.isPinned 
+                      ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-200' 
+                      : 'bg-slate-900 hover:bg-black shadow-slate-200'
+                  }`} asChild>
+                    <Link href={`/demo-booking?tutor=${t.id}&from=${pageData.slug}`}>
+                      Check Availability <ArrowRight className="w-3.5 h-3.5 ml-2" />
+                    </Link>
+                  </Button>
               </div>
             </motion.div>
           ))}
-        </div>
-        <div className="text-center mt-6">
-          <Button variant="outline" asChild>
-            <Link href="/demo-booking" className="flex items-center gap-2">
-              View All Tutor Profiles <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
         </div>
       </div>
     </section>

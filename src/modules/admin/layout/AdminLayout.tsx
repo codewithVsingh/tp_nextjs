@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   LogOut, LayoutDashboard, Loader2, IndianRupee, Users, 
   CalendarClock, GraduationCap, Link2, TrendingUp, MapPin, 
-  Megaphone, Globe, ShieldCheck, Network, ListChecks
+  Megaphone, Globe, ShieldCheck, Network, ListChecks, Route, Star
 } from "lucide-react";
 import { useAuthStore } from "@/modules/shared/store/useAuthStore";
 import DashboardLayout from "@/layouts/DashboardLayout";
@@ -34,6 +34,7 @@ const NAV_SECTIONS: NavSection[] = [
       { label: "Revenue",     href: "/admin/revenue",     icon: IndianRupee     },
       { label: "Funnel",      href: "/admin/funnel",      icon: TrendingUp      },
       { label: "Marketing",   href: "/admin/marketing",   icon: Megaphone       },
+      { label: "Testimonials", href: "/admin/testimonials", icon: Star           },
       { label: "Cities",      href: "/admin/cities",      icon: MapPin          },
       { label: "SEO Control", href: "/admin/seo",         icon: Globe           },
     ],
@@ -41,9 +42,10 @@ const NAV_SECTIONS: NavSection[] = [
   {
     label: "Intelligence",
     items: [
-      { label: "Control Tower",   href: "/admin/intelligence",              icon: ShieldCheck      },
-      { label: "Verification",    href: "/admin/intelligence/verification", icon: ListChecks       },
-      { label: "Agency Network",  href: "/admin/intelligence/network",      icon: Network          },
+      { label: "Control Tower",       href: "/admin/intelligence",              icon: ShieldCheck      },
+      { label: "Verification",        href: "/admin/intelligence/verification", icon: ListChecks       },
+      { label: "Agency Network",      href: "/admin/intelligence/network",      icon: Network          },
+      { label: "Distribution Engine", href: "/admin/distribution",              icon: Route            },
     ],
   },
 ];

@@ -1,14 +1,17 @@
 import { useState, useMemo, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MapPin, CheckCircle, AlertCircle } from "lucide-react";
+import { MapPin, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 import OptionChip from "../OptionChip";
 import { CITY_OPTIONS, isValidCityOrPincode, type StepProps } from "../types";
+import { supabase } from "@/integrations/supabase/client";
+import PremiumSelect from "../PremiumSelect";
 
 const MODES = [
   { value: "online", label: "Online", emoji: "💻" },
   { value: "home", label: "Home Tutor", emoji: "🏠" },
-  { value: "both", label: "Both", emoji: "🔄" },
+  { value: "any", label: "Any", emoji: "🔄" },
 ];
 
 type LocationKind = "none" | "city" | "pincode" | "invalid";
@@ -22,125 +25,136 @@ const classifyLocation = (city: string): LocationKind => {
   return isValidCityOrPincode(trimmed) ? "city" : "invalid";
 };
 
-const LocationMode = ({ data, onChange }: StepProps) => {
-  const [query, setQuery] = useState(data.city);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+const PRIORITIZED_CITIES = [
+  "Delhi", "New Delhi", "Noida", "Gurgaon", "Ghaziabad", "Faridabad",
+  "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Pune", "Ahmedabad"
+];
 
+const LocationMode = ({ data, onChange }: StepProps) => {
+  const [cities, setCities] = useState<any[]>([]);
+  const [areas, setAreas] = useState<any[]>([]);
+  
+  const [selectedCity, setSelectedCity] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  // 1. Load All Cities on Mount
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setShowSuggestions(false);
+    const init = async () => {
+      const { data: c } = await supabase.from('cities').select('*, states(name)').order('name');
+      if (c) {
+        // Sort: Prioritized first, then alphabetical
+        const sorted = [...c].sort((a, b) => {
+          const aPri = PRIORITIZED_CITIES.indexOf(a.name);
+          const bPri = PRIORITIZED_CITIES.indexOf(b.name);
+          
+          if (aPri !== -1 && bPri !== -1) return aPri - bPri;
+          if (aPri !== -1) return -1;
+          if (bPri !== -1) return 1;
+          return a.name.localeCompare(b.name);
+        });
+        
+        setCities(sorted);
+        
+        if (data.city) {
+          const cityObj = sorted.find(item => item.name === data.city);
+          if (cityObj) setSelectedCity(cityObj);
+        }
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    init();
   }, []);
 
-  const suggestions = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q || /^\d/.test(q)) return [];
-    return CITY_OPTIONS.filter((c) => c.toLowerCase().includes(q)).slice(0, 6);
-  }, [query]);
+  // 2. Load Areas when City changes
+  useEffect(() => {
+    const fetchAreas = async () => {
+      if (!selectedCity) return;
+      setLoading(true);
+      const { data: a } = await supabase.from('areas').select('*').eq('city_id', selectedCity.id).order('name');
+      if (a) setAreas(a);
+      setLoading(false);
+    };
+    fetchAreas();
+  }, [selectedCity]);
 
-  const kind = classifyLocation(data.city);
-  const requireArea = data.mode === "home" || data.mode === "both";
+  const requireArea = data.mode?.toLowerCase() === "home" || data.mode?.toLowerCase() === "any" || data.mode?.toLowerCase() === "both";
 
-  const handleSelectCity = (city: string) => {
-    setQuery(city);
-    onChange({ city });
-    setShowSuggestions(false);
-  };
-
-  const handleInputChange = (val: string) => {
-    setQuery(val);
-    // For pincodes: persist only when user types digits — final validity checked on canNext
-    onChange({ city: val });
-    setShowSuggestions(true);
+  const getAreaPlaceholder = () => {
+    const c = (selectedCity?.name || data.city || "").toLowerCase();
+    if (c.includes('delhi')) return "e.g. Rohini, Pitampura, Janakpuri";
+    if (c.includes('bangalore')) return "e.g. Koramangala, Indiranagar, HSR Layout";
+    if (c.includes('mumbai')) return "e.g. Andheri, Borivali, Powai";
+    return "Search your area...";
   };
 
   return (
     <div className="space-y-5">
-      <div>
-        <Label className="mb-1 block">City or Pincode *</Label>
-        <p className="text-xs text-muted-foreground mb-2">Type your city name and pick from the list, or enter a 6-digit pincode</p>
-        <div ref={wrapperRef} className="relative">
-          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
-          <Input
-            id="lead-city"
-            placeholder="e.g. New Delhi or 110001"
-            value={query}
-            onChange={(e) => handleInputChange(e.target.value)}
-            onFocus={() => setShowSuggestions(true)}
-            maxLength={100}
-            className="pl-10"
-            autoComplete="off"
+      <div className="space-y-4">
+        {/* Unified City Selection */}
+        <div className="relative">
+          <PremiumSelect
+            label="City *"
+            options={cities.map(c => ({ 
+              id: c.id, 
+              name: PRIORITIZED_CITIES.includes(c.name) ? `${c.name} (Popular)` : c.name 
+            }))}
+            value={data.city}
+            onChange={(id, name) => {
+              const cleanName = name.replace(" (Popular)", "");
+              const cityObj = cities.find(c => c.id === id);
+              setSelectedCity(cityObj);
+              onChange({ 
+                city: cleanName, 
+                state: cityObj?.states?.name || "",
+                area: "" 
+              });
+            }}
+            placeholder="Search or select city..."
           />
-          {showSuggestions && suggestions.length > 0 && (
-            <ul className="absolute z-20 left-0 right-0 mt-1 bg-popover border border-border rounded-lg shadow-md max-h-56 overflow-auto">
-              {suggestions.map((c) => (
-                <li key={c}>
-                  <button
-                    type="button"
-                    onClick={() => handleSelectCity(c)}
-                    className="w-full text-left px-4 py-2.5 text-sm hover:bg-accent transition-colors"
-                  >
-                    {c}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
 
-        {kind === "city" && (
-          <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
-            <CheckCircle className="w-3 h-3" /> {data.city.trim()} — we'll match a tutor for you
-          </p>
-        )}
-        {kind === "pincode" && (
-          <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
-            <CheckCircle className="w-3 h-3" /> Pincode {data.city.trim()} accepted
-          </p>
-        )}
-        {kind === "invalid" && (
-          <p className="text-xs text-destructive mt-1.5 flex items-center gap-1">
-            <AlertCircle className="w-3 h-3" /> Enter a city name (3+ letters) or a valid 6-digit pincode
-          </p>
-        )}
-      </div>
-
-      {requireArea && (
         <div>
-          <Label htmlFor="lead-area">Area / Locality *</Label>
-          <Input
-            id="lead-area"
-            placeholder="e.g. Koramangala, Sector 62"
-            value={data.area}
-            onChange={(e) => onChange({ area: e.target.value })}
-            maxLength={100}
-            className="mt-1"
-          />
-        </div>
-      )}
-
-      <div>
-        <Label className="mb-2 block">Mode of Learning *</Label>
-        <div className="grid grid-cols-3 gap-3">
-          {MODES.map((m) => (
-            <OptionChip
-              key={m.value}
-              variant="card"
-              selected={data.mode === m.value}
-              onClick={() => onChange({ mode: m.value })}
-              className="py-5"
-            >
-              <div className="text-2xl mb-1">{m.emoji}</div>
-              <div className="text-xs font-semibold">{m.label}</div>
-            </OptionChip>
-          ))}
+          <Label className="mb-3 block text-xs font-black uppercase tracking-widest text-primary/70 ml-1">Learning Mode *</Label>
+          <div className="grid grid-cols-3 gap-2">
+            {MODES.map((m) => (
+              <OptionChip
+                key={m.value}
+                variant="card"
+                selected={data.mode === m.value}
+                onClick={() => onChange({ mode: m.value })}
+                className="py-3 h-16 md:h-18"
+              >
+                <div className="text-lg md:text-lg mb-0.5 md:mb-1">{m.emoji}</div>
+                <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-tight leading-none">{m.label}</div>
+              </OptionChip>
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* Area Selection (PremiumSelect) - Only for Home/Any */}
+      <AnimatePresence>
+        {requireArea && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }} 
+            animate={{ opacity: 1, height: 'auto' }} 
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-visible pb-40"
+          >
+            <div className="pt-2">
+              <PremiumSelect
+                label="Area / Locality *"
+                options={areas.map(a => ({ id: a.name, name: a.name }))}
+                value={data.area}
+                onChange={(id) => {
+                  onChange({ area: id });
+                }}
+                placeholder={selectedCity ? getAreaPlaceholder() : "Select city first"}
+              />
+              {loading && <p className="text-[9px] font-black text-primary animate-pulse mt-2 uppercase tracking-widest ml-1">Finding local experts in {selectedCity?.name}...</p>}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

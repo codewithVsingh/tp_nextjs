@@ -21,10 +21,10 @@ const WhatsAppButton = ({ area, classLevel }: WhatsAppButtonProps) => {
         trackCTAClick("whatsapp_float", window.location.pathname);
         openWhatsApp(msg);
       }}
-      className="fixed bottom-20 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
+      className="fixed bottom-6 left-4 z-50 w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
       aria-label="Chat on WhatsApp"
     >
-      <MessageCircle className="w-7 h-7 text-white" />
+      <MessageCircle className="w-4 h-4 text-white" />
     </button>
   );
 };

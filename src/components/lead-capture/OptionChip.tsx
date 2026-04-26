@@ -13,18 +13,18 @@ const OptionChip = ({ selected, onClick, children, className, variant = "chip" }
     type="button"
     onClick={onClick}
     className={cn(
-      "transition-all duration-200 font-medium text-sm",
+      "transition-all duration-200 font-medium text-sm border-2",
       variant === "chip"
         ? cn(
-            "px-4 py-2.5 rounded-full border",
+            "px-4 py-2 rounded-full",
             selected
-              ? "border-primary bg-primary text-primary-foreground shadow-sm"
+              ? "border-primary bg-primary/5 text-primary shadow-sm"
               : "border-border bg-background text-foreground hover:border-primary/50 hover:bg-accent/40"
           )
         : cn(
-            "p-4 rounded-xl border-2 text-center",
+            "p-3 md:p-4 rounded-xl text-center flex flex-col items-center justify-center gap-1",
             selected
-              ? "border-primary bg-accent text-accent-foreground shadow-md"
+              ? "border-primary bg-primary/5 text-primary shadow-md"
               : "border-border bg-background text-foreground hover:border-primary/40 hover:bg-accent/30"
           ),
       className

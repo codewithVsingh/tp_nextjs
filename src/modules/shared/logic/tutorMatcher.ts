@@ -119,81 +119,37 @@ function generateTags(
 // ─── Main Matcher ─────────────────────────────────────────────────────────────
 export async function getSmartTutorMatches(
   leadRecord: any,
-  topN = 5,
-): Promise<TutorMatch[]> {
-  // Fetch tutors + all their assignments in one go
-  const [tutorRes, assignRes] = await Promise.all([
-    supabase.from("tutor_registrations").select("*"),
-    supabase.from("lead_tutor_assignments").select("tutor_id, status, lead_id"),
-  ]);
-
-  if (tutorRes.error || !tutorRes.data) return [];
-
-  // Build quick lookup maps
-  const allAssignments = assignRes.data || [];
-  const byTutor: Record<string, any[]> = {};
-  allAssignments.forEach(a => {
-    if (!byTutor[a.tutor_id]) byTutor[a.tutor_id] = [];
-    byTutor[a.tutor_id].push(a);
+  topN = 10,
+): Promise<any[]> {
+  const { data, error } = await supabase.rpc('match_tutors_for_params', {
+    p_subject: (Array.isArray(leadRecord.subjects) ? leadRecord.subjects[0] : leadRecord.subjects) || null,
+    p_area_slug: leadRecord.area || null,
+    p_class_label: leadRecord.class_level || null,
+    p_board_name: leadRecord.board || null
   });
 
-  const alreadyAssignedTutorIds = new Set(
-    allAssignments.filter(a => a.lead_id === leadRecord.id && a.status === "Active").map(a => a.tutor_id),
-  );
+  if (error) {
+    console.error("RPC Match Error:", error);
+    return [];
+  }
 
-  // Lead dimensions
-  const leadSubs   = toArr(leadRecord.subjects);
-  const leadClass  = String(leadRecord.class_level || leadRecord.exam || "").trim();
-  const leadBudget = parseBudget(leadRecord.budget);
-  const leadCity   = leadRecord.city || null;
-
-  const scored: TutorMatch[] = tutorRes.data.map(tutor => {
-    const tutorSubs    = toArr(tutor.subjects);
-    const tutorClasses = toArr(tutor.classes);
-    const tutorMin     = tutor.min_budget ?? 0;
-    const tutorMax     = tutor.max_budget ?? 0;
-    const rating       = parseFloat(tutor.rating) || 0;
-
-    // Compute live tutor metrics from assignments
-    const tutorAssignments = byTutor[tutor.id] || [];
-    const metrics = computeTutorMetrics(tutorAssignments, rating);
-
-    const bd: MatchBreakdown = {
-      subjects:  scoreSubject(leadSubs, tutorSubs),
-      class:     scoreClass(leadClass, tutorClasses),
-      budget:    scoreBudget(leadBudget, tutorMin, tutorMax),
-      location:  scoreLocation(leadCity, tutor.city, tutor.preferred_locations),
-      tutorPerf: scoreTutorPerf(metrics.tutorScore),
-    };
-
-    const total     = Object.values(bd).reduce((a, b) => a + b, 0);
-    let matchScore = Math.min(100, total);
-
-    // Hard penalty for gender mismatch if specified
-    if (leadRecord.preferred_tutor_gender && tutor.gender) {
-      if (leadRecord.preferred_tutor_gender !== "No Preference" && leadRecord.preferred_tutor_gender !== tutor.gender) {
-        matchScore *= 0.5; // 50% penalty for gender mismatch
-      }
-    }
-
-    return {
-      tutor,
-      matchScore,
-      matchPct: matchScore,
-      breakdown: bd,
-      reasonTags: generateTags(bd, matchScore, metrics),
-      tutorMetrics: metrics,
-      alreadyAssigned: alreadyAssignedTutorIds.has(tutor.id),
-    };
-  });
-
-  return scored
-    .filter(t => t.breakdown.subjects > 0)  // Subject is mandatory
-    .sort((a, b) => {
-      if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
-      return (b.tutor.rating || 0) - (a.tutor.rating || 0);
-    })
-    .slice(0, topN);
+  // Map to UI friendly format
+  return (data || []).map((m: any) => ({
+    id: m.tutor_id,
+    name: m.tutor_name,
+    phone: m.phone,
+    matchScore: m.match_score,
+    matchReasons: m.match_reasons,
+    city: m.city,
+    experience: m.experience,
+    qualification: m.qualification,
+    expected_fees: m.expected_fees,
+    teaching_mode: m.teaching_mode,
+    step_reached: m.step_reached,
+    status: m.status,
+    created_at: m.created_at,
+    subjects: Array.isArray(leadRecord.subjects) ? leadRecord.subjects : [leadRecord.subjects]
+  }));
 }
 
 /** Fetch all assignments for a lead (history) */

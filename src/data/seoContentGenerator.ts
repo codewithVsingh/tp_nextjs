@@ -633,7 +633,7 @@ export function getOptimizedMeta(pageData: SeoPageData): { title: string; descri
   if (title.length > 65) title = title.slice(0, 62) + "...";
 
   const descVariants = [
-    `Looking for verified ${subj || "home"} tutors${area ? ` in ${area}` : " in Delhi"}${cls ? ` for ${cls}` : ""}${board ? ` (${board})` : ""}? 10,000+ happy students, 4.8★ rating. Free demo in 24h. Book now!`,
+    `Looking for verified ${subj || "home"} tutors${area ? ` in ${area}` : " in Delhi"}? ${cls ? ` for ${cls}` : ""}${board ? ` (${board})` : ""}? 10,000+ happy students, 4.8★ rating. Match in 24 Hours. Book now!`,
     `Hire top-rated ${subj || "home"} tuition${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}${board ? `, ${board} specialists` : ""}. Background-checked experts, affordable fees. Free demo class!`,
     `Experienced ${subj || "home"} tutors${area ? ` in ${area}` : ""}${cls ? ` for ${cls}` : ""}. 1-on-1 personalized learning for CBSE, ICSE & IB. 2500+ verified tutors. Book demo!`,
     `The best ${subj || "home"} tuition platform${area ? ` in ${area}` : ""}${cls ? ` (${cls})` : ""}. Transparent fees, verified profiles, and proven academic results. Start free trial today!`,

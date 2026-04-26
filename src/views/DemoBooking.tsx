@@ -20,9 +20,9 @@ const DemoBooking = () => {
         keywords="book demo tutor, free tuition demo class, home tutor demo"
       />
       
-      <main className="min-h-screen pt-20 pb-12 bg-gradient-to-b from-accent/30 to-background">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="bg-background rounded-2xl card-shadow p-6 md:p-10 max-w-6xl mx-auto">
+      <main className="min-h-screen pt-4 md:pt-12 pb-12 bg-gradient-to-b from-accent/30 to-background">
+        <div className="container mx-auto px-2 md:px-8">
+          <div className="bg-background rounded-2xl card-shadow p-0 max-w-6xl mx-auto overflow-hidden">
             <LeadCaptureFlow
               source={sourceFromUrl ? `demo_booking_${sourceFromUrl}` : "demo_booking_page"}
               prefill={{ 

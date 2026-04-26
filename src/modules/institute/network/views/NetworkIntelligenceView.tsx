@@ -123,55 +123,96 @@ const NetworkIntelligenceView = () => {
             <CardContent className="h-full flex items-center justify-center p-0">
                {/* Concept: Interactive Graph UI */}
                <div className="relative w-full h-full p-10 overflow-hidden">
-                  {filteredNodes.map((node, i) => (
+                  {/* Radar Sweep Background */}
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                    <motion.div 
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                      className="absolute left-1/2 top-1/2 w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2 opacity-[0.03]"
+                      style={{ background: "conic-gradient(from 0deg, transparent, #3b82f6)" }}
+                    />
+                  </div>
+
+                  {/* Ghost Nodes (Background Noise to build trust/scale) */}
+                  {Array.from({ length: 15 }).map((_, i) => (
                     <motion.div
-                      key={node.id}
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ 
-                        scale: 1, 
-                        opacity: 1,
-                        x: Math.sin(i) * 300,
-                        y: Math.cos(i) * 200,
+                      key={`ghost-${i}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 0.1, 0] }}
+                      transition={{ duration: 4, delay: i * 0.5, repeat: Infinity }}
+                      className="absolute w-1.5 h-1.5 bg-slate-400 rounded-full"
+                      style={{ 
+                        left: `${10 + Math.random() * 80}%`, 
+                        top: `${10 + Math.random() * 80}%` 
                       }}
-                      whileHover={{ scale: 1.1, zIndex: 50 }}
-                      onClick={() => setSelectedNode(node)}
-                      className={cn(
-                        "absolute left-1/2 top-1/2 p-3 rounded-2xl border-2 cursor-pointer transition-all shadow-2xl",
-                        node.risk_score > 70 ? "bg-rose-500/10 border-rose-500/50 shadow-rose-500/10" : "bg-blue-500/10 border-blue-500/50 shadow-blue-500/10"
-                      )}
-                    >
-                      <div className="flex flex-col items-center gap-1">
-                        <Users className={cn("w-5 h-5", node.risk_score > 70 ? "text-rose-500" : "text-blue-500")} />
-                        <span className="text-[10px] font-black text-slate-700 uppercase tracking-tighter truncate w-20 text-center">
-                          {node.primary_name}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[8px] text-slate-500 font-bold">{node.risk_score}% RISK</span>
-                        </div>
-                      </div>
-                    </motion.div>
+                    />
                   ))}
 
+                  {filteredNodes.map((node, i) => {
+                    const radius = filteredNodes.length === 1 ? 0 : 250;
+                    const angle = (i * 2 * Math.PI) / filteredNodes.length;
+                    
+                    return (
+                      <motion.div
+                        key={node.id}
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ 
+                          scale: 1, 
+                          opacity: 1,
+                          x: Math.sin(angle) * radius,
+                          y: Math.cos(angle) * radius,
+                        }}
+                        whileHover={{ scale: 1.1, zIndex: 50 }}
+                        onClick={() => setSelectedNode(node)}
+                        className={cn(
+                          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-4 rounded-2xl border-2 cursor-pointer transition-all shadow-2xl z-20",
+                          node.risk_score > 70 ? "bg-white border-rose-500 shadow-rose-500/20" : "bg-white border-blue-500 shadow-blue-500/20"
+                        )}
+                      >
+                        <motion.div 
+                          animate={{ y: [0, -4, 0] }}
+                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                          className="flex flex-col items-center gap-2"
+                        >
+                          <div className={cn("p-2 rounded-lg", node.risk_score > 70 ? "bg-rose-50" : "bg-blue-50")}>
+                            <Users className={cn("w-6 h-6", node.risk_score > 70 ? "text-rose-600" : "text-blue-600")} />
+                          </div>
+                          <span className="text-[11px] font-black text-slate-800 uppercase tracking-tighter truncate w-24 text-center">
+                            {node.primary_name}
+                          </span>
+                          <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-[9px] text-slate-600 font-black uppercase">{node.risk_score}% RISK</span>
+                          </div>
+                        </motion.div>
+                      </motion.div>
+                    );
+                  })}
+
                   {/* Dynamic Connections SVG */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30 z-10">
                     <defs>
                       <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor="#3b82f6" />
                         <stop offset="100%" stopColor="#8b5cf6" />
                       </linearGradient>
                     </defs>
-                    {filteredNodes.map((node, i) => {
+                    {filteredNodes.length > 1 && filteredNodes.map((node, i) => {
                       if (i === 0) return null;
+                      const angle1 = ((i-1) * 2 * Math.PI) / filteredNodes.length;
+                      const angle2 = (i * 2 * Math.PI) / filteredNodes.length;
+                      const r = 250;
+                      
                       return (
                         <motion.line
                           key={`line-${i}`}
-                          x1={`${50 + Math.sin(i-1) * 30}%`}
-                          y1={`${50 + Math.cos(i-1) * 25}%`}
-                          x2={`${50 + Math.sin(i) * 30}%`}
-                          y2={`${50 + Math.cos(i) * 25}%`}
+                          x1={`${50 + (Math.sin(angle1) * r / 8)}%`}
+                          y1={`${50 + (Math.cos(angle1) * r / 6)}%`}
+                          x2={`${50 + (Math.sin(angle2) * r / 8)}%`}
+                          y2={`${50 + (Math.cos(angle2) * r / 6)}%`}
                           stroke="url(#lineGrad)"
-                          strokeWidth="1"
+                          strokeWidth="2"
+                          strokeDasharray="4 4"
                           initial={{ pathLength: 0 }}
                           animate={{ pathLength: 1 }}
                           transition={{ duration: 2, delay: i * 0.1 }}

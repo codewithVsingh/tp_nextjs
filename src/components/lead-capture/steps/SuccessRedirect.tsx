@@ -11,14 +11,16 @@ interface SuccessRedirectProps {
 
 const buildWhatsAppMessage = (data: LeadData): string => {
   const userTypeLabel = USER_TYPES.find((t) => t.value === data.user_type)?.label || data.user_type;
-  const modeLabel = data.mode === "home" ? "Home Tutor" : data.mode === "online" ? "Online" : "Both";
+  const modeLabel = data.mode === "home" ? "Home Tutor" : data.mode === "online" ? "Online" : "Any";
 
   const lines = [
     "Hi, I need a tutor.",
     data.name ? `Name: ${data.name}` : "",
     `Phone: ${data.phone}`,
     `For: ${userTypeLabel}`,
-    data.city ? `Location: ${[data.city, data.area].filter(Boolean).join(", ")}` : "",
+    data.state ? `State: ${data.state}` : "",
+    data.city ? `City: ${data.city}` : "",
+    data.area ? `Area: ${data.area}` : "",
     `Mode: ${modeLabel}`,
     data.class_level ? `Class: ${data.class_level}` : "",
     data.board ? `Board: ${data.board}` : "",
@@ -47,15 +49,15 @@ const SuccessRedirect = ({ data, onClose }: SuccessRedirectProps) => {
   }, [whatsappMsg]);
 
   return (
-    <div className="text-center space-y-6 py-4">
+    <div className="text-center space-y-6 py-4 px-2">
       <CheckCircle className="w-20 h-20 text-green-500 mx-auto" />
       
       <div>
-        <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-2">
-          Request Submitted! 🎉
+        <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-3 leading-tight">
+          Great choice! Your journey starts here. 🚀
         </h2>
-        <p className="text-muted-foreground text-sm max-w-sm mx-auto">
-          Our team will contact you within 30 minutes. We're also opening WhatsApp for faster communication.
+        <p className="text-muted-foreground text-sm max-w-sm mx-auto leading-relaxed">
+          Your request is now with our expert matching team. We're hand-picking the perfect tutor for your specific goals. Stay close to your phone—the best match is coming your way!
         </p>
       </div>
 

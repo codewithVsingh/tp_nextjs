@@ -6,7 +6,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Upload, Video, ArrowRight, ArrowLeft, X, Loader2, MapPin } from "lucide-react";
+import { CheckCircle2, Upload, Video, ArrowRight, ArrowLeft, X, Loader2, MapPin, Search } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { openWhatsApp } from "@/modules/shared/logic/whatsapp";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,14 +40,16 @@ interface FormData {
   email: string;
   state: string;
   city: string;
-  pincode: string;
   gender: string;
   age: string;
   subjects: string[];
   classes: string[];
   boards: string[];
   teachingMode: string;
-  preferredLocations: string;
+  preferredAreaIds: number[];
+  homeArea: string;
+  stateId: number | null;
+  cityId: number | null;
   languages: string[];
   qualification: string;
   specialization: string;
@@ -63,9 +66,10 @@ interface FormData {
 }
 
 const defaultForm: FormData = {
-  name: "", phone: "", email: "", state: "", city: "", pincode: "",
+  name: "", phone: "", email: "", state: "", city: "",
   gender: "", age: "",
-  subjects: [], classes: [], boards: [], teachingMode: "", preferredLocations: "", languages: [],
+  subjects: [], classes: [], boards: [], teachingMode: "", preferredAreaIds: [], languages: [], homeArea: "",
+  stateId: null, cityId: null,
   qualification: "", specialization: "", experience: "", currentStatus: "", communicationLevel: "", availableDays: [], timeSlots: [], expectedFees: "", travelWilling: "", travelRadius: "",
   bio: "", videoLink: "",
 };
@@ -87,13 +91,81 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
   const [photoName, setPhotoName] = useState("");
   const [idProofName, setIdProofName] = useState("");
   const [resumeName, setResumeName] = useState("");
-  const [pincodeLoading, setPincodeLoading] = useState(false);
-  const [pincodeStatus, setPincodeStatus] = useState<"idle" | "success" | "error" | "manual">("idle");
-  const [postOffices, setPostOffices] = useState<string[]>([]);
-  const [locationLocked, setLocationLocked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [availableAreas, setAvailableAreas] = useState<{id: number, name: string}[]>([]);
+  const [states, setStates] = useState<{id: number, name: string}[]>([]);
+  const [cities, setCities] = useState<{id: number, name: string}[]>([]);
+  const [masterData, setMasterData] = useState<{
+    subjects: {id: number, name: string}[];
+    classes: {id: number, label: string, value: string}[];
+    boards: {id: number, name: string}[];
+    languages: {id: number, name: string}[];
+    days: {id: number, name: string}[];
+    slots: {id: number, label: string}[];
+  }>({ subjects: [], classes: [], boards: [], languages: [], days: [], slots: [] });
+  const [areaSearch, setAreaSearch] = useState("");
+  const [homeAreaSearch, setHomeAreaSearch] = useState("");
+  const [showHomeAreaDropdown, setShowHomeAreaDropdown] = useState(false);
+  const [showPreferredDropdown, setShowPreferredDropdown] = useState(false);
+  const [registrationId, setRegistrationId] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Fetch all master data on mount
+  useEffect(() => {
+    async function init() {
+      const [
+        { data: s }, { data: c }, { data: b }, { data: l }, { data: d }, { data: ts }, { data: st }
+      ] = await Promise.all([
+        supabase.from('master_subjects').select('id, name').order('name'),
+        supabase.from('master_classes').select('id, label, value').order('sort_order'),
+        supabase.from('master_boards').select('id, name').order('name'),
+        supabase.from('master_languages').select('id, name').order('name'),
+        supabase.from('master_days').select('id, name').order('sort_order'),
+        supabase.from('master_time_slots').select('id, label').order('sort_order'),
+        supabase.from('states').select('id, name').order('name')
+      ]);
+
+      setMasterData({
+        subjects: s || [],
+        classes: c || [],
+        boards: b || [],
+        languages: l || [],
+        days: d || [],
+        slots: ts || []
+      });
+      if (st) setStates(st);
+    }
+    init();
+  }, []);
+
+  // Fetch cities when state changes
+  useEffect(() => {
+    async function fetchCities() {
+      if (!form.stateId) {
+        setCities([]);
+        return;
+      }
+      const { data } = await supabase.from('cities').select('id, name').eq('state_id', form.stateId).order('name');
+      if (data) setCities(data);
+    }
+    fetchCities();
+  }, [form.stateId]);
+
+  // Fetch areas when city changes
+  useEffect(() => {
+    async function fetchAreas() {
+      if (!form.cityId) {
+        setAvailableAreas([]);
+        return;
+      }
+      const { data } = await supabase.from('areas').select('id, name').eq('city_id', form.cityId).order('name');
+      if (data) {
+        setAvailableAreas(data);
+      }
+    }
+    fetchAreas();
+  }, [form.cityId]);
 
   useEffect(() => {
     setMounted(true);
@@ -113,52 +185,15 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
     }
   }, [form, mounted]);
 
-  const fetchPincodeData = useCallback(async (pincode: string) => {
-    if (!/^\d{6}$/.test(pincode)) return;
-    setPincodeLoading(true);
-    setPincodeStatus("idle");
-    try {
-      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
-      const data = await res.json();
-      if (data?.[0]?.Status === "Success" && data[0].PostOffice?.length > 0) {
-        const offices = data[0].PostOffice;
-        const state = offices[0].State;
-        const district = offices[0].District;
-        setForm(prev => ({ ...prev, state, city: district }));
-        setPostOffices(offices.map((o: any) => o.Name));
-        setPincodeStatus("success");
-        setLocationLocked(true);
-        setErrors(prev => { const n = { ...prev }; delete n.state; delete n.city; delete n.pincode; return n; });
-      } else {
-        setPincodeStatus("error");
-        setLocationLocked(false);
-      }
-    } catch {
-      setPincodeStatus("manual");
-      setLocationLocked(false);
-    } finally {
-      setPincodeLoading(false);
-    }
-  }, []);
 
-  const handlePincodeChange = (value: string) => {
-    const clean = value.replace(/\D/g, "").slice(0, 6);
-    set("pincode", clean);
-    setPincodeStatus("idle");
-    setLocationLocked(false);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (clean.length === 6) {
-      debounceRef.current = setTimeout(() => fetchPincodeData(clean), 500);
-    }
-  };
 
   const set = (field: keyof FormData, value: string | string[]) => {
     setForm(prev => ({ ...prev, [field]: value }));
     setErrors(prev => { const n = { ...prev }; delete n[field]; return n; });
   };
 
-  const toggleArray = (field: keyof FormData, value: string) => {
-    const arr = form[field] as string[];
+  const toggleArray = (field: keyof FormData, value: any) => {
+    const arr = form[field] as any[];
     set(field, arr.includes(value) ? arr.filter(v => v !== value) : [...arr, value]);
   };
 
@@ -168,9 +203,8 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
       if (!form.name.trim()) e.name = "Name is required";
       if (!form.phone.match(/^[6-9]\d{9}$/)) e.phone = "Valid 10-digit mobile required";
       if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "Valid email required";
-      if (!form.pincode.match(/^\d{6}$/)) e.pincode = "Valid 6-digit pincode required";
-      if (!form.state) e.state = "State is required";
-      if (!form.city) e.city = "City is required";
+      if (!form.stateId) e.state = "State is required";
+      if (!form.cityId) e.city = "City is required";
       if (!form.gender) e.gender = "Gender is required";
       if (!form.age || parseInt(form.age) < 18 || parseInt(form.age) > 80) e.age = "Valid age required (18-80)";
     }
@@ -179,7 +213,7 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
       if (form.classes.length === 0) e.classes = "Select at least one class group";
       if (form.boards.length === 0) e.boards = "Select at least one board";
       if (!form.teachingMode) e.teachingMode = "Select teaching mode";
-      if ((form.teachingMode === "home" || form.teachingMode === "both") && !form.preferredLocations.trim()) e.preferredLocations = "Location required for home tuition";
+      if ((form.teachingMode === "home" || form.teachingMode === "both") && form.preferredAreaIds.length === 0) e.preferredAreaIds = "Select at least one preferred location";
       if (form.languages.length === 0) e.languages = "Select at least one language";
     }
     if (s === 3) {
@@ -200,50 +234,122 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
     return Object.keys(e).length === 0;
   };
 
-  const next = () => { if (validate(step)) setStep(s => Math.min(s + 1, 4)); };
+  const next = async () => { 
+    if (validate(step)) {
+      // PARTIAL LEAD CAPTURE: Save/Update DB on every step
+      await savePartialData(step);
+      setStep(s => Math.min(s + 1, 4)); 
+    }
+  };
+
+  const savePartialData = async (currentStep: number) => {
+    try {
+      const payload: any = {
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        state: form.state,
+        city: form.city,
+        step_reached: currentStep,
+        // @ts-ignore
+        source_page: sourcePage || null,
+        // @ts-ignore
+        source_cta: sourceCta || null,
+      };
+
+      if (currentStep >= 2) {
+        payload.subjects = form.subjects;
+        payload.classes = form.classes;
+        payload.boards = form.boards;
+        payload.teaching_mode = form.teachingMode;
+        payload.preferred_locations = form.preferredAreaIds.length > 0 
+          ? availableAreas.filter(a => form.preferredAreaIds.includes(a.id)).map(a => a.name).join(", ") 
+          : null;
+        payload.languages = form.languages;
+      }
+
+      if (currentStep >= 3) {
+        payload.qualification = form.qualification;
+        payload.specialization = form.specialization || null;
+        payload.experience = form.experience;
+        payload.current_status = form.currentStatus;
+        payload.communication_level = form.communicationLevel;
+        payload.available_days = form.availableDays;
+        payload.time_slots = form.timeSlots;
+        payload.expected_fees = form.expectedFees;
+        payload.travel_willing = form.teachingMode === 'online' ? 'No' : 'Yes';
+      }
+
+      if (registrationId) {
+        // Update existing record
+        await supabase.from('tutor_registrations').update(payload).eq('id', registrationId);
+      } else if (currentStep === 1) {
+        // Create new record
+        const { data, error } = await supabase.from('tutor_registrations').insert(payload).select('id').single();
+        if (data) setRegistrationId(data.id);
+      }
+    } catch (e) {
+      console.error("Step save failed:", e);
+    }
+  };
   const prev = () => setStep(s => Math.max(s - 1, 1));
 
   const handleSubmit = async () => {
     if (!validate(4)) return;
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from('tutor_registrations').insert({
-        name: form.name,
-        phone: form.phone,
-        email: form.email,
-        state: form.state,
-        city: form.city,
-        pincode: form.pincode,
-        subjects: form.subjects,
-        classes: form.classes,
-        boards: form.boards,
-        gender: form.gender,
-        age: parseInt(form.age),
-        communication_level: form.communicationLevel,
-        teaching_mode: form.teachingMode,
-        preferred_locations: form.preferredLocations || null,
-        languages: form.languages,
-        qualification: form.qualification,
-        specialization: form.specialization || null,
-        experience: form.experience,
-        current_status: form.currentStatus,
-        available_days: form.availableDays,
-        time_slots: form.timeSlots,
-        expected_fees: form.expectedFees,
-        travel_willing: form.travelWilling,
-        travel_radius: form.travelRadius || null,
+      const payload = {
         bio: form.bio || null,
         video_link: form.videoLink || null,
         photo_name: photoName || null,
         id_proof_name: idProofName || null,
         resume_name: resumeName || null,
-        // @ts-ignore
-        source_page: sourcePage || null,
-        // @ts-ignore
-        source_cta: sourceCta || null,
-      });
+        status: 'pending', // or 'completed' depending on your review flow
+        step_reached: 4
+      };
 
-      if (error) throw error;
+      if (registrationId) {
+        const { error } = await supabase.from('tutor_registrations').update(payload).eq('id', registrationId);
+        if (error) throw error;
+
+        if (form.preferredAreaIds.length > 0 && (form.teachingMode === "home" || form.teachingMode === "both")) {
+          await supabase.from('tutor_locations').delete().eq('tutor_id', registrationId);
+          await supabase.from('tutor_locations').insert(form.preferredAreaIds.map(areaId => ({
+            tutor_id: registrationId,
+            area_id: areaId,
+            mode: form.teachingMode === "both" ? "both" : "offline",
+            is_primary: false
+          })));
+        }
+
+        // ENTERPRISE SYNC: Populate Normalized Join Tables
+        const syncJoins = async (tableName: string, masterList: any[], selectedValues: string[], idField: string, valueField: string = "name") => {
+          await supabase.from(tableName).delete().eq('tutor_id', registrationId);
+          const ids = masterList.filter(m => selectedValues.includes(m[valueField])).map(m => m.id);
+          if (ids.length > 0) {
+            await supabase.from(tableName).insert(ids.map(id => ({ tutor_id: registrationId, [idField]: id })));
+          }
+        };
+
+        await Promise.all([
+          syncJoins('tutor_subjects', masterData.subjects, form.subjects, 'subject_id'),
+          syncJoins('tutor_classes', masterData.classes, form.classes, 'class_id', 'label'),
+          syncJoins('tutor_boards', masterData.boards, form.boards, 'board_id'),
+          syncJoins('tutor_languages', masterData.languages, form.languages, 'language_id'),
+        ]);
+
+        // Special handling for Availability (Days x Slots)
+        await supabase.from('tutor_availability').delete().eq('tutor_id', registrationId);
+        const availInserts: any[] = [];
+        masterData.days.filter(d => form.availableDays.includes(d.name)).forEach(day => {
+          masterData.slots.filter(s => form.timeSlots.includes(s.label)).forEach(slot => {
+            availInserts.push({ tutor_id: registrationId, day_id: day.id, slot_id: slot.id });
+          });
+        });
+        if (availInserts.length > 0) {
+          await supabase.from('tutor_availability').insert(availInserts);
+        }
+      }
 
       localStorage.removeItem(STORAGE_KEY);
       setSubmitted(true);
@@ -336,111 +442,116 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
           {step === 1 && (
             <div className="space-y-4">
               <h3 className="text-xl font-semibold text-foreground">Tell us about yourself</h3>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Full Name *</label>
-                <Input placeholder="Enter your full name" value={form.name} onChange={e => set("name", e.target.value)} />
-                <FieldError field="name" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Mobile Number *</label>
-                <Input placeholder="10-digit mobile number" value={form.phone} onChange={e => set("phone", e.target.value.replace(/\D/g, "").slice(0, 10))} />
-                <FieldError field="phone" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Email ID *</label>
-                <Input type="email" placeholder="your@email.com" value={form.email} onChange={e => set("email", e.target.value)} />
-                <FieldError field="email" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Gender *</label>
-                  <Select value={form.gender} onValueChange={v => set("gender", v)}>
-                    <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                    <SelectContent>{GENDER_OPTIONS.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}</SelectContent>
-                  </Select>
-                  <FieldError field="gender" />
+                  <label className="block text-sm font-medium text-foreground mb-1">Full Name *</label>
+                  <Input placeholder="Enter your full name" value={form.name} onChange={e => set("name", e.target.value)} />
+                  <FieldError field="name" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Age *</label>
-                  <Input type="number" placeholder="e.g. 25" value={form.age} onChange={e => set("age", e.target.value)} />
-                  <FieldError field="age" />
+                  <label className="block text-sm font-medium text-foreground mb-1">Mobile Number *</label>
+                  <Input placeholder="10-digit mobile number" value={form.phone} onChange={e => set("phone", e.target.value.replace(/\D/g, "").slice(0, 10))} />
+                  <FieldError field="phone" />
                 </div>
               </div>
-              {/* Pincode - PRIMARY input */}
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Pincode *</label>
-                <div className="relative">
-                  <Input
-                    placeholder="Enter 6-digit pincode"
-                    value={form.pincode}
-                    onChange={e => handlePincodeChange(e.target.value)}
-                    className="pr-10"
-                  />
-                  {pincodeLoading && (
-                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-muted-foreground" />
-                  )}
-                  {pincodeStatus === "success" && !pincodeLoading && (
-                    <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary" />
-                  )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">Email ID *</label>
+                  <Input type="email" placeholder="your@email.com" value={form.email} onChange={e => set("email", e.target.value)} />
+                  <FieldError field="email" />
                 </div>
-                {pincodeLoading && (
-                  <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" /> Auto-detecting your location...
-                  </p>
-                )}
-                {pincodeStatus === "success" && !pincodeLoading && (
-                  <p className="text-xs text-primary mt-1 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> Location detected
-                  </p>
-                )}
-                {pincodeStatus === "error" && (
-                  <p className="text-sm text-destructive mt-1">Invalid Pincode. Please enter a valid pincode or fill manually below.</p>
-                )}
-                <FieldError field="pincode" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1">Gender *</label>
+                    <Select value={form.gender} onValueChange={v => set("gender", v)}>
+                      <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                      <SelectContent>{GENDER_OPTIONS.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}</SelectContent>
+                    </Select>
+                    <FieldError field="gender" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-1">Age *</label>
+                    <Input type="number" placeholder="e.g. 25" value={form.age} onChange={e => set("age", e.target.value)} />
+                    <FieldError field="age" />
+                  </div>
+                </div>
               </div>
 
-              {/* State & City - auto-filled or manual */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-1">State *</label>
-                  {locationLocked ? (
-                    <div className="flex items-center gap-2">
-                      <Input value={form.state} readOnly className="bg-muted/50" />
-                      <button type="button" onClick={() => { setLocationLocked(false); setPincodeStatus("manual"); }}
-                        className="text-xs text-primary hover:underline whitespace-nowrap">Edit</button>
-                    </div>
-                  ) : (
-                    <Select value={form.state} onValueChange={v => set("state", v)}>
-                      <SelectTrigger><SelectValue placeholder="Select state" /></SelectTrigger>
-                      <SelectContent>{STATES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-                    </Select>
-                  )}
+                  <Select onValueChange={v => {
+                    const s = states.find(st => st.id.toString() === v);
+                    set("stateId", parseInt(v));
+                    set("state", s?.name || "");
+                    set("cityId", null);
+                    set("city", "");
+                    set("homeArea", "");
+                    set("preferredAreaIds", []); // CLEAR selected areas if state changes
+                  }} value={form.stateId?.toString()}>
+                    <SelectTrigger><SelectValue placeholder="Select State" /></SelectTrigger>
+                    <SelectContent>
+                      {states.map(s => <SelectItem key={s.id} value={s.id.toString()}>{s.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
                   <FieldError field="state" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-1">City *</label>
-                  {locationLocked ? (
-                    <div className="flex items-center gap-2">
-                      <Input value={form.city} readOnly className="bg-muted/50" />
-                    </div>
-                  ) : (
-                    <Select value={form.city} onValueChange={v => set("city", v)}>
-                      <SelectTrigger><SelectValue placeholder="Select city" /></SelectTrigger>
-                      <SelectContent>{CITIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-                    </Select>
-                  )}
+                  <Select onValueChange={v => {
+                    const c = cities.find(ci => ci.id.toString() === v);
+                    set("cityId", parseInt(v));
+                    set("city", c?.name || "");
+                    set("homeArea", "");
+                    set("preferredAreaIds", []); // CLEAR selected areas if city changes
+                  }} value={form.cityId?.toString()} disabled={!form.stateId}>
+                    <SelectTrigger><SelectValue placeholder={form.stateId ? "Select City" : "Choose state first"} /></SelectTrigger>
+                    <SelectContent>
+                      {cities.map(c => <SelectItem key={c.id} value={c.id.toString()}>{c.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
                   <FieldError field="city" />
                 </div>
               </div>
 
-              {/* Post Office selector if multiple results */}
-              {pincodeStatus === "success" && postOffices.length > 1 && (
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Area / Post Office</label>
-                  <Select onValueChange={v => set("preferredLocations", v)}>
-                    <SelectTrigger><SelectValue placeholder="Select your area" /></SelectTrigger>
-                    <SelectContent>{postOffices.map(po => <SelectItem key={po} value={po}>{po}</SelectItem>)}</SelectContent>
-                  </Select>
+              {/* Residential Area Selector - Searchable Dropdown */}
+              {form.cityId && (
+                <div className="relative">
+                  <label className="block text-sm font-medium text-foreground mb-1">Your Residential Area (Local) *</label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      placeholder="Search your area..." 
+                      className="pl-9"
+                      value={showHomeAreaDropdown ? homeAreaSearch : form.homeArea}
+                      onFocus={() => setShowHomeAreaDropdown(true)}
+                      onChange={e => setHomeAreaSearch(e.target.value)}
+                    />
+                  </div>
+                  {showHomeAreaDropdown && (
+                    <div className="absolute z-50 w-full mt-1 bg-popover border rounded-md shadow-lg max-h-[200px] overflow-y-auto">
+                      {availableAreas
+                        .filter(a => a.name.toLowerCase().includes(homeAreaSearch.toLowerCase()))
+                        .map(a => (
+                          <button
+                            key={a.id}
+                            onClick={() => {
+                              set("homeArea", a.name);
+                              setHomeAreaSearch("");
+                              setShowHomeAreaDropdown(false);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm hover:bg-accent"
+                          >
+                            {a.name}
+                          </button>
+                        ))
+                      }
+                      {availableAreas.filter(a => a.name.toLowerCase().includes(homeAreaSearch.toLowerCase())).length === 0 && (
+                        <div className="px-4 py-2 text-sm text-muted-foreground italic">No matching areas found</div>
+                      )}
+                    </div>
+                  )}
+                  {showHomeAreaDropdown && <div className="fixed inset-0 z-40" onClick={() => setShowHomeAreaDropdown(false)} />}
                 </div>
               )}
             </div>
@@ -450,9 +561,9 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
           {step === 2 && (
             <div className="space-y-5">
               <h3 className="text-xl font-semibold text-foreground">Your Teaching Profile</h3>
-              <MultiSelect label="Subjects You Teach *" options={SUBJECTS} field="subjects" />
-              <MultiSelect label="Classes/Grades *" options={CLASS_GROUPS.map(c => c.label)} field="classes" />
-              <MultiSelect label="Boards *" options={BOARDS} field="boards" />
+              <MultiSelect label="Subjects You Teach *" options={masterData.subjects.map(s => s.name)} field="subjects" />
+              <MultiSelect label="Classes/Grades *" options={masterData.classes.map(c => c.label)} field="classes" />
+              <MultiSelect label="Boards *" options={masterData.boards.map(b => b.name)} field="boards" />
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Teaching Mode *</label>
                 <div className="grid grid-cols-3 gap-2">
@@ -466,13 +577,69 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
                 <FieldError field="teachingMode" />
               </div>
               {(form.teachingMode === "home" || form.teachingMode === "both") && (
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Preferred Locations *</label>
-                  <Input placeholder="e.g., Rohini, Dwarka, Pitampura" value={form.preferredLocations} onChange={e => set("preferredLocations", e.target.value)} />
-                  <FieldError field="preferredLocations" />
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-foreground">Preferred Locations (Areas in {form.city || "your city"}) *</label>
+                  
+                  {/* Selected Areas Tags */}
+                  <div className="flex flex-wrap gap-2 min-h-[40px] p-2 border rounded-lg bg-muted/30">
+                    {form.preferredAreaIds.length === 0 && <span className="text-sm text-muted-foreground italic">No areas selected yet...</span>}
+                    {form.preferredAreaIds.map(id => {
+                      const area = availableAreas.find(a => a.id === id);
+                      return (
+                        <div key={id} className="flex items-center gap-1 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs">
+                          {area?.name}
+                          <button onClick={() => toggleArray("preferredAreaIds", id)} className="hover:text-destructive">
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Searchable Area Dropdown */}
+                  <div className="relative">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input 
+                        placeholder="Search area name..." 
+                        className="pl-9"
+                        value={areaSearch}
+                        onFocus={() => setShowPreferredDropdown(true)}
+                        onChange={e => setAreaSearch(e.target.value)}
+                      />
+                    </div>
+                    {showPreferredDropdown && (
+                      <div className="absolute z-50 w-full mt-1 bg-popover border rounded-md shadow-lg max-h-[250px] overflow-y-auto">
+                        {availableAreas
+                          .filter(a => !form.preferredAreaIds.includes(a.id)) // HIDE already selected
+                          .filter(a => a.name.toLowerCase().includes(areaSearch.toLowerCase()))
+                          .map(a => (
+                            <button
+                              key={a.id}
+                              onClick={() => {
+                                toggleArray("preferredAreaIds", a.id);
+                                setAreaSearch("");
+                                // Keep dropdown open for more selections unless user clicks away
+                              }}
+                              className="w-full text-left px-4 py-2 text-sm hover:bg-accent flex justify-between items-center"
+                            >
+                              {a.name}
+                            </button>
+                          ))
+                        }
+                        {availableAreas.filter(a => !form.preferredAreaIds.includes(a.id)).filter(a => a.name.toLowerCase().includes(areaSearch.toLowerCase())).length === 0 && (
+                          <div className="px-4 py-2 text-sm text-muted-foreground italic">
+                            {areaSearch ? "No matching areas found" : "All available areas selected"}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {showPreferredDropdown && <div className="fixed inset-0 z-40" onClick={() => setShowPreferredDropdown(false)} />}
+                  </div>
+                  <FieldError field="preferredAreaIds" />
                 </div>
               )}
-              <MultiSelect label="Languages *" options={LANGUAGES} field="languages" />
+              <MultiSelect label="Languages *" options={masterData.languages.map(l => l.name)} field="languages" />
             </div>
           )}
 
@@ -520,31 +687,12 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
                 </Select>
                 <FieldError field="communicationLevel" />
               </div>
-              <MultiSelect label="Available Days *" options={DAYS} field="availableDays" />
-              <MultiSelect label="Preferred Time Slots *" options={TIME_SLOTS} field="timeSlots" />
+              <MultiSelect label="Available Days *" options={masterData.days.map(d => d.name)} field="availableDays" />
+              <MultiSelect label="Preferred Time Slots *" options={masterData.slots.map(s => s.label)} field="timeSlots" />
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">Expected Fees (₹/hour) *</label>
                 <Input placeholder="e.g., 500" value={form.expectedFees} onChange={e => set("expectedFees", e.target.value.replace(/\D/g, ""))} />
                 <FieldError field="expectedFees" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Willing to Travel? *</label>
-                  <div className="flex gap-2">
-                    {["Yes", "No"].map(v => (
-                      <button key={v} type="button" onClick={() => set("travelWilling", v)}
-                        className={`flex-1 py-2 rounded-lg text-sm border transition-all ${form.travelWilling === v ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-border"}`}>
-                        {v}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {form.travelWilling === "Yes" && (
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1">Travel Radius (km)</label>
-                    <Input placeholder="e.g., 10" value={form.travelRadius} onChange={e => set("travelRadius", e.target.value.replace(/\D/g, ""))} />
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -593,6 +741,60 @@ const TutorRegistrationForm = ({ onClose, isModal = false, sourcePage, sourceCta
                 <div className="flex items-center gap-2 mt-2 p-3 bg-accent/50 rounded-lg">
                   <Video className="w-5 h-5 text-primary flex-shrink-0" />
                   <p className="text-sm text-accent-foreground">Profiles with demo videos get <strong>3x more student requests</strong></p>
+                </div>
+              </div>
+
+              {/* Summary Preview Section */}
+              <div className="mt-8 p-4 bg-muted/20 rounded-xl border border-border space-y-4">
+                <h4 className="text-sm font-bold flex items-center gap-2 uppercase tracking-wider text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-primary" /> Review Your Profile
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">Location & Mode</p>
+                    <p className="font-medium">{form.city}, {form.state}</p>
+                    <p className="text-xs text-primary font-medium">{form.teachingMode === 'both' ? 'Online + Home Tuition' : form.teachingMode === 'online' ? 'Online Only' : 'Home Tuition'}</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">Subjects & Classes</p>
+                    <p className="font-medium">{form.subjects.slice(0, 2).join(", ")}{form.subjects.length > 2 ? ` +${form.subjects.length - 2}` : ""}</p>
+                    <p className="text-xs text-muted-foreground">{form.classes.join(", ")}</p>
+                  </div>
+
+                  {(form.teachingMode === 'home' || form.teachingMode === 'both') && (
+                    <div className="md:col-span-2 space-y-2 pt-2 border-t border-border/50">
+                      <p className="text-xs text-muted-foreground">Preferred Teaching Areas:</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {form.preferredAreaIds.slice(0, 3).map(id => (
+                          <Badge key={id} variant="secondary" className="text-[10px] py-0 px-2 h-5">
+                            {availableAreas.find(a => a.id === id)?.name}
+                          </Badge>
+                        ))}
+                        {form.preferredAreaIds.length > 3 && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button type="button" className="text-[10px] h-5 px-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors font-semibold">
+                                  +{form.preferredAreaIds.length - 3} more
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent className="p-2 max-w-[250px]">
+                                <div className="flex flex-wrap gap-1">
+                                  {form.preferredAreaIds.slice(3).map(id => (
+                                    <span key={id} className="bg-background/50 px-1.5 py-0.5 rounded text-[10px]">
+                                      {availableAreas.find(a => a.id === id)?.name}
+                                    </span>
+                                  ))}
+                                </div>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

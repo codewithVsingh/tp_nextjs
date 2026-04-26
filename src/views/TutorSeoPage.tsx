@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { buildBreadcrumbSchema, buildLocalBusinessSchema } from "@/modules/shared/logic/seoMetadataGenerator";
 
@@ -113,7 +113,7 @@ const TutorSeoPage = () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(buildLocalBusinessSchema({
-            name: `Tutors Parliament — ${knownCity || "Delhi"}`,
+            name: `Tutors Parliament Ã¢â‚¬â€ ${knownCity || "Delhi"}`,
             area: knownCity || "Delhi",
             description: meta.description,
             url: pageUrl
@@ -152,7 +152,7 @@ const TutorSeoPage = () => {
           <div className="container mx-auto max-w-4xl text-center">
             {pageData.isMoneyPage && (
               <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-4">
-                {isFeesPage ? "💰 Fee Guide 2026" : "🏆 Top Rated Tutors"}
+                {isFeesPage ? '💰 Fee Guide 2026' : '🏆 Top Rated Tutors'}
               </motion.span>
             )}
             {pageData.board && (
@@ -204,8 +204,8 @@ const TutorSeoPage = () => {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex flex-wrap gap-4 justify-center mb-6 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5"><Shield className="h-4 w-4 text-primary" /> Verified Tutors</span>
               <span className="flex items-center gap-1.5"><CheckCircle className="h-4 w-4 text-primary" /> Background Checked</span>
-              <span className="flex items-center gap-1.5"><Star className="h-4 w-4 text-secondary" /> 4.8★ Avg Rating</span>
-              <span className="flex items-center gap-1.5"><Clock className="h-4 w-4 text-primary" /> Free Demo in 24h</span>
+              <span className="flex items-center gap-1.5"><Star className="h-4 w-4 text-secondary" /> 4.8 Avg Rating</span>
+              <span className="flex items-center gap-1.5"><Clock className="h-4 w-4 text-primary" /> Match in 24 Hours</span>
             </motion.div>
 
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
@@ -213,11 +213,8 @@ const TutorSeoPage = () => {
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex flex-wrap gap-4 justify-center">
-              <Button id="cta-hero-demo" size="lg" variant="cta" className="text-base px-8 py-6" asChild>
-                <Link href={`/demo-booking?from=${pageData.slug}&cta=hero`}>Get Free Demo Class</Link>
-              </Button>
-              <Button id="cta-hero-profiles" size="lg" variant="outline" className="text-base px-8 py-6" asChild>
-                <Link href={`/demo-booking?from=${pageData.slug}&cta=hero_secondary`}>View Tutor Profiles <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Button id="cta-hero-demo" size="lg" variant="cta" className="text-base px-10 py-6 rounded-2xl shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all font-black uppercase tracking-widest" asChild>
+                <Link href={`/demo-booking?from=${pageData.slug}&cta=hero`}>Match Me with a Tutor</Link>
               </Button>
             </motion.div>
           </div>
@@ -225,34 +222,34 @@ const TutorSeoPage = () => {
 
         <TrustLayer pageData={pageData} />
 
-        {/* Local Insights Section */}
-        {pageData.area && (
-          <section className="section-padding pt-0">
-            <div className="container mx-auto max-w-4xl">
-              <div className="p-6 rounded-2xl bg-muted/30 border border-border">
-                <h3 className="font-heading font-bold text-xl text-foreground mb-4 flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-primary" /> Educational Landscape in {pageData.area.name}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Students in {pageData.area.name} primarily attend top-tier schools such as {["DPS", "Modern School", "Amity International", "Sanskriti School", "Vasant Valley"][pageData.area.slug.length % 5]} and {["Lotus Valley", "Shiv Nadar", "The Heritage School", "Pathways World School"][pageData.area.slug.length % 4]}.
-                  The area is known for its high academic standards and competitive environment, particularly for CBSE and IB students.
-                  Our tutors in {pageData.area.name} are intimately familiar with the local school calendars and exam schedules, ensuring your child stays ahead of the curve.
-                </p>
-              </div>
+        <section className="py-12 bg-white">
+          <div className="container mx-auto max-w-4xl">
+            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 shadow-sm relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl transition-colors group-hover:bg-primary/10" />
+              <h3 className="font-heading font-black text-xl text-slate-900 mb-4 flex items-center gap-2 relative">
+                <MapPin className="h-5 w-5 text-primary" /> Educational Landscape in {pageData.area.name}
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed relative">
+                Students in {pageData.area.name} primarily attend top-tier schools such as {["DPS", "Modern School", "Amity International", "Sanskriti School", "Vasant Valley"][pageData.area.slug.length % 5]} and {["Lotus Valley", "Shiv Nadar", "The Heritage School", "Pathways World School"][pageData.area.slug.length % 4]}.
+                The area is known for its high academic standards and competitive environment, particularly for CBSE and IB students.
+                Our tutors in {pageData.area.name} are intimately familiar with the local school calendars and exam schedules, ensuring your child stays ahead of the curve.
+              </p>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
         <FeesSection pageData={pageData} />
         <TopTutorsNearYou pageData={pageData} />
 
-        <section className="section-padding">
-          <div className="container mx-auto max-w-3xl prose prose-gray dark:prose-invert">
-            <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-4">
+        <section className="py-12 bg-white">
+          <div className="container mx-auto max-w-3xl prose prose-slate dark:prose-invert">
+            <h2 className="font-heading font-black text-2xl md:text-3xl text-slate-900 mb-6 text-center">
               Why {pageData.subject?.name || "Home Tuition"} Matters{pageData.area ? ` in ${pageData.area.name}` : ""}
             </h2>
-            <p className="text-muted-foreground leading-relaxed">{content.value}</p>
-            <p className="text-muted-foreground leading-relaxed mt-4">{content.closing}</p>
+            <div className="space-y-4 text-slate-600 leading-relaxed text-base">
+              <p>{content.value}</p>
+              <p>{content.closing}</p>
+            </div>
 
             {pageData.board && (
               <div className="mt-6 p-4 rounded-xl border border-primary/20 bg-primary/5">
@@ -280,18 +277,18 @@ const TutorSeoPage = () => {
         </section>
 
         {/* FAQs */}
-        <section className="section-padding">
+        <section className="py-16 bg-slate-50 border-y border-slate-100">
           <div className="container mx-auto max-w-3xl">
-            <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-8 text-center">
+            <h2 className="font-heading font-black text-2xl md:text-3xl text-slate-900 mb-10 text-center">
               Frequently Asked Questions
             </h2>
-            <Accordion type="single" collapsible className="space-y-3">
+            <Accordion type="single" collapsible className="space-y-4">
               {faqs.map((faq, i) => (
-                <AccordionItem key={i} value={`faq-${i}`} className="bg-background rounded-xl px-6 border border-border card-shadow">
-                  <AccordionTrigger className="text-left font-heading font-semibold text-foreground hover:no-underline">
+                <AccordionItem key={i} value={`faq-${i}`} className="bg-white rounded-2xl px-6 border border-slate-200 shadow-sm transition-all hover:border-primary/30">
+                  <AccordionTrigger className="text-left font-heading font-bold text-slate-800 hover:no-underline py-4 text-sm md:text-base">
                     {faq.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed">
+                  <AccordionContent className="text-slate-500 leading-relaxed text-sm pb-4">
                     {faq.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -299,31 +296,9 @@ const TutorSeoPage = () => {
             </Accordion>
           </div>
         </section>
-
-        <section className="section-padding bg-primary text-primary-foreground text-center">
-          <div className="container mx-auto max-w-2xl">
-            <h2 className="font-heading font-bold text-2xl md:text-3xl mb-4">Start Learning Today</h2>
-            <p className="opacity-90 mb-6">
-              Book a free demo class and experience personalized tutoring with Tutors Parliament.
-              Serving Delhi, Noida, Gurgaon, Ghaziabad & Faridabad.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Button id="cta-footer-demo" size="lg" variant="secondary" asChild>
-                <Link href={`/demo-booking?from=${pageData.slug}&cta=footer`}>Book Free Demo</Link>
-              </Button>
-              <Button id="cta-footer-whatsapp" size="lg" variant="hero-outline" onClick={() => openWhatsApp(`Hi, I need a tutor for ${pageData.keyword} in ${pageData.area?.name || "Delhi"}`)}>
-                  Talk to Tutor Now
-              </Button>
-            </div>
-          </div>
-        </section>
       </main>
-
       <StickyBottomCTA pageData={pageData} />
     </>
   );
 };
-
 export default TutorSeoPage;
-
-

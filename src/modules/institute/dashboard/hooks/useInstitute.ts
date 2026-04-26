@@ -10,7 +10,8 @@ export const useInstitute = (user: any) => {
     totalSignals: 0,
     networkIQ: 0,
     yourContribution: 0,
-    riskAlerts: 0
+    riskAlerts: 0,
+    agencyTrust: 0.5
   });
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);

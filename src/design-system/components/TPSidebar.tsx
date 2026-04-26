@@ -1,15 +1,16 @@
-"use client";
-
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { 
   ChevronRight,
+  ChevronLeft,
   Settings,
-  LogOut
+  LogOut,
+  PanelLeftClose,
+  PanelLeft
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export interface NavItem {
   label: string;
@@ -32,21 +33,22 @@ export interface TPSidebarProps {
 
 const TPSidebar: React.FC<TPSidebarProps> = ({ role, items, sections, onLogout, className }) => {
   const pathname = usePathname();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const roleStyles = {
     admin: {
-      active: "bg-indigo-600 text-white shadow-lg shadow-indigo-200/50 scale-[1.02]",
-      hover: "hover:bg-indigo-50 text-slate-600 hover:text-indigo-600",
+      active: "bg-indigo-600 text-white shadow-lg shadow-indigo-500/20",
+      hover: "hover:bg-white/5 text-slate-400 hover:text-white",
       accent: "bg-indigo-600",
     },
     institute: {
-      active: "bg-tp-institute text-white shadow-lg shadow-tp-institute/20 scale-[1.02]",
-      hover: "hover:bg-tp-institute/5 text-slate-600 hover:text-tp-institute",
+      active: "bg-tp-institute text-white shadow-lg shadow-tp-institute/20",
+      hover: "hover:bg-white/5 text-slate-400 hover:text-white",
       accent: "bg-tp-institute",
     },
     tutor: {
-      active: "bg-tp-tutor text-white shadow-lg shadow-tp-tutor/20 scale-[1.02]",
-      hover: "hover:bg-tp-tutor/5 text-slate-600 hover:text-tp-tutor",
+      active: "bg-tp-tutor text-white shadow-lg shadow-tp-tutor/20",
+      hover: "hover:bg-white/5 text-slate-400 hover:text-white",
       accent: "bg-tp-tutor",
     },
   };
@@ -61,58 +63,104 @@ const TPSidebar: React.FC<TPSidebarProps> = ({ role, items, sections, onLogout, 
       <Link
         key={item.href}
         href={item.href}
+        title={isCollapsed ? item.label : ""}
         className={cn(
-          "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300 group relative",
-          isActive ? style.active : style.hover
+          "flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all duration-200 group relative",
+          isActive ? style.active : style.hover,
+          isCollapsed && "justify-center px-1.5"
         )}
       >
-        <Icon className={cn("w-5 h-5 transition-transform duration-300 group-hover:scale-110", !isActive && "text-slate-400 group-hover:text-indigo-500")} />
-        {item.label}
-        {isActive && (
+        <Icon className={cn("w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110", !isActive && "text-slate-500 group-hover:text-indigo-400")} />
+        <AnimatePresence>
+          {!isCollapsed && (
+            <motion.span 
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              className="truncate whitespace-nowrap"
+            >
+              {item.label}
+            </motion.span>
+          )}
+        </AnimatePresence>
+        {!isCollapsed && isActive && (
           <motion.div 
             layoutId="active-nav-indicator"
-            className="ml-auto w-1.5 h-1.5 rounded-full bg-white/80"
+            className="ml-auto w-1 h-1 rounded-full bg-white/80"
           />
         )}
       </Link>
     );
   };
-  return (
-    <aside className={cn("w-64 h-full border-r border-slate-100 bg-white/50 backdrop-blur-xl flex flex-col z-40 shadow-[1px_0_0_0_rgba(0,0,0,0.02)]", className)}>
 
-      <div className="flex-1 py-6 px-4 space-y-6 overflow-y-auto scrollbar-hide">
+  return (
+    <motion.aside 
+      initial={false}
+      animate={{ width: isCollapsed ? 70 : 240 }}
+      className={cn(
+        "h-full bg-slate-900 flex flex-col z-40 relative border-r border-white/5 transition-colors duration-300", 
+        className
+      )}
+    >
+      {/* Collapse Toggle */}
+      <button 
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="absolute -right-3 top-10 w-6 h-6 bg-slate-800 border border-white/10 rounded-full flex items-center justify-center shadow-xl text-slate-400 hover:text-indigo-400 z-50 transition-all hover:scale-110"
+      >
+        {isCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+      </button>
+
+      {/* Brand area if needed, but keeping it dense */}
+      <div className="flex-1 py-4 px-2.5 space-y-4 overflow-y-auto scrollbar-hide">
         {sections ? (
           sections.map((section) => (
-            <div key={section.label} className="space-y-3 pb-2">
-              <h4 className="px-4 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400/80">
-                {section.label}
-              </h4>
-              <div className="space-y-1">
+            <div key={section.label} className="space-y-1">
+              <div className="h-4 flex items-center px-3">
+                <AnimatePresence>
+                  {!isCollapsed && (
+                    <motion.h4 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-[8px] font-black uppercase tracking-[0.15em] text-slate-500/60 whitespace-nowrap"
+                    >
+                      {section.label}
+                    </motion.h4>
+                  )}
+                </AnimatePresence>
+              </div>
+              <div className="space-y-px">
                 {section.items.map(renderItem)}
               </div>
             </div>
           ))
         ) : (
-          <div className="space-y-1">
+          <div className="space-y-px">
             {items?.map(renderItem)}
           </div>
         )}
       </div>
 
-      <div className="p-4 border-t border-slate-50 space-y-1">
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group">
-          <Settings className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-          Settings
+      <div className="p-2.5 border-t border-white/5 space-y-px">
+        <button className={cn(
+          "w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-slate-400 hover:bg-white/5 hover:text-white transition-all group",
+          isCollapsed && "justify-center px-2"
+        )}>
+          <Settings className="w-4 h-4 text-slate-500 group-hover:text-white shrink-0" />
+          {!isCollapsed && "Settings"}
         </button>
         <button 
           onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-destructive hover:bg-destructive/5 transition-all group"
+          className={cn(
+            "w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-[12px] font-semibold text-rose-400 hover:bg-rose-500/10 transition-all group",
+            isCollapsed && "justify-center px-2"
+          )}
         >
-          <LogOut className="w-5 h-5 opacity-70 group-hover:opacity-100" />
-          Sign Out
+          <LogOut className="w-4 h-4 opacity-70 group-hover:opacity-100 shrink-0" />
+          {!isCollapsed && "Sign Out"}
         </button>
       </div>
-    </aside>
+    </motion.aside>
   );
 };
 

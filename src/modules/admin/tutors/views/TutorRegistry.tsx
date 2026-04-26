@@ -105,6 +105,19 @@ const TutorCard = ({ tutor, onClick }: { tutor: any; onClick(): void }) => {
         <MetricPill label="Retain"   value={`${tutor.retentionRate || 0}%`}      color="bg-amber-50 border-amber-100 text-amber-700" />
       </div>
 
+      {/* Progress bar for registrations */}
+      <div className="mt-3">
+        <div className="flex items-center justify-between text-[9px] font-black uppercase text-gray-400 mb-1">
+          <span>Registration Progress</span>
+          <span>Step {tutor.step_reached || 1}/4</span>
+        </div>
+        <div className="flex gap-1">
+          {[1, 2, 3, 4].map(s => (
+            <div key={s} className={cn("h-1 flex-1 rounded-full", (tutor.step_reached || 0) >= s ? "bg-indigo-500" : "bg-gray-100")} />
+          ))}
+        </div>
+      </div>
+
       {/* Score bar */}
       <div className="mt-3 flex items-center gap-2">
         <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -115,6 +128,20 @@ const TutorCard = ({ tutor, onClick }: { tutor: any; onClick(): void }) => {
         </div>
         <span className={cn("text-[9px] font-bold shrink-0", cfg.color)}>{cfg.label}</span>
       </div>
+
+      <div className="mt-2 flex items-center justify-between border-t border-gray-50 pt-2">
+        <span className="text-[10px] text-gray-400">Joined: {new Date(tutor.created_at).toLocaleDateString()}</span>
+        {tutor.teaching_mode && <span className="text-[10px] font-bold text-indigo-500 uppercase">{tutor.teaching_mode}</span>}
+      </div>
+
+      {/* Drop-off Intelligence Badge */}
+      {tutor.frictionPoint && (
+        <div className="mt-2 p-1.5 bg-rose-50 border border-rose-100 rounded-lg">
+          <p className="text-[9px] font-black text-rose-700 flex items-center gap-1 uppercase">
+            <Target className="w-2.5 h-2.5" /> {tutor.frictionPoint}
+          </p>
+        </div>
+      )}
     </button>
   );
 };
@@ -123,14 +150,15 @@ const TutorCard = ({ tutor, onClick }: { tutor: any; onClick(): void }) => {
 export default function AdminTutors() {
   const [tutors, setTutors]         = useState<any[]>([]);
   const [loading, setLoading]       = useState(true);
-  const [tab, setTab]               = useState<"all"|"top"|"mid"|"low">("all");
+  const [tab, setTab]               = useState<"all"|"top"|"mid"|"low"|"dropoff">("all");
   const [search, setSearch]         = useState("");
-  const [filterCity, setCity]       = useState("");
+  const [filterCity, setCity]       = useState("all");
+  const [filterState, setState]     = useState("all");
   const [filterSubject, setSubject] = useState("");
   const [filterScore, setScore]     = useState("all");
-  const [sortBy, setSortBy]         = useState<"score"|"rating"|"name"|"active">("score");
+  const [sortBy, setSortBy]         = useState<"score"|"rating"|"name"|"active"|"newest">("newest");
   const [page, setPage]             = useState(1);
-  const pageSize = 18;
+  const pageSize = 12;
 
   const [addOpen,     setAddOpen]   = useState(false);
   const [exportOpen, setExport]     = useState(false);
@@ -141,9 +169,10 @@ export default function AdminTutors() {
     setLoading(true);
     try {
       // Fetch tutors + all assignments in parallel
-      const [tutorRes, assignRes] = await Promise.all([
+      const [tutorRes, assignRes, visibilityRes] = await Promise.all([
         supabase.from("tutor_registrations").select("*").order("created_at", { ascending: false }),
         supabase.from("lead_tutor_assignments").select("tutor_id, status, lead_name, lead_id, fee, start_date, class_level"),
+        supabase.from("tutor_visibility").select("*")
       ]);
       if (tutorRes.error) throw tutorRes.error;
 
@@ -156,8 +185,28 @@ export default function AdminTutors() {
         byTutor[a.tutor_id].push(a);
       });
 
-      // Enrich each tutor with computed metrics
-      const enriched = (tutorRes.data || []).map(t => enrichTutor(t, byTutor[t.id] || []));
+      // Enrich each tutor with computed metrics and visibility
+      const enriched = (tutorRes.data || []).map(t => {
+        const base = enrichTutor(t, byTutor[t.id] || []);
+        const vis = (visibilityRes.data || []).find(v => v.tutor_id === t.id);
+        
+        // Add Intelligence for Drop-offs
+        let frictionPoint = "";
+        if ((t.step_reached || 0) < 4) {
+          if (t.step_reached === 1) frictionPoint = "Abandoned at Identity/Location";
+          else if (t.step_reached === 2) frictionPoint = "Stopped at Teaching Profile";
+          else if (t.step_reached === 3) frictionPoint = "Quit at Experience/Availability";
+          else frictionPoint = "Document Friction";
+        }
+
+        return {
+          ...base,
+          visibility_status: vis?.visibility_status || "pending",
+          priority_score: vis?.priority_score || 0,
+          is_featured: vis?.is_featured || false,
+          frictionPoint
+        };
+      });
       setTutors(enriched);
     } catch (e: any) { toast.error(e.message); }
     finally { setLoading(false); }
@@ -167,13 +216,23 @@ export default function AdminTutors() {
 
   // ── Derived / filtered list ──────────────────────────────────────────────────
   let filtered = tutors;
+  
+  // 1. Separate Drop-offs from Main Views
+  if (tab === "dropoff") {
+    filtered = filtered.filter(t => (t.step_reached || 0) < 4);
+  } else {
+    filtered = filtered.filter(t => (t.step_reached || 0) >= 4);
+    if (tab === "top") filtered = filtered.filter(t => t.tier === "Top");
+    if (tab === "mid") filtered = filtered.filter(t => t.tier === "Mid");
+    if (tab === "low") filtered = filtered.filter(t => t.tier === "Low");
+  }
 
-  if (tab === "top") filtered = filtered.filter(t => t.tier === "Top");
-  if (tab === "mid") filtered = filtered.filter(t => t.tier === "Mid");
-  if (tab === "low") filtered = filtered.filter(t => t.tier === "Low");
+  // 2. Location Filters
+  if (filterState !== "all") filtered = filtered.filter(t => t.state === filterState);
+  if (filterCity !== "all")  filtered = filtered.filter(t => t.city === filterCity);
 
-  if (search.trim())       filtered = filtered.filter(t => t.name?.toLowerCase().includes(search.toLowerCase()));
-  if (filterCity.trim())   filtered = filtered.filter(t => t.city?.toLowerCase().includes(filterCity.toLowerCase()));
+  // 3. Search & Subject Filters
+  if (search.trim())       filtered = filtered.filter(t => t.name?.toLowerCase().includes(search.toLowerCase()) || t.phone?.includes(search));
   if (filterSubject.trim()) filtered = filtered.filter(t => {
     const s = Array.isArray(t.subjects) ? t.subjects.join(" ") : (t.subjects || "");
     return s.toLowerCase().includes(filterSubject.toLowerCase());
@@ -187,6 +246,7 @@ export default function AdminTutors() {
     if (sortBy === "score")  return (b.tutorScore || 0)      - (a.tutorScore || 0);
     if (sortBy === "rating") return (b.avgRating || 0)       - (a.avgRating || 0);
     if (sortBy === "active") return (b.activeStudents || 0)  - (a.activeStudents || 0);
+    if (sortBy === "newest") return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     return (a.name || "").localeCompare(b.name || "");
   });
 
@@ -194,12 +254,26 @@ export default function AdminTutors() {
   const totalPages = Math.ceil(sorted.length / pageSize);
 
   // ── Aggregate stats ──────────────────────────────────────────────────────────
-  const topCount   = tutors.filter(t => t.tier === "Top").length;
-  const midCount   = tutors.filter(t => t.tier === "Mid").length;
-  const lowCount   = tutors.filter(t => t.tier === "Low").length;
-  const avgScore   = tutors.length > 0 ? Math.round(tutors.reduce((a, t) => a + (t.tutorScore || 0), 0) / tutors.length) : 0;
-  const totalActive = tutors.reduce((a, t) => a + (t.activeStudents || 0), 0);
-  const top5 = [...tutors].sort((a, b) => (b.tutorScore || 0) - (a.tutorScore || 0)).slice(0, 5);
+  const topCount   = tutors.filter(t => t.tier === "Top" && (t.step_reached || 0) >= 4).length;
+  const midCount   = tutors.filter(t => t.tier === "Mid" && (t.step_reached || 0) >= 4).length;
+  const lowCount   = tutors.filter(t => t.tier === "Low" && (t.step_reached || 0) >= 4).length;
+  const activeTutors = tutors.filter(t => (t.step_reached || 0) >= 4);
+  const avgScore   = activeTutors.length > 0 ? Math.round(activeTutors.reduce((a, t) => a + (t.tutorScore || 0), 0) / activeTutors.length) : 0;
+  const totalActive = activeTutors.reduce((a, t) => a + (t.activeStudents || 0), 0);
+  const top5 = [...activeTutors].sort((a, b) => (b.tutorScore || 0) - (a.tutorScore || 0)).slice(0, 5);
+
+  // Dynamic Location Lists
+  const states = Array.from(new Set(activeTutors.map(t => t.state).filter(Boolean))).sort();
+  const cities = Array.from(new Set(activeTutors.filter(t => filterState === "all" || t.state === filterState).map(t => t.city).filter(Boolean))).sort();
+
+  const resetFilters = () => {
+    setSearch("");
+    setCity("all");
+    setState("all");
+    setSubject("");
+    setScore("all");
+    setPage(1);
+  };
 
   return (
     <div className="p-5 md:p-7 space-y-6 max-w-[1700px] mx-auto">
@@ -211,7 +285,7 @@ export default function AdminTutors() {
             <GraduationCap className="w-5 h-5 text-blue-500" /> Tutor Intelligence
           </h1>
           <p className="text-[12px] text-gray-400 mt-0.5">
-            {tutors.length} tutors · {totalActive} active students · Avg score: {avgScore}/100
+            {tutors.filter(t => (t.step_reached || 0) >= 4).length} active tutors · {tutors.filter(t => (t.step_reached || 0) < 4).length} drop-offs · {totalActive} students
           </p>
         </div>
         <div className="flex gap-2">
@@ -224,10 +298,10 @@ export default function AdminTutors() {
       {/* ── KPI bar ───────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { icon: Teams,  label: "Total Tutors",   value: tutors.length,  color: "bg-indigo-50 border-indigo-200 text-indigo-700" },
-          { icon: Trophy, label: "Top Performers", value: topCount,       color: "bg-emerald-50 border-emerald-200 text-emerald-700" },
-          { icon: Users,  label: "Active Students", value: totalActive,   color: "bg-blue-50 border-blue-200 text-blue-700" },
-          { icon: Target, label: "Avg Score",       value: `${avgScore}/100`, color: "bg-violet-50 border-violet-200 text-violet-700" },
+          { icon: GraduationCap, label: "Active Tutors", value: tutors.filter(t => (t.step_reached || 0) >= 4).length, color: "bg-indigo-50 border-indigo-200 text-indigo-700" },
+          { icon: Trophy,        label: "Top Performers", value: topCount,       color: "bg-emerald-50 border-emerald-200 text-emerald-700" },
+          { icon: Users,         label: "Active Students", value: totalActive,   color: "bg-blue-50 border-blue-200 text-blue-700" },
+          { icon: Target,        label: "Market Reach",   value: `${cities.length} Cities`, color: "bg-violet-50 border-violet-200 text-violet-700" },
         ].map(({ icon: Icon, label, value, color }) => (
           <div key={label} className={cn("rounded-xl border p-4 flex items-center gap-3", color)}>
             <div className="w-9 h-9 rounded-lg bg-white/70 flex items-center justify-center">
@@ -280,10 +354,11 @@ export default function AdminTutors() {
         {/* Tier tabs */}
         <div className="flex gap-2 flex-wrap">
           {([
-            { id: "all", label: "All Tutors",      count: tutors.length, color: "" },
+            { id: "all", label: "All Tutors",      count: activeTutors.length, color: "" },
             { id: "top", label: "🏆 Top (80+)",    count: topCount,      color: "text-emerald-700" },
             { id: "mid", label: "⚡ Mid (50–79)",  count: midCount,      color: "text-amber-700" },
             { id: "low", label: "🔴 Low (<50)",    count: lowCount,      color: "text-red-700" },
+            { id: "dropoff", label: "⚠️ Drop-offs", count: tutors.filter(t => (t.step_reached || 0) < 4).length, color: "text-rose-700" },
           ] as const).map(t => (
             <button key={t.id} onClick={() => { setTab(t.id); setPage(1); }}
               className={cn(
@@ -304,23 +379,55 @@ export default function AdminTutors() {
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400" />
             <Input placeholder="Search name..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="h-8 pl-7 w-[160px] text-[12px]" />
           </div>
-          <Input placeholder="City..." value={filterCity} onChange={e => { setCity(e.target.value); setPage(1); }} className="h-8 w-[110px] text-[12px]" />
+          
+          <Select value={filterState} onValueChange={v => { setState(v); setCity("all"); setPage(1); }}>
+            <SelectTrigger className="h-8 w-[140px] text-[12px]"><SelectValue placeholder="State" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All States</SelectItem>
+              {states.map(s => (
+                <SelectItem key={s} value={s}>
+                  {s} ({activeTutors.filter(t => t.state === s).length})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={filterCity} onValueChange={v => { setCity(v); setPage(1); }}>
+            <SelectTrigger className="h-8 w-[140px] text-[12px]"><SelectValue placeholder="City" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Cities</SelectItem>
+              {cities.map(c => (
+                <SelectItem key={c} value={c}>
+                  {c} ({activeTutors.filter(t => t.city === c).length})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           <Input placeholder="Subject..." value={filterSubject} onChange={e => { setSubject(e.target.value); setPage(1); }} className="h-8 w-[120px] text-[12px]" />
           <Select value={filterScore} onValueChange={v => { setScore(v); setPage(1); }}>
             <SelectTrigger className="h-8 w-[120px] text-[12px]"><SelectValue placeholder="Score" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Scores</SelectItem>
-              <SelectItem value="80+">🟢 80+ (Top)</SelectItem>
-              <SelectItem value="50+">🟡 50–79 (Mid)</SelectItem>
-              <SelectItem value="<50">🔴 &lt;50 (Low)</SelectItem>
+              <SelectItem value="80+">Top (80+)</SelectItem>
+              <SelectItem value="50-79">Mid (50-79)</SelectItem>
+              <SelectItem value="<50">Low (&lt;50)</SelectItem>
             </SelectContent>
           </Select>
+          
+          {(search || filterCity !== "all" || filterState !== "all" || filterSubject || filterScore !== "all") && (
+            <Button variant="ghost" size="sm" onClick={resetFilters} className="h-8 text-[11px] font-bold text-rose-500 hover:bg-rose-50">
+               Clear All
+            </Button>
+          )}
+
           <Select value={sortBy} onValueChange={v => setSortBy(v as any)}>
             <SelectTrigger className="h-8 w-[130px] text-[12px]"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="score">Sort: Score ↓</SelectItem>
               <SelectItem value="rating">Sort: Rating ↓</SelectItem>
               <SelectItem value="active">Sort: Active ↓</SelectItem>
+              <SelectItem value="newest">Sort: Newest</SelectItem>
               <SelectItem value="name">Sort: Name A–Z</SelectItem>
             </SelectContent>
           </Select>
